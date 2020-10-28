@@ -24,6 +24,8 @@ namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Repositories
             return refreshToken?.AsEntity();
         }
 
+        public Task<bool> ExistsWithKeyAsync(string key) => _repository.ExistsAsync(c => c.Key == key);
+
         public Task AddAsync(Project token) => _repository.AddAsync(token.AsDocument());
 
         public Task UpdateAsync(Project token) => _repository.UpdateAsync(token.AsDocument());

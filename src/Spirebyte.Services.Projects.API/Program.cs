@@ -35,6 +35,9 @@ namespace Spirebyte.Services.Projects.API
                     .UseDispatcherEndpoints(endpoints => endpoints
                         .Get("", ctx => ctx.Response.WriteAsync(ctx.RequestServices.GetService<AppOptions>().Name))
                         .Get<GetProjects, IEnumerable<ProjectDto>>("projects")
+                        .Get<GetProject, ProjectDto>("projects/{key}")
+                        .Get<DoesKeyExist, bool>("projects/doeskeyexist/{key}")
+                        .Get<ProjectHasUser, bool>("projects/{projectId:guid}/hasuser/{userId:guid}")
                         .Post<CreateProject>("projects",
                             afterDispatch: (cmd, ctx) => ctx.Response.Created($"projects/{cmd.ProjectId}"))
                     ))

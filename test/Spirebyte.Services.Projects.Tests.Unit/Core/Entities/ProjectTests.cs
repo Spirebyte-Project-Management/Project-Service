@@ -14,15 +14,30 @@ namespace Spirebyte.Services.Projects.Tests.Unit.Core.Entities
         {
             var projectId = new AggregateId();
             var ownerId = new AggregateId();
+            var key = "key";
             var title = "Title";
             var description = "description";
-            var user = new Project(projectId, ownerId, null, "test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, null, key,"test.nl/image", title, description, DateTime.UtcNow);
 
-            user.Should().NotBeNull();
-            user.Id.Should().Be(projectId);
-            user.OwnerUserId.Should().Be(ownerId);
-            user.Title.Should().Be(title);
-            user.Description.Should().Be(description);
+            project.Should().NotBeNull();
+            project.Id.Should().Be(projectId);
+            project.OwnerUserId.Should().Be(ownerId);
+            project.Title.Should().Be(title);
+            project.Description.Should().Be(description);
+        }
+
+
+        [Fact]
+        public void given_empty_key_project_should_throw_an_exeption()
+        {
+            var projectId = new AggregateId();
+            var ownerId = new AggregateId();
+            var key = "";
+            var title = "Title";
+            var description = "description";
+
+            Action act = () => new Project(projectId, ownerId, null, key, "test.nl/image", title, description, DateTime.UtcNow);
+            act.Should().Throw<InvalidKeyException>();
         }
 
         [Fact]
@@ -30,10 +45,11 @@ namespace Spirebyte.Services.Projects.Tests.Unit.Core.Entities
         {
             var projectId = new AggregateId();
             var ownerId = Guid.Empty;
+            var key = "key";
             var title = "Title";
             var description = "description";
 
-            Action act = () => new Project(projectId, ownerId, null, "test.nl/image", title, description, DateTime.UtcNow);
+            Action act = () => new Project(projectId, ownerId, null, key,"test.nl/image", title, description, DateTime.UtcNow);
             act.Should().Throw<InvalidOwnerIdException>();
         }
 
@@ -42,10 +58,11 @@ namespace Spirebyte.Services.Projects.Tests.Unit.Core.Entities
         {
             var projectId = new AggregateId();
             var ownerId = new AggregateId();
+            var key = "key";
             var title = "";
             var description = "description";
 
-            Action act = () => new Project(projectId, ownerId, null, "test.nl/image", title, description, DateTime.UtcNow);
+            Action act = () => new Project(projectId, ownerId, null, key,"test.nl/image", title, description, DateTime.UtcNow);
             act.Should().Throw<InvalidTitleException>();
         }
     }

@@ -39,9 +39,9 @@ namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Queries.Handler
                 documents = documents.Where(p => p.OwnerUserId == query.OwnerId);
             }
 
-            var orders = await documents.ToListAsync();
+            var projects = await documents.ToListAsync();
 
-            return orders.Select(p => p.AsDto());
+            return projects.Select(p => p.AsDto());
         }
     }
 }

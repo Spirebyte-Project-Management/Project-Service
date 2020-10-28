@@ -11,13 +11,20 @@ namespace Spirebyte.Services.Projects.Core.Entities
         public Guid Id { get; private set; }
         public Guid OwnerUserId { get; private set; }
         public IEnumerable<Guid> ProjectUserIds { get; private set; }
+        public string Key { get; private set; }
+
         public string Pic { get; private set; }
         public string Title { get; private set; }
         public string Description { get; private set; }
         public DateTime CreatedAt { get; private set; }
 
-        public Project(Guid id, Guid ownerUserId, IEnumerable<Guid> projectUserIds, string pic, string title, string description, DateTime createdAt)
+        public Project(Guid id, Guid ownerUserId, IEnumerable<Guid> projectUserIds, string key, string pic, string title, string description, DateTime createdAt)
         {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new InvalidKeyException(key);
+            }
+
             if (ownerUserId == Guid.Empty)
             {
                 throw new InvalidOwnerIdException(ownerUserId);
@@ -31,10 +38,11 @@ namespace Spirebyte.Services.Projects.Core.Entities
             Id = id;
             OwnerUserId = ownerUserId;
             ProjectUserIds ??= Enumerable.Empty<Guid>();
+            Key = key;
             Pic = pic;
             Title = title;
             Description = description;
-            CreatedAt = createdAt;
+            CreatedAt = createdAt == DateTime.MinValue ? DateTime.Now : createdAt;
         }
     }
 }

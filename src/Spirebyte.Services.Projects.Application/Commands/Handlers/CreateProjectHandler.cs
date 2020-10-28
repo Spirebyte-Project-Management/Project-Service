@@ -25,14 +25,19 @@ namespace Spirebyte.Services.Projects.Application.Commands.Handlers
 
         public async Task HandleAsync(CreateProject command)
         {
+            if (await _projectRepository.ExistsWithKeyAsync(command.Key))
+            {
+                throw new KeyAlreadyExistsException(command.Key, command.OwnerId);
+            }
+
             if (!(await _userRepository.ExistsAsync(command.OwnerId)))
             {
                 throw new UserNotFoundException(command.OwnerId);
             }
 
-            var project = new Project(command.ProjectId, command.OwnerId, command.ProjectUserIds, command.Pic, command.Title, command.Description, command.CreatedAt);
+            var project = new Project(command.ProjectId, command.OwnerId, command.ProjectUserIds, command.Key, command.Pic, command.Title, command.Description, command.CreatedAt);
             await _projectRepository.AddAsync(project);
-            await _messageBroker.PublishAsync(new ProjectCreated(project.Id));
+            await _messageBroker.PublishAsync(new ProjectCreated(project.Id, project.Key));
         }
     }
 }

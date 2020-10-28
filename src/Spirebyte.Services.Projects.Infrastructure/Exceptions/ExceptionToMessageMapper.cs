@@ -12,6 +12,7 @@ namespace Spirebyte.Services.Projects.Infrastructure.Exceptions
 
             {
                 UserNotFoundException ex => new CreateProjectRejected(ex.UserId, ex.Message, ex.Code),
+                KeyAlreadyExistsException ex => new CreateProjectRejected(ex.UserId, ex.Message, ex.Code),
                 _ => null
             };
     }

@@ -7,6 +7,7 @@ namespace Spirebyte.Services.Projects.Core.Repositories
     public interface IProjectRepository
     {
         Task<Project> GetAsync(Guid projectId);
+        Task<bool> ExistsWithKeyAsync(string key);
         Task AddAsync(Project project);
         Task UpdateAsync(Project project);
     }
