@@ -37,7 +37,7 @@ namespace Spirebyte.Services.Projects.API
                         .Get<GetProjects, IEnumerable<ProjectDto>>("projects")
                         .Get<GetProject, ProjectDto>("projects/{key}")
                         .Get<DoesKeyExist, bool>("projects/doeskeyexist/{key}")
-                        .Get<ProjectHasUser, bool>("projects/{projectId:guid}/hasuser/{userId:guid}")
+                        .Get<ProjectHasUser, bool>("projects/{key}/hasuser/{userId:guid}")
                         .Post<CreateProject>("projects",
                             afterDispatch: (cmd, ctx) => ctx.Response.Created($"projects/{cmd.ProjectId}"))
                         .Put<UpdateProject>("projects/{key}")

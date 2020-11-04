@@ -7,7 +7,7 @@ namespace Spirebyte.Services.Projects.Application.Queries
 {
     public class ProjectHasUser : IQuery<bool>
     {
-        public Guid ProjectId { get; set; }
+        public string Key { get; set; }
         public Guid UserId { get; set; }
 
     }

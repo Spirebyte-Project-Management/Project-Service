@@ -24,7 +24,7 @@ namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Queries.Handler
         {
             var documents = _projectRepository.Collection.AsQueryable();
 
-            var project = await documents.FirstOrDefaultAsync(p => p.Id == query.ProjectId);
+            var project = await documents.FirstOrDefaultAsync(p => p.Key == query.Key);
 
             return project != null && (project.OwnerUserId == query.UserId || project.ProjectUserIds.Any(c => c == query.UserId));
         }
