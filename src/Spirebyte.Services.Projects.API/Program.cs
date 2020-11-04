@@ -40,6 +40,7 @@ namespace Spirebyte.Services.Projects.API
                         .Get<ProjectHasUser, bool>("projects/{projectId:guid}/hasuser/{userId:guid}")
                         .Post<CreateProject>("projects",
                             afterDispatch: (cmd, ctx) => ctx.Response.Created($"projects/{cmd.ProjectId}"))
+                        .Put<UpdateProject>("projects/{key}")
                     ))
                 .UseLogging()
                 .UseVault()

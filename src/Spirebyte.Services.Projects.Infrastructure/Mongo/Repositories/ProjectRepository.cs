@@ -19,11 +19,17 @@ namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Repositories
 
         public async Task<Project> GetAsync(Guid projectId)
         {
-            var refreshToken = await _repository.GetAsync(x => x.Id == projectId);
+            var project = await _repository.GetAsync(x => x.Id == projectId);
 
-            return refreshToken?.AsEntity();
+            return project?.AsEntity();
         }
 
+        public async Task<Project> GetAsync(string projectKey)
+        {
+            var project = await _repository.GetAsync(x => x.Key == projectKey);
+
+            return project?.AsEntity();
+        }
         public Task<bool> ExistsWithKeyAsync(string key) => _repository.ExistsAsync(c => c.Key == key);
 
         public Task AddAsync(Project token) => _repository.AddAsync(token.AsDocument());

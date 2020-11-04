@@ -42,6 +42,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Partytitan.Convey.WindowsAzure.Blob;
 
 namespace Spirebyte.Services.Projects.Infrastructure
 {
@@ -74,6 +75,7 @@ namespace Spirebyte.Services.Projects.Infrastructure
                 .AddMongoRepository<ProjectDocument, Guid>("projects")
                 .AddMongoRepository<UserDocument, Guid>("users")
                 .AddWebApiSwaggerDocs()
+                .AddAzureBlobStorage()
                 .AddSecurity();
         }
         public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
@@ -85,6 +87,7 @@ namespace Spirebyte.Services.Projects.Infrastructure
                 .UsePublicContracts<ContractAttribute>()
                 .UseRabbitMq()
                 .SubscribeCommand<CreateProject>()
+                .SubscribeCommand<UpdateProject>()
                 .SubscribeEvent<SignedUp>();
 
             return app;
