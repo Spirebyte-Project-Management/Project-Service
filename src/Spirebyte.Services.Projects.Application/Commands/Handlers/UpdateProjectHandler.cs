@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Convey.CQRS.Commands;
 using Microsoft.Extensions.Logging;
 using Partytitan.Convey.WindowsAzure.Blob.Services.Interfaces;
+using Spirebyte.Services.Projects.Application.Clients.Interfaces;
+using Spirebyte.Services.Projects.Application.Events;
 using Spirebyte.Services.Projects.Application.Exceptions;
+using Spirebyte.Services.Projects.Application.Services.Interfaces;
 using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Services.Projects.Core.Repositories;
 
@@ -15,15 +19,19 @@ namespace Spirebyte.Services.Projects.Application.Commands.Handlers
     internal sealed class UpdateProjectHandler : ICommandHandler<UpdateProject>
     {
         private readonly IProjectRepository _projectRepository;
+        private readonly IIdentityApiHttpClient _identityApiHttpClient;
         private readonly ILogger<UpdateProjectHandler> _logger;
         private readonly IBlobStorageService _blobStorageService;
+        private readonly IMessageBroker _messageBroker;
 
-        public UpdateProjectHandler(IProjectRepository projectRepository, ILogger<UpdateProjectHandler> logger,
-            IBlobStorageService blobStorageService)
+        public UpdateProjectHandler(IProjectRepository projectRepository, IIdentityApiHttpClient identityApiHttpClient, ILogger<UpdateProjectHandler> logger,
+            IBlobStorageService blobStorageService, IMessageBroker messageBroker)
         {
             _projectRepository = projectRepository;
+            _identityApiHttpClient = identityApiHttpClient;
             _logger = logger;
             _blobStorageService = blobStorageService;
+            _messageBroker = messageBroker;
         }
         public async Task HandleAsync(UpdateProject command)
         {
@@ -31,10 +39,17 @@ namespace Spirebyte.Services.Projects.Application.Commands.Handlers
             var project = await _projectRepository.GetAsync(command.Key);
             if (project is null)
             {
-                throw new ProjectNotFoundException(command.ProjectId);
+                throw new ProjectNotFoundException(command.Key);
             }
 
-            string picUrl = command.Pic;
+            var newInvitations = command.InvitedUserIds.Except(project.InvitedUserIds);
+            foreach (var newInvitation in newInvitations)
+            {
+                var user = await _identityApiHttpClient.GetUserAsync(newInvitation);
+                await _messageBroker.PublishAsync(new UserInvitedToProject(project.Id, user.Id, project.Title, project.Key, user.Fullname, user.Email));
+            }
+
+            string picUrl = project.Pic;
 
             if (!string.IsNullOrWhiteSpace(command.File))
             {
@@ -48,7 +63,7 @@ namespace Spirebyte.Services.Projects.Application.Commands.Handlers
                 picUrl = uri.OriginalString;
             }
 
-            project = new Project(project.Id, project.OwnerUserId, command.ProjectUserIds, project.Key, picUrl, command.Title, command.Description, project.CreatedAt);
+            project = new Project(project.Id, project.OwnerUserId, command.ProjectUserIds, command.InvitedUserIds, project.Key, picUrl, command.Title, command.Description, project.CreatedAt);
             await _projectRepository.UpdateAsync(project);
 
             _logger.LogInformation($"Updated project with id: {project.Id}.");

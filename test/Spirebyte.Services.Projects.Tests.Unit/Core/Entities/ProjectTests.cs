@@ -17,7 +17,7 @@ namespace Spirebyte.Services.Projects.Tests.Unit.Core.Entities
             var key = "key";
             var title = "Title";
             var description = "description";
-            var project = new Project(projectId, ownerId, null, key,"test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, null, null, key,"test.nl/image", title, description, DateTime.UtcNow);
 
             project.Should().NotBeNull();
             project.Id.Should().Be(projectId);
@@ -36,7 +36,7 @@ namespace Spirebyte.Services.Projects.Tests.Unit.Core.Entities
             var title = "Title";
             var description = "description";
 
-            Action act = () => new Project(projectId, ownerId, null, key, "test.nl/image", title, description, DateTime.UtcNow);
+            Action act = () => new Project(projectId, ownerId, null, null, key, "test.nl/image", title, description, DateTime.UtcNow);
             act.Should().Throw<InvalidKeyException>();
         }
 
@@ -49,7 +49,7 @@ namespace Spirebyte.Services.Projects.Tests.Unit.Core.Entities
             var title = "Title";
             var description = "description";
 
-            Action act = () => new Project(projectId, ownerId, null, key,"test.nl/image", title, description, DateTime.UtcNow);
+            Action act = () => new Project(projectId, ownerId, null, null, key,"test.nl/image", title, description, DateTime.UtcNow);
             act.Should().Throw<InvalidOwnerIdException>();
         }
 
@@ -62,7 +62,7 @@ namespace Spirebyte.Services.Projects.Tests.Unit.Core.Entities
             var title = "";
             var description = "description";
 
-            Action act = () => new Project(projectId, ownerId, null, key,"test.nl/image", title, description, DateTime.UtcNow);
+            Action act = () => new Project(projectId, ownerId, null, null, key,"test.nl/image", title, description, DateTime.UtcNow);
             act.Should().Throw<InvalidTitleException>();
         }
     }

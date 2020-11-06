@@ -43,6 +43,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Partytitan.Convey.WindowsAzure.Blob;
+using Spirebyte.Services.Projects.Application.Clients.Interfaces;
+using Spirebyte.Services.Projects.Infrastructure.Clients.HTTP;
 
 namespace Spirebyte.Services.Projects.Infrastructure
 {
@@ -54,6 +56,7 @@ namespace Spirebyte.Services.Projects.Infrastructure
             builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
             builder.Services.AddTransient<IAppContextFactory, AppContextFactory>();
+            builder.Services.AddTransient<IIdentityApiHttpClient, IdentityApiHttpClient>();
             builder.Services.AddTransient(ctx => ctx.GetRequiredService<IAppContextFactory>().Create());
             builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(OutboxCommandHandlerDecorator<>));
             builder.Services.TryDecorate(typeof(IEventHandler<>), typeof(OutboxEventHandlerDecorator<>));

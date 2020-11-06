@@ -8,11 +8,11 @@ namespace Spirebyte.Services.Projects.Application.Exceptions
     public class ProjectNotFoundException : AppException
     {
         public override string Code { get; } = "project_not_found";
-        public Guid ProjectId { get; }
+        public string Key { get; }
 
-        public ProjectNotFoundException(Guid projectId) : base($"Project with ID: '{projectId}' was not found.")
+        public ProjectNotFoundException(string key) : base($"Project with Key: '{key}' was not found.")
         {
-            ProjectId = projectId;
+            Key = key;
         }
     }
 }

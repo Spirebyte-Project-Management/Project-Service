@@ -9,6 +9,7 @@ namespace Spirebyte.Services.Projects.Application.DTO
         public Guid Id { get; set; }
         public Guid OwnerUserId { get; set; }
         public IEnumerable<Guid> ProjectUserIds { get; set; }
+        public IEnumerable<Guid> InvitedUserIds { get; set; }
         public string Key { get; set; }
         public string Pic { get; set; }
         public string Title { get; set; }
@@ -25,6 +26,7 @@ namespace Spirebyte.Services.Projects.Application.DTO
             Id = project.Id;
             OwnerUserId = project.OwnerUserId;
             ProjectUserIds = project.ProjectUserIds;
+            InvitedUserIds = project.InvitedUserIds;
             Key = project.Key;
             Pic = project.Pic;
             Title = project.Title;

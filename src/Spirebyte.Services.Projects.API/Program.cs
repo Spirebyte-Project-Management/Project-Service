@@ -41,6 +41,8 @@ namespace Spirebyte.Services.Projects.API
                         .Post<CreateProject>("projects",
                             afterDispatch: (cmd, ctx) => ctx.Response.Created($"projects/{cmd.ProjectId}"))
                         .Put<UpdateProject>("projects/{key}")
+                        .Post<JoinProject>("projects/{key}/join")
+                        .Post<LeaveProject>("projects/{key}/leave")
                     ))
                 .UseLogging()
                 .UseVault()

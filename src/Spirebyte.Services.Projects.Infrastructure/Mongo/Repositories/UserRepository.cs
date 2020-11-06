@@ -16,7 +16,12 @@ namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Repositories
         {
             _repository = repository;
         }
+        public async Task<User> GetAsync(Guid id)
+        {
+            var user = await _repository.GetAsync(id);
 
+            return user?.AsEntity();
+        }
         public Task<bool> ExistsAsync(Guid id) => _repository.ExistsAsync(c => c.Id == id);
         public Task AddAsync(User user) => _repository.AddAsync(user.AsDocument());
     }

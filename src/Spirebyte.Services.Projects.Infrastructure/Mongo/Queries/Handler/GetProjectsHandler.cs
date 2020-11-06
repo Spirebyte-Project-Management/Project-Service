@@ -1,4 +1,10 @@
-﻿using Convey.CQRS.Queries;
+﻿
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Convey.CQRS.Queries;
 using Convey.Persistence.MongoDB;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -7,10 +13,6 @@ using Spirebyte.Services.Projects.Application.DTO;
 using Spirebyte.Services.Projects.Application.Queries;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Queries.Handler
 {
@@ -35,8 +37,8 @@ namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Queries.Handler
                 {
                     return Enumerable.Empty<ProjectDto>();
                 }
-
-                documents = documents.Where(p => p.OwnerUserId == query.OwnerId);
+                var userId = query.OwnerId.Value;
+                documents = documents.Where(p => p.ProjectUserIds.Any(u => u == userId) || p.OwnerUserId == query.OwnerId);
             }
 
             var projects = await documents.ToListAsync();

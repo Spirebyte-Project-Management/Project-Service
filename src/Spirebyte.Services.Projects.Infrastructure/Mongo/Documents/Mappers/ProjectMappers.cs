@@ -8,7 +8,7 @@ namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers
     internal static class ProjectMappers
     {
         public static Project AsEntity(this ProjectDocument document)
-            => new Project(document.Id, document.OwnerUserId, document.ProjectUserIds, document.Key, document.Pic, document.Title, document.Description, document.CreatedAt);
+            => new Project(document.Id, document.OwnerUserId, document.ProjectUserIds, document.InvitedUserIds, document.Key, document.Pic, document.Title, document.Description, document.CreatedAt);
 
         public static ProjectDocument AsDocument(this Project entity)
             => new ProjectDocument
@@ -16,6 +16,7 @@ namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers
                 Id = entity.Id,
                 OwnerUserId = entity.OwnerUserId,
                 ProjectUserIds = entity.ProjectUserIds ?? Enumerable.Empty<Guid>(),
+                InvitedUserIds = entity.InvitedUserIds ?? Enumerable.Empty<Guid>(),
                 Key = entity.Key,
                 Pic = entity.Pic,
                 Title = entity.Title,
@@ -29,6 +30,7 @@ namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers
                 Id = document.Id,
                 OwnerUserId = document.OwnerUserId,
                 ProjectUserIds = document.ProjectUserIds ?? Enumerable.Empty<Guid>(),
+                InvitedUserIds = document.InvitedUserIds ?? Enumerable.Empty<Guid>(),
                 Key = document.Key,
                 Pic = document.Pic,
                 Title = document.Title,
