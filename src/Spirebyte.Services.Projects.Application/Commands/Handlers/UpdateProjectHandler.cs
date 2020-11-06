@@ -49,7 +49,7 @@ namespace Spirebyte.Services.Projects.Application.Commands.Handlers
                 await _messageBroker.PublishAsync(new UserInvitedToProject(project.Id, user.Id, project.Title, project.Key, user.Fullname, user.Email));
             }
 
-            string picUrl = project.Pic;
+            var picUrl = project.Pic;
 
             if (!string.IsNullOrWhiteSpace(command.File))
             {
