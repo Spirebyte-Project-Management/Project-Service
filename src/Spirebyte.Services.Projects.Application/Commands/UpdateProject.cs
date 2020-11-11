@@ -9,7 +9,6 @@ namespace Spirebyte.Services.Projects.Application.Commands
     public class UpdateProject : ICommand
     {
         public Guid ProjectId { get; }
-        public Guid OwnerId { get; }
         public IEnumerable<Guid> ProjectUserIds { get; }
         public IEnumerable<Guid> InvitedUserIds { get; }
         public string Key { get; set; }
@@ -17,20 +16,18 @@ namespace Spirebyte.Services.Projects.Application.Commands
         public string File { get; }
         public string Title { get; }
         public string Description { get; }
-        public DateTime CreatedAt { get; }
 
-        public UpdateProject(Guid projectId, Guid ownerId, IEnumerable<Guid> projectUserIds, IEnumerable<Guid> invitedUserIds, string pic, string file, string title,
-            string description, DateTime createdAt)
+        public UpdateProject(Guid projectId, string key, IEnumerable<Guid> projectUserIds, IEnumerable<Guid> invitedUserIds, string pic, string file, string title,
+            string description)
         {
             ProjectId = projectId;
-            OwnerId = ownerId;
+            Key = key;
             ProjectUserIds = projectUserIds ?? Enumerable.Empty<Guid>();
             InvitedUserIds = invitedUserIds ?? Enumerable.Empty<Guid>();
             Pic = pic;
             File = file;
             Title = title;
             Description = description;
-            CreatedAt = createdAt;
         }
     }
 }

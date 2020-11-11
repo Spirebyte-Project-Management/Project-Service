@@ -40,10 +40,13 @@ namespace Spirebyte.Services.Projects.Application.Commands.Handlers
             }
 
             var project = await _projectRepository.GetAsync(command.Key);
-            if (project.InvitedUserIds.Contains(command.UserId))
+            if (!project.InvitedUserIds.Contains(command.UserId))
             {
-                project.JoinProject(command.UserId);
+                throw new UserNotInvitedException(command.UserId, command.Key);
             }
+
+            project.JoinProject(command.UserId);
+
             await _projectRepository.UpdateAsync(project);
             await _messageBroker.PublishAsync(new ProjectJoined(project.Id, project.Key, command.UserId));
         }

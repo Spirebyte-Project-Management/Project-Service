@@ -20,7 +20,7 @@ namespace Spirebyte.Services.Projects.Application.Commands
         public DateTime CreatedAt { get; }
 
         public CreateProject(Guid projectId, Guid ownerId, IEnumerable<Guid> projectUserIds, IEnumerable<Guid> invitedUserIds, string key, string pic, string title,
-            string description, DateTime createdAt)
+            string description)
         {
             ProjectId = projectId;
             OwnerId = ownerId;
@@ -30,7 +30,7 @@ namespace Spirebyte.Services.Projects.Application.Commands
             Pic = pic;
             Title = title;
             Description = description;
-            CreatedAt = createdAt;
+            CreatedAt = DateTime.Now;
         }
     }
 }

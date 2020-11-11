@@ -10,5 +10,11 @@ namespace Spirebyte.Services.Projects.Application.Commands
     {
         public string Key { get; set; }
         public Guid UserId { get; set; }
+
+        public JoinProject(string key, Guid userId)
+        {
+            Key = key;
+            UserId = userId;
+        }
     }
 }

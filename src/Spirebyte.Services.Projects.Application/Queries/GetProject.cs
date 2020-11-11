@@ -10,5 +10,10 @@ namespace Spirebyte.Services.Projects.Application.Queries
     {
         public string Key { get; set; }
 
+        public GetProject(string key)
+        {
+            Key = key;
+        }
+
     }
 }

@@ -22,7 +22,12 @@ namespace Spirebyte.Services.Projects.API
     public class Program
     {
         public static async Task Main(string[] args)
-            => await WebHost.CreateDefaultBuilder(args)
+            => await CreateWebHostBuilder(args)
+                .Build()
+                .RunAsync();
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+            => WebHost.CreateDefaultBuilder(args)
                 .ConfigureServices(services => services
                     .AddConvey()
                     .AddWebApi()
@@ -45,8 +50,6 @@ namespace Spirebyte.Services.Projects.API
                         .Post<LeaveProject>("projects/{key}/leave")
                     ))
                 .UseLogging()
-                .UseVault()
-                .Build()
-                .RunAsync();
+                .UseVault();
     }
 }

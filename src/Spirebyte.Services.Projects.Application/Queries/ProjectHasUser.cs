@@ -10,5 +10,11 @@ namespace Spirebyte.Services.Projects.Application.Queries
         public string Key { get; set; }
         public Guid UserId { get; set; }
 
+        public ProjectHasUser(string key, Guid userId)
+        {
+            Key = key;
+            UserId = userId;
+        }
+
     }
 }
