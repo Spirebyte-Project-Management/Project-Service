@@ -1,7 +1,7 @@
-﻿using System;
-using Convey;
+﻿using Convey;
 using Convey.CQRS.Commands;
 using Convey.CQRS.Events;
+using System;
 
 namespace Spirebyte.Services.Projects.Application
 {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Convey.CQRS.Commands;
+﻿using Convey.CQRS.Commands;
 using Microsoft.Extensions.Logging;
 using Partytitan.Convey.WindowsAzure.Blob.Services.Interfaces;
 using Spirebyte.Services.Projects.Application.Clients.Interfaces;
@@ -13,6 +7,10 @@ using Spirebyte.Services.Projects.Application.Exceptions;
 using Spirebyte.Services.Projects.Application.Services.Interfaces;
 using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Services.Projects.Core.Repositories;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Projects.Application.Commands.Handlers
 {

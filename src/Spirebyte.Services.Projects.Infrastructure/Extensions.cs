@@ -26,11 +26,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Partytitan.Convey.WindowsAzure.Blob;
 using Spirebyte.Services.Projects.Application;
+using Spirebyte.Services.Projects.Application.Clients.Interfaces;
 using Spirebyte.Services.Projects.Application.Commands;
 using Spirebyte.Services.Projects.Application.Events.External;
 using Spirebyte.Services.Projects.Application.Services.Interfaces;
 using Spirebyte.Services.Projects.Core.Repositories;
+using Spirebyte.Services.Projects.Infrastructure.Clients.HTTP;
 using Spirebyte.Services.Projects.Infrastructure.Contexts;
 using Spirebyte.Services.Projects.Infrastructure.Decorators;
 using Spirebyte.Services.Projects.Infrastructure.Exceptions;
@@ -42,9 +45,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Partytitan.Convey.WindowsAzure.Blob;
-using Spirebyte.Services.Projects.Application.Clients.Interfaces;
-using Spirebyte.Services.Projects.Infrastructure.Clients.HTTP;
 
 namespace Spirebyte.Services.Projects.Infrastructure
 {

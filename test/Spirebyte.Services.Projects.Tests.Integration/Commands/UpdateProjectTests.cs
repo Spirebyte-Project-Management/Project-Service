@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Convey.CQRS.Commands;
+﻿using Convey.CQRS.Commands;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Services.Projects.API;
@@ -12,6 +10,8 @@ using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
 using Spirebyte.Services.Projects.Tests.Shared.Factories;
 using Spirebyte.Services.Projects.Tests.Shared.Fixtures;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Spirebyte.Services.Projects.Tests.Integration.Commands
@@ -59,7 +59,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 
-            var command = new UpdateProject(projectId, key,null, null, "test.nl/image", null, updatedTitle, updatedDescription);
+            var command = new UpdateProject(projectId, key, null, null, "test.nl/image", null, updatedTitle, updatedDescription);
 
             // Check if exception is thrown
 
@@ -92,7 +92,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
             var user = new User(ownerId);
             await _usersMongoDbFixture.InsertAsync(user.AsDocument());
 
-            var command = new UpdateProject(projectId, key,null, null, "test.nl/image", null, updatedTitle, updatedDescription);
+            var command = new UpdateProject(projectId, key, null, null, "test.nl/image", null, updatedTitle, updatedDescription);
 
 
             // Check if exception is thrown

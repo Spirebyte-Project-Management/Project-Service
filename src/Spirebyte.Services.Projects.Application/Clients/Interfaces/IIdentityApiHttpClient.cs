@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Spirebyte.Services.Projects.Application.Clients.DTO;
+using System;
 using System.Threading.Tasks;
-using Spirebyte.Services.Projects.Application.Clients.DTO;
 
 namespace Spirebyte.Services.Projects.Application.Clients.Interfaces
 {

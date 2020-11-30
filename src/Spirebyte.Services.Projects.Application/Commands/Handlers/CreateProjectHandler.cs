@@ -1,10 +1,10 @@
 ﻿using Convey.CQRS.Commands;
+using Spirebyte.Services.Projects.Application.Events;
 using Spirebyte.Services.Projects.Application.Exceptions;
 using Spirebyte.Services.Projects.Application.Services.Interfaces;
 using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Services.Projects.Core.Repositories;
 using System.Threading.Tasks;
-using Spirebyte.Services.Projects.Application.Events;
 
 namespace Spirebyte.Services.Projects.Application.Commands.Handlers
 {

@@ -1,22 +1,16 @@
-﻿using System;
-using System.Threading.Tasks;
-using Convey.CQRS.Commands;
-using Convey.CQRS.Events;
-using Convey.CQRS.Queries;
+﻿using Convey.CQRS.Events;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Services.Projects.API;
-using Spirebyte.Services.Projects.Application.Commands;
-using Spirebyte.Services.Projects.Application.DTO;
 using Spirebyte.Services.Projects.Application.Events.External;
 using Spirebyte.Services.Projects.Application.Exceptions;
-using Spirebyte.Services.Projects.Application.Queries;
 using Spirebyte.Services.Projects.Core.Entities;
-using Spirebyte.Services.Projects.Core.Entities.Base;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
 using Spirebyte.Services.Projects.Tests.Shared.Factories;
 using Spirebyte.Services.Projects.Tests.Shared.Fixtures;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Spirebyte.Services.Projects.Tests.Integration.Events

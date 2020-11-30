@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Spirebyte.Services.Projects.Tests.Shared.Factories
 {

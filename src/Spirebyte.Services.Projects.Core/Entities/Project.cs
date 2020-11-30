@@ -8,7 +8,6 @@ namespace Spirebyte.Services.Projects.Core.Entities
 {
     public class Project : AggregateRoot
     {
-        public Guid Id { get; private set; }
         public Guid OwnerUserId { get; private set; }
         public IEnumerable<Guid> ProjectUserIds { get; private set; }
         public IEnumerable<Guid> InvitedUserIds { get; private set; }
@@ -39,7 +38,7 @@ namespace Spirebyte.Services.Projects.Core.Entities
             Id = id;
             OwnerUserId = ownerUserId;
             ProjectUserIds = projectUserIds ?? Enumerable.Empty<Guid>();
-            InvitedUserIds = invitedUserIds?? Enumerable.Empty<Guid>();
+            InvitedUserIds = invitedUserIds ?? Enumerable.Empty<Guid>();
             Key = key;
             Pic = pic;
             Title = title;

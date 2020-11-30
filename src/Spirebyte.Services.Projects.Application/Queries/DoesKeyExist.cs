@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Convey.CQRS.Queries;
+﻿using Convey.CQRS.Queries;
 
 namespace Spirebyte.Services.Projects.Application.Queries
 {

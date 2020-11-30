@@ -1,10 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Convey.CQRS.Queries;
+﻿using Convey.CQRS.Queries;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Services.Projects.API;
-using Spirebyte.Services.Projects.Application.DTO;
 using Spirebyte.Services.Projects.Application.Queries;
 using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Services.Projects.Core.Entities.Base;
@@ -12,6 +9,8 @@ using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
 using Spirebyte.Services.Projects.Tests.Shared.Factories;
 using Spirebyte.Services.Projects.Tests.Shared.Fixtures;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Spirebyte.Services.Projects.Tests.Integration.Queries
@@ -48,7 +47,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
             var title = "Title";
             var description = "description";
 
-            var project = new Project(projectId, ownerId, new []{ userId }, null, key, "test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, new[] { userId }, null, key, "test.nl/image", title, description, DateTime.UtcNow);
             await _mongoDbFixture.InsertAsync(project.AsDocument());
 
 
