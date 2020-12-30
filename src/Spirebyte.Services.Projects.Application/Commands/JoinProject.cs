@@ -6,12 +6,12 @@ namespace Spirebyte.Services.Projects.Application.Commands
     [Contract]
     public class JoinProject : ICommand
     {
-        public string Key { get; set; }
+        public string ProjectId { get; set; }
         public Guid UserId { get; set; }
 
-        public JoinProject(string key, Guid userId)
+        public JoinProject(string projectId, Guid userId)
         {
-            Key = key;
+            ProjectId = projectId;
             UserId = userId;
         }
     }

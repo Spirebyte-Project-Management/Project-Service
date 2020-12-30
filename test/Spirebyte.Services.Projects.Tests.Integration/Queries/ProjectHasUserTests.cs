@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Services.Projects.API;
 using Spirebyte.Services.Projects.Application.Queries;
 using Spirebyte.Services.Projects.Core.Entities;
-using Spirebyte.Services.Projects.Core.Entities.Base;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
 using Spirebyte.Services.Projects.Tests.Shared.Factories;
@@ -21,7 +20,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         public ProjectHasUserTests(SpirebyteApplicationFactory<Program> factory)
         {
             _rabbitMqFixture = new RabbitMqFixture();
-            _mongoDbFixture = new MongoDbFixture<ProjectDocument, Guid>("projects");
+            _mongoDbFixture = new MongoDbFixture<ProjectDocument, string>("projects");
             factory.Server.AllowSynchronousIO = true;
             _queryHandler = factory.Services.GetRequiredService<IQueryHandler<ProjectHasUser, bool>>();
         }
@@ -32,7 +31,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         }
 
         private const string Exchange = "projects";
-        private readonly MongoDbFixture<ProjectDocument, Guid> _mongoDbFixture;
+        private readonly MongoDbFixture<ProjectDocument, string> _mongoDbFixture;
         private readonly RabbitMqFixture _rabbitMqFixture;
         private readonly IQueryHandler<ProjectHasUser, bool> _queryHandler;
 
@@ -40,18 +39,17 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         [Fact]
         public async Task project_has_user_query_returns_true_when_project_owner_is_given_user_and_project_exists()
         {
-            var projectId = new AggregateId();
+            var projectId = "key";
             var ownerId = Guid.NewGuid();
             var userId = Guid.NewGuid();
-            var key = "key";
             var title = "Title";
             var description = "description";
 
-            var project = new Project(projectId, ownerId, new[] { userId }, null, key, "test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, new[] { userId }, null, "test.nl/image", title, description, DateTime.UtcNow);
             await _mongoDbFixture.InsertAsync(project.AsDocument());
 
 
-            var query = new ProjectHasUser(key, ownerId);
+            var query = new ProjectHasUser(projectId, ownerId);
 
             // Check if exception is thrown
 
@@ -68,18 +66,17 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         [Fact]
         public async Task project_has_user_query_returns_true_when_project_members_contain_given_user_and_project_exists()
         {
-            var projectId = new AggregateId();
+            var projectId = "key";
             var ownerId = Guid.NewGuid();
             var userId = Guid.NewGuid();
-            var key = "key";
             var title = "Title";
             var description = "description";
 
-            var project = new Project(projectId, ownerId, new[] { userId }, null, key, "test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, new[] { userId }, null, "test.nl/image", title, description, DateTime.UtcNow);
             await _mongoDbFixture.InsertAsync(project.AsDocument());
 
 
-            var query = new ProjectHasUser(key, userId);
+            var query = new ProjectHasUser(projectId, userId);
 
             // Check if exception is thrown
 
@@ -96,19 +93,18 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         [Fact]
         public async Task project_has_user_query_returns_false_when_project_does_not_contain_given_user_and_project_exists()
         {
-            var projectId = new AggregateId();
+            var projectId = "key";
             var ownerId = Guid.NewGuid();
             var userId = Guid.NewGuid();
             var notExistingUserId = Guid.NewGuid();
-            var key = "key";
             var title = "Title";
             var description = "description";
 
-            var project = new Project(projectId, ownerId, new[] { userId }, null, key, "test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, new[] { userId }, null, "test.nl/image", title, description, DateTime.UtcNow);
             await _mongoDbFixture.InsertAsync(project.AsDocument());
 
 
-            var query = new ProjectHasUser(key, notExistingUserId);
+            var query = new ProjectHasUser(projectId, notExistingUserId);
 
             // Check if exception is thrown
 

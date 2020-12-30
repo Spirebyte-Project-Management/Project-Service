@@ -5,7 +5,6 @@ using Spirebyte.Services.Projects.API;
 using Spirebyte.Services.Projects.Application.Commands;
 using Spirebyte.Services.Projects.Application.Exceptions;
 using Spirebyte.Services.Projects.Core.Entities;
-using Spirebyte.Services.Projects.Core.Entities.Base;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
 using Spirebyte.Services.Projects.Tests.Shared.Factories;
@@ -22,7 +21,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
         public CreateProjectTests(SpirebyteApplicationFactory<Program> factory)
         {
             _rabbitMqFixture = new RabbitMqFixture();
-            _projectsMongoDbFixture = new MongoDbFixture<ProjectDocument, Guid>("projects");
+            _projectsMongoDbFixture = new MongoDbFixture<ProjectDocument, string>("projects");
             _usersMongoDbFixture = new MongoDbFixture<UserDocument, Guid>("users");
             factory.Server.AllowSynchronousIO = true;
             _commandHandler = factory.Services.GetRequiredService<ICommandHandler<CreateProject>>();
@@ -35,7 +34,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
         }
 
         private const string Exchange = "projects";
-        private readonly MongoDbFixture<ProjectDocument, Guid> _projectsMongoDbFixture;
+        private readonly MongoDbFixture<ProjectDocument, string> _projectsMongoDbFixture;
         private readonly MongoDbFixture<UserDocument, Guid> _usersMongoDbFixture;
         private readonly RabbitMqFixture _rabbitMqFixture;
         private readonly ICommandHandler<CreateProject> _commandHandler;
@@ -44,9 +43,8 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
         [Fact]
         public async Task create_project_command_should_add_project_with_given_data_to_database()
         {
-            var projectId = new AggregateId();
+            var projectId = "key";
             var ownerId = Guid.NewGuid();
-            var key = "key";
             var title = "Title";
             var description = "description";
 
@@ -54,7 +52,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
             await _usersMongoDbFixture.InsertAsync(user.AsDocument());
 
 
-            var command = new CreateProject(projectId, ownerId, null, null, key, "test.nl/image", title, description);
+            var command = new CreateProject(projectId, ownerId, null, null, "test.nl/image", title, description);
 
             // Check if exception is thrown
 
@@ -63,7 +61,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
                 .Should().NotThrow();
 
 
-            var project = await _projectsMongoDbFixture.GetAsync(command.ProjectId);
+            var project = await _projectsMongoDbFixture.GetAsync(command.Id);
 
             project.Should().NotBeNull();
             project.Id.Should().Be(projectId);
@@ -75,9 +73,8 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
         [Fact]
         public async Task create_project_command_fails_when_project_with_key_already_exists_in_database()
         {
-            var projectId = new AggregateId();
+            var projectId = "key";
             var ownerId = Guid.NewGuid();
-            var key = "key";
             var title = "Title";
             var description = "description";
 
@@ -86,29 +83,29 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
             await _usersMongoDbFixture.InsertAsync(user.AsDocument());
 
             // Add project
-            var project = new Project(projectId, ownerId, null, null, key, "test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, DateTime.UtcNow);
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 
-            var command = new CreateProject(projectId, ownerId, null, null, key, "test.nl/image", title, description);
+            var command = new CreateProject(projectId, ownerId, null, null, "test.nl/image", title, description);
 
             // Check if exception is thrown
 
             _commandHandler
                 .Awaiting(c => c.HandleAsync(command))
-                .Should().Throw<KeyAlreadyExistsException>();
+                .Should().Throw<ProjectAlreadyExistsException>();
         }
 
         [Fact]
         public async Task create_project_command_fails_when_owner_does_not_exist()
         {
-            var projectId = new AggregateId();
+            var projectId = "key";
             var ownerId = Guid.NewGuid();
             var key = "key";
             var title = "Title";
             var description = "description";
 
-            var command = new CreateProject(projectId, ownerId, null, null, key, "test.nl/image", title, description);
+            var command = new CreateProject(projectId, ownerId, null, null, "test.nl/image", title, description);
 
             // Check if exception is thrown
 

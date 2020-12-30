@@ -23,7 +23,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         public GetProjectsTests(SpirebyteApplicationFactory<Program> factory)
         {
             _rabbitMqFixture = new RabbitMqFixture();
-            _mongoDbFixture = new MongoDbFixture<ProjectDocument, Guid>("projects");
+            _mongoDbFixture = new MongoDbFixture<ProjectDocument, string>("projects");
             factory.Server.AllowSynchronousIO = true;
             _queryHandler = factory.Services.GetRequiredService<IQueryHandler<GetProjects, IEnumerable<ProjectDto>>>();
         }
@@ -34,7 +34,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         }
 
         private const string Exchange = "projects";
-        private readonly MongoDbFixture<ProjectDocument, Guid> _mongoDbFixture;
+        private readonly MongoDbFixture<ProjectDocument, string> _mongoDbFixture;
         private readonly RabbitMqFixture _rabbitMqFixture;
         private readonly IQueryHandler<GetProjects, IEnumerable<ProjectDto>> _queryHandler;
 
@@ -42,16 +42,14 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         [Fact]
         public async Task get_projects_query_succeeds_when_a_project_exists()
         {
-            var projectId = Guid.NewGuid();
-            var projectId2 = Guid.NewGuid();
+            var projectId = "key" + Guid.NewGuid();
+            var projectId2 = "key" + Guid.NewGuid();
             var ownerId = Guid.NewGuid();
-            var key = "key";
-            var key2 = "key2";
             var title = "Title";
             var description = "description";
 
-            var project = new Project(projectId, ownerId, null, null, key, "test.nl/image", title, description, DateTime.UtcNow);
-            var project2 = new Project(projectId2, ownerId, null, null, key2, "test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, DateTime.UtcNow);
+            var project2 = new Project(projectId2, ownerId, null, null, "test.nl/image", title, description, DateTime.UtcNow);
             await _mongoDbFixture.InsertAsync(project.AsDocument());
             await _mongoDbFixture.InsertAsync(project2.AsDocument());
 

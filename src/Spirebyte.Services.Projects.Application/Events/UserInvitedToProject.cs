@@ -6,21 +6,19 @@ namespace Spirebyte.Services.Projects.Application.Events
     [Contract]
     public class UserInvitedToProject : IEvent
     {
-        public Guid ProjectId { get; }
-        public string ProjectKey { get; }
+        public string ProjectId { get; }
         public string ProjectTitle { get; }
         public Guid UserId { get; }
         public string Username { get; }
-        public string EmailAdress { get; }
+        public string EmailAddress { get; }
 
-        public UserInvitedToProject(Guid projectId, Guid userId, string projectTitle, string projectKey, string username, string emailAdress)
+        public UserInvitedToProject(string projectId, Guid userId, string projectTitle, string username, string emailAddress)
         {
             ProjectId = projectId;
             UserId = userId;
             ProjectTitle = projectTitle;
-            ProjectKey = projectKey;
             Username = username;
-            EmailAdress = emailAdress;
+            EmailAddress = emailAddress;
         }
     }
 }

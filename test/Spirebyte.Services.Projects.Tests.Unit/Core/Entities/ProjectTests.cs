@@ -12,12 +12,11 @@ namespace Spirebyte.Services.Projects.Tests.Unit.Core.Entities
         [Fact]
         public void given_valid_input_project_should_be_created()
         {
-            var projectId = new AggregateId();
+            var projectId = "key";
             var ownerId = new AggregateId();
-            var key = "key";
             var title = "Title";
             var description = "description";
-            var project = new Project(projectId, ownerId, null, null, key, "test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, DateTime.UtcNow);
 
             project.Should().NotBeNull();
             project.Id.Should().Be(projectId);
@@ -28,41 +27,38 @@ namespace Spirebyte.Services.Projects.Tests.Unit.Core.Entities
 
 
         [Fact]
-        public void given_empty_key_project_should_throw_an_exeption()
+        public void given_empty_id_project_should_throw_an_exception()
         {
-            var projectId = new AggregateId();
+            var projectId = string.Empty;
             var ownerId = new AggregateId();
-            var key = "";
             var title = "Title";
             var description = "description";
 
-            Action act = () => new Project(projectId, ownerId, null, null, key, "test.nl/image", title, description, DateTime.UtcNow);
-            act.Should().Throw<InvalidKeyException>();
+            Action act = () => new Project(projectId, ownerId, null, null, "test.nl/image", title, description, DateTime.UtcNow);
+            act.Should().Throw<InvalidIdException>();
         }
 
         [Fact]
-        public void given_empty_ownerid_project_should_throw_an_exeption()
+        public void given_empty_owner_id_project_should_throw_an_exception()
         {
-            var projectId = new AggregateId();
+            var projectId = "key";
             var ownerId = Guid.Empty;
-            var key = "key";
             var title = "Title";
             var description = "description";
 
-            Action act = () => new Project(projectId, ownerId, null, null, key, "test.nl/image", title, description, DateTime.UtcNow);
+            Action act = () => new Project(projectId, ownerId, null, null, "test.nl/image", title, description, DateTime.UtcNow);
             act.Should().Throw<InvalidOwnerIdException>();
         }
 
         [Fact]
-        public void given_empty_title_project_should_throw_an_exeption()
+        public void given_empty_title_project_should_throw_an_exception()
         {
-            var projectId = new AggregateId();
+            var projectId = "key";
             var ownerId = new AggregateId();
-            var key = "key";
-            var title = "";
+            var title = string.Empty;
             var description = "description";
 
-            Action act = () => new Project(projectId, ownerId, null, null, key, "test.nl/image", title, description, DateTime.UtcNow);
+            Action act = () => new Project(projectId, ownerId, null, null, "test.nl/image", title, description, DateTime.UtcNow);
             act.Should().Throw<InvalidTitleException>();
         }
     }

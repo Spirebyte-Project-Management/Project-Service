@@ -21,7 +21,6 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Events
         public SignedUpTests(SpirebyteApplicationFactory<Program> factory)
         {
             _rabbitMqFixture = new RabbitMqFixture();
-            _projectsMongoDbFixture = new MongoDbFixture<ProjectDocument, Guid>("projects");
             _usersMongoDbFixture = new MongoDbFixture<UserDocument, Guid>("users");
             factory.Server.AllowSynchronousIO = true;
             _eventHandler = factory.Services.GetRequiredService<IEventHandler<SignedUp>>();
@@ -29,12 +28,10 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Events
 
         public void Dispose()
         {
-            _projectsMongoDbFixture.Dispose();
             _usersMongoDbFixture.Dispose();
         }
 
         private const string Exchange = "projects";
-        private readonly MongoDbFixture<ProjectDocument, Guid> _projectsMongoDbFixture;
         private readonly MongoDbFixture<UserDocument, Guid> _usersMongoDbFixture;
         private readonly RabbitMqFixture _rabbitMqFixture;
         private readonly IEventHandler<SignedUp> _eventHandler;

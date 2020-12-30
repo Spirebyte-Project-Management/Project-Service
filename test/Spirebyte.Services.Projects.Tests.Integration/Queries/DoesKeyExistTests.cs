@@ -16,14 +16,14 @@ using Xunit;
 namespace Spirebyte.Services.Projects.Tests.Integration.Queries
 {
     [Collection("Spirebyte collection")]
-    public class DoesKeyExistTests : IDisposable
+    public class DoesProjectExistTests : IDisposable
     {
-        public DoesKeyExistTests(SpirebyteApplicationFactory<Program> factory)
+        public DoesProjectExistTests(SpirebyteApplicationFactory<Program> factory)
         {
             _rabbitMqFixture = new RabbitMqFixture();
-            _mongoDbFixture = new MongoDbFixture<ProjectDocument, Guid>("projects");
+            _mongoDbFixture = new MongoDbFixture<ProjectDocument, string>("projects");
             factory.Server.AllowSynchronousIO = true;
-            _queryHandler = factory.Services.GetRequiredService<IQueryHandler<DoesKeyExist, bool>>();
+            _queryHandler = factory.Services.GetRequiredService<IQueryHandler<DoesProjectExist, bool>>();
         }
 
         public void Dispose()
@@ -32,25 +32,24 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         }
 
         private const string Exchange = "projects";
-        private readonly MongoDbFixture<ProjectDocument, Guid> _mongoDbFixture;
+        private readonly MongoDbFixture<ProjectDocument, string> _mongoDbFixture;
         private readonly RabbitMqFixture _rabbitMqFixture;
-        private readonly IQueryHandler<DoesKeyExist, bool> _queryHandler;
+        private readonly IQueryHandler<DoesProjectExist, bool> _queryHandler;
 
 
         [Fact]
-        public async Task does_key_exist_query_returns_true_when_project_with_key_exist()
+        public async Task does_project_exist_query_returns_true_when_project_with_id_exist()
         {
-            var projectId = new AggregateId();
+            var projectId = "key";
             var ownerId = new AggregateId();
-            var key = "key";
             var title = "Title";
             var description = "description";
 
-            var project = new Project(projectId, ownerId, null, null, key, "test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, DateTime.UtcNow);
             await _mongoDbFixture.InsertAsync(project.AsDocument());
 
 
-            var query = new DoesKeyExist(key);
+            var query = new DoesProjectExist(projectId);
 
             // Check if exception is thrown
 
@@ -65,11 +64,11 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         }
 
         [Fact]
-        public async Task does_key_exist_query_returns_false_when_np_project_with_key_exist()
+        public async Task does_project_exist_query_returns_false_when_no_project_with_id_exist()
         {
-            var key = "notExistingKey";
+            var projectId = "notExistingKey";
 
-            var query = new DoesKeyExist(key);
+            var query = new DoesProjectExist(projectId);
 
             // Check if exception is thrown
 

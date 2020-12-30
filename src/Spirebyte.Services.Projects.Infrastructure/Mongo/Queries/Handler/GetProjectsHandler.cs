@@ -9,7 +9,6 @@ using Spirebyte.Services.Projects.Application.DTO;
 using Spirebyte.Services.Projects.Application.Queries;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,10 +17,10 @@ namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Queries.Handler
 {
     internal sealed class GetProjectsHandler : IQueryHandler<GetProjects, IEnumerable<ProjectDto>>
     {
-        private readonly IMongoRepository<ProjectDocument, Guid> _projectRepository;
+        private readonly IMongoRepository<ProjectDocument, string> _projectRepository;
         private readonly IAppContext _appContext;
 
-        public GetProjectsHandler(IMongoRepository<ProjectDocument, Guid> projectRepository, IAppContext appContext)
+        public GetProjectsHandler(IMongoRepository<ProjectDocument, string> projectRepository, IAppContext appContext)
         {
             _projectRepository = projectRepository;
             _appContext = appContext;
@@ -38,7 +37,7 @@ namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Queries.Handler
                     return Enumerable.Empty<ProjectDto>();
                 }
                 var userId = query.OwnerId.Value;
-                documents = documents.Where(p => p.ProjectUserIds.Any(u => u == userId) || p.OwnerUserId == query.OwnerId);
+                documents = documents.Where(p => p.ProjectUserIds.Any(u => u == userId) || p.InvitedUserIds.Any(u => u == userId) || p.OwnerUserId == query.OwnerId);
             }
 
             var projects = await documents.ToListAsync();

@@ -4,26 +4,24 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Spirebyte.Services.Projects.Application.Queries;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Queries.Handler
 {
-    internal sealed class DoesKeyExistHandler : IQueryHandler<DoesKeyExist, bool>
+    internal sealed class DoesProjectExistHandler : IQueryHandler<DoesProjectExist, bool>
     {
-        private readonly IMongoRepository<ProjectDocument, Guid> _projectRepository;
+        private readonly IMongoRepository<ProjectDocument, string> _projectRepository;
 
-        public DoesKeyExistHandler(IMongoRepository<ProjectDocument, Guid> projectRepository)
+        public DoesProjectExistHandler(IMongoRepository<ProjectDocument, string> projectRepository)
         {
             _projectRepository = projectRepository;
         }
 
-        public async Task<bool> HandleAsync(DoesKeyExist query)
+        public async Task<bool> HandleAsync(DoesProjectExist query)
         {
             var documents = _projectRepository.Collection.AsQueryable();
 
-            var project = await documents.AnyAsync(p => p.Key == query.Key);
+            var project = await documents.AnyAsync(p => p.Id == query.Id);
 
             return project;
         }

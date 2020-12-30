@@ -1,4 +1,5 @@
 using Convey;
+using Convey.CQRS.Queries;
 using Convey.Logging;
 using Convey.Secrets.Vault;
 using Convey.Types;
@@ -40,14 +41,14 @@ namespace Spirebyte.Services.Projects.API
                     .UseDispatcherEndpoints(endpoints => endpoints
                         .Get("", ctx => ctx.Response.WriteAsync(ctx.RequestServices.GetService<AppOptions>().Name))
                         .Get<GetProjects, IEnumerable<ProjectDto>>("projects")
-                        .Get<GetProject, ProjectDto>("projects/{key}")
-                        .Get<DoesKeyExist, bool>("projects/doeskeyexist/{key}")
-                        .Get<ProjectHasUser, bool>("projects/{key}/hasuser/{userId:guid}")
+                        .Get<GetProject, ProjectDto>("projects/{id}")
+                        .Get<DoesProjectExist, bool>("projects/exists/{id}")
+                        .Get<ProjectHasUser, bool>("projects/{id}/hasuser/{userId:guid}")
                         .Post<CreateProject>("projects",
-                            afterDispatch: (cmd, ctx) => ctx.Response.Created($"projects/{cmd.ProjectId}"))
-                        .Put<UpdateProject>("projects/{key}")
-                        .Post<JoinProject>("projects/{key}/join")
-                        .Post<LeaveProject>("projects/{key}/leave")
+                            afterDispatch: async (cmd, ctx) => await ctx.Response.Created($"projects/{cmd.Id}", await ctx.RequestServices.GetService<IQueryDispatcher>().QueryAsync<GetProject, ProjectDto>(new GetProject(cmd.Id))))
+                        .Put<UpdateProject>("projects/{id}")
+                        .Post<JoinProject>("projects/{projectId}/join")
+                        .Post<LeaveProject>("projects/{projectId}/leave")
                     ))
                 .UseLogging()
                 .UseVault();

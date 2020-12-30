@@ -22,7 +22,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         public GetProjectTests(SpirebyteApplicationFactory<Program> factory)
         {
             _rabbitMqFixture = new RabbitMqFixture();
-            _mongoDbFixture = new MongoDbFixture<ProjectDocument, Guid>("projects");
+            _mongoDbFixture = new MongoDbFixture<ProjectDocument, string>("projects");
             factory.Server.AllowSynchronousIO = true;
             _queryHandler = factory.Services.GetRequiredService<IQueryHandler<GetProject, ProjectDto>>();
         }
@@ -33,25 +33,24 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         }
 
         private const string Exchange = "projects";
-        private readonly MongoDbFixture<ProjectDocument, Guid> _mongoDbFixture;
+        private readonly MongoDbFixture<ProjectDocument, string> _mongoDbFixture;
         private readonly RabbitMqFixture _rabbitMqFixture;
         private readonly IQueryHandler<GetProject, ProjectDto> _queryHandler;
 
 
         [Fact]
-        public async Task get_project_query_succeeds_when_project_exists()
+        public async Task get_project_query_succeeds_when_project_with_id_exists()
         {
-            var projectId = new AggregateId();
+            var projectId = "key";
             var ownerId = new AggregateId();
-            var key = "key";
             var title = "Title";
             var description = "description";
 
-            var project = new Project(projectId, ownerId, null, null, key, "test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, DateTime.UtcNow);
             await _mongoDbFixture.InsertAsync(project.AsDocument());
 
 
-            var query = new GetProject(key);
+            var query = new GetProject(projectId);
 
             // Check if exception is thrown
 
@@ -70,11 +69,11 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         }
 
         [Fact]
-        public async Task get_project_query_should_return_null_when_project_does_not_exist()
+        public async Task get_project_query_should_return_null_when_project_with_id_does_not_exist()
         {
-            var key = "notExistingKey";
+            var projectId = "notExistingKey";
 
-            var query = new GetProject(key);
+            var query = new GetProject(projectId);
 
             // Check if exception is thrown
 

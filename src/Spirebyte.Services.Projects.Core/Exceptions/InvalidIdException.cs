@@ -2,11 +2,11 @@
 
 namespace Spirebyte.Services.Projects.Core.Exceptions
 {
-    public class InvalidKeyException : DomainException
+    public class InvalidIdException : DomainException
     {
         public override string Code { get; } = "invalid_key";
 
-        public InvalidKeyException(string key) : base($"Invalid key: {key}.")
+        public InvalidIdException(string key) : base($"Invalid key: {key}.")
         {
         }
     }

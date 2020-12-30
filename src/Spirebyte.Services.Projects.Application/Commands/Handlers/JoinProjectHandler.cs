@@ -26,9 +26,9 @@ namespace Spirebyte.Services.Projects.Application.Commands.Handlers
 
         public async Task HandleAsync(JoinProject command)
         {
-            if (!await _projectRepository.ExistsWithKeyAsync(command.Key))
+            if (!await _projectRepository.ExistsAsync(command.ProjectId))
             {
-                throw new ProjectNotFoundException(command.Key);
+                throw new ProjectNotFoundException(command.ProjectId);
             }
 
             if (!await _userRepository.ExistsAsync(command.UserId))
@@ -36,16 +36,16 @@ namespace Spirebyte.Services.Projects.Application.Commands.Handlers
                 throw new UserNotFoundException(command.UserId);
             }
 
-            var project = await _projectRepository.GetAsync(command.Key);
+            var project = await _projectRepository.GetAsync(command.ProjectId);
             if (!project.InvitedUserIds.Contains(command.UserId))
             {
-                throw new UserNotInvitedException(command.UserId, command.Key);
+                throw new UserNotInvitedException(command.UserId, command.ProjectId);
             }
 
             project.JoinProject(command.UserId);
 
             await _projectRepository.UpdateAsync(project);
-            await _messageBroker.PublishAsync(new ProjectJoined(project.Id, project.Key, command.UserId));
+            await _messageBroker.PublishAsync(new ProjectJoined(project.Id, command.UserId));
         }
     }
 }

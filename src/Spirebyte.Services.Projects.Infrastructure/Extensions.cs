@@ -75,7 +75,7 @@ namespace Spirebyte.Services.Projects.Infrastructure
                 .AddMongo()
                 .AddRedis()
                 .AddJaeger()
-                .AddMongoRepository<ProjectDocument, Guid>("projects")
+                .AddMongoRepository<ProjectDocument, string>("projects")
                 .AddMongoRepository<UserDocument, Guid>("users")
                 .AddWebApiSwaggerDocs()
                 .AddAzureBlobStorage()

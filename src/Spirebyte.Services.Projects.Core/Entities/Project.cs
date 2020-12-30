@@ -1,28 +1,27 @@
-﻿using Spirebyte.Services.Projects.Core.Entities.Base;
-using Spirebyte.Services.Projects.Core.Exceptions;
+﻿using Spirebyte.Services.Projects.Core.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Spirebyte.Services.Projects.Core.Entities
 {
-    public class Project : AggregateRoot
+    public class Project
     {
+        public string Id { get; private set; }
+
         public Guid OwnerUserId { get; private set; }
         public IEnumerable<Guid> ProjectUserIds { get; private set; }
         public IEnumerable<Guid> InvitedUserIds { get; private set; }
-        public string Key { get; private set; }
-
         public string Pic { get; private set; }
         public string Title { get; private set; }
         public string Description { get; private set; }
         public DateTime CreatedAt { get; private set; }
 
-        public Project(Guid id, Guid ownerUserId, IEnumerable<Guid> projectUserIds, IEnumerable<Guid> invitedUserIds, string key, string pic, string title, string description, DateTime createdAt)
+        public Project(string id, Guid ownerUserId, IEnumerable<Guid> projectUserIds, IEnumerable<Guid> invitedUserIds, string pic, string title, string description, DateTime createdAt)
         {
-            if (string.IsNullOrWhiteSpace(key))
+            if (string.IsNullOrWhiteSpace(id))
             {
-                throw new InvalidKeyException(key);
+                throw new InvalidIdException(id);
             }
 
             if (ownerUserId == Guid.Empty)
@@ -39,7 +38,6 @@ namespace Spirebyte.Services.Projects.Core.Entities
             OwnerUserId = ownerUserId;
             ProjectUserIds = projectUserIds ?? Enumerable.Empty<Guid>();
             InvitedUserIds = invitedUserIds ?? Enumerable.Empty<Guid>();
-            Key = key;
             Pic = pic;
             Title = title;
             Description = description;

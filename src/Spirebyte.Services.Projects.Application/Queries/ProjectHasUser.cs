@@ -5,12 +5,12 @@ namespace Spirebyte.Services.Projects.Application.Queries
 {
     public class ProjectHasUser : IQuery<bool>
     {
-        public string Key { get; set; }
+        public string Id { get; set; }
         public Guid UserId { get; set; }
 
-        public ProjectHasUser(string key, Guid userId)
+        public ProjectHasUser(string id, Guid userId)
         {
-            Key = key;
+            Id = id;
             UserId = userId;
         }
 

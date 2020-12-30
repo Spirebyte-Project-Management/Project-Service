@@ -7,12 +7,12 @@ namespace Spirebyte.Services.Projects.Application.Exceptions
     {
         public override string Code { get; } = "user_not_invited";
         public Guid UserId { get; }
-        public string ProjectKey { get; }
+        public string ProjectId { get; }
 
-        public UserNotInvitedException(Guid userId, string projectKey) : base($"User with ID: '{userId}' was not invited to project with key: '{projectKey}'.")
+        public UserNotInvitedException(Guid userId, string projectId) : base($"User with ID: '{userId}' was not invited to project with id: '{projectId}'.")
         {
             UserId = userId;
-            ProjectKey = projectKey;
+            ProjectId = projectId;
         }
     }
 }

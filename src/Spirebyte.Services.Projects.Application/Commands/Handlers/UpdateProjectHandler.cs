@@ -34,17 +34,17 @@ namespace Spirebyte.Services.Projects.Application.Commands.Handlers
         public async Task HandleAsync(UpdateProject command)
         {
 
-            var project = await _projectRepository.GetAsync(command.Key);
+            var project = await _projectRepository.GetAsync(command.Id);
             if (project is null)
             {
-                throw new ProjectNotFoundException(command.Key);
+                throw new ProjectNotFoundException(command.Id);
             }
 
             var newInvitations = command.InvitedUserIds.Except(project.InvitedUserIds);
             foreach (var newInvitation in newInvitations)
             {
                 var user = await _identityApiHttpClient.GetUserAsync(newInvitation);
-                await _messageBroker.PublishAsync(new UserInvitedToProject(project.Id, user.Id, project.Title, project.Key, user.Fullname, user.Email));
+                await _messageBroker.PublishAsync(new UserInvitedToProject(project.Id, user.Id, project.Title, user.Fullname, user.Email));
             }
 
             var picUrl = project.Pic;
@@ -61,7 +61,7 @@ namespace Spirebyte.Services.Projects.Application.Commands.Handlers
                 picUrl = uri.OriginalString;
             }
 
-            project = new Project(project.Id, project.OwnerUserId, command.ProjectUserIds, command.InvitedUserIds, project.Key, picUrl, command.Title, command.Description, project.CreatedAt);
+            project = new Project(project.Id, project.OwnerUserId, command.ProjectUserIds, command.InvitedUserIds, picUrl, command.Title, command.Description, project.CreatedAt);
             await _projectRepository.UpdateAsync(project);
 
             _logger.LogInformation($"Updated project with id: {project.Id}.");

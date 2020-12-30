@@ -5,7 +5,6 @@ using Spirebyte.Services.Projects.API;
 using Spirebyte.Services.Projects.Application.Commands;
 using Spirebyte.Services.Projects.Application.Exceptions;
 using Spirebyte.Services.Projects.Core.Entities;
-using Spirebyte.Services.Projects.Core.Entities.Base;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
 using Spirebyte.Services.Projects.Tests.Shared.Factories;
@@ -22,7 +21,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
         public UpdateProjectTests(SpirebyteApplicationFactory<Program> factory)
         {
             _rabbitMqFixture = new RabbitMqFixture();
-            _projectsMongoDbFixture = new MongoDbFixture<ProjectDocument, Guid>("projects");
+            _projectsMongoDbFixture = new MongoDbFixture<ProjectDocument, string>("projects");
             _usersMongoDbFixture = new MongoDbFixture<UserDocument, Guid>("users");
             factory.Server.AllowSynchronousIO = true;
             _commandHandler = factory.Services.GetRequiredService<ICommandHandler<UpdateProject>>();
@@ -35,7 +34,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
         }
 
         private const string Exchange = "projects";
-        private readonly MongoDbFixture<ProjectDocument, Guid> _projectsMongoDbFixture;
+        private readonly MongoDbFixture<ProjectDocument, string> _projectsMongoDbFixture;
         private readonly MongoDbFixture<UserDocument, Guid> _usersMongoDbFixture;
         private readonly RabbitMqFixture _rabbitMqFixture;
         private readonly ICommandHandler<UpdateProject> _commandHandler;
@@ -44,9 +43,8 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
         [Fact]
         public async Task update_project_command_should_modify_project_with_given_data()
         {
-            var projectId = new AggregateId();
+            var projectId = "key";
             var ownerId = Guid.NewGuid();
-            var key = "key";
             var title = "Title";
             var updatedTitle = "UpdatedTitle";
             var description = "description";
@@ -55,11 +53,11 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
             var user = new User(ownerId);
             await _usersMongoDbFixture.InsertAsync(user.AsDocument());
 
-            var project = new Project(projectId, ownerId, null, null, key, "test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, DateTime.UtcNow);
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 
-            var command = new UpdateProject(projectId, key, null, null, "test.nl/image", null, updatedTitle, updatedDescription);
+            var command = new UpdateProject(projectId, null, null, "test.nl/image", null, updatedTitle, updatedDescription);
 
             // Check if exception is thrown
 
@@ -68,7 +66,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
                 .Should().NotThrow();
 
 
-            var updatedProject = await _projectsMongoDbFixture.GetAsync(command.ProjectId);
+            var updatedProject = await _projectsMongoDbFixture.GetAsync(command.Id);
 
             updatedProject.Should().NotBeNull();
             updatedProject.Id.Should().Be(projectId);
@@ -80,9 +78,8 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
         [Fact]
         public async Task update_project_command_fails_when_project_does_not_exists_in_database()
         {
-            var projectId = new AggregateId();
+            var projectId = "key";
             var ownerId = Guid.NewGuid();
-            var key = "key";
             var title = "Title";
             var updatedTitle = "UpdatedTitle";
             var description = "description";
@@ -92,7 +89,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
             var user = new User(ownerId);
             await _usersMongoDbFixture.InsertAsync(user.AsDocument());
 
-            var command = new UpdateProject(projectId, key, null, null, "test.nl/image", null, updatedTitle, updatedDescription);
+            var command = new UpdateProject(projectId, null, null, "test.nl/image", null, updatedTitle, updatedDescription);
 
 
             // Check if exception is thrown
