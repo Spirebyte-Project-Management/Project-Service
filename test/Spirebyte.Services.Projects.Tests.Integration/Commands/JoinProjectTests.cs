@@ -55,7 +55,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
             var invitedUser = new User(invitedUserId);
             await _usersMongoDbFixture.InsertAsync(invitedUser.AsDocument());
 
-            var project = new Project(projectId, ownerId, null, new[] { invitedUserId }, "test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, null, new[] { invitedUserId }, "test.nl/image", title, description, 0, DateTime.UtcNow);
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 
@@ -111,7 +111,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
             var user = new User(ownerId);
             await _usersMongoDbFixture.InsertAsync(user.AsDocument());
 
-            var project = new Project(projectId, ownerId, null, new[] { invitedUserId }, "test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, null, new[] { invitedUserId }, "test.nl/image", title, description, 0, DateTime.UtcNow);
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 
@@ -139,7 +139,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
             var invitedUser = new User(invitedUserId);
             await _usersMongoDbFixture.InsertAsync(invitedUser.AsDocument());
 
-            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 

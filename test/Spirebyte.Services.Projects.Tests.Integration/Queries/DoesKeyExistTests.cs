@@ -45,7 +45,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
             var title = "Title";
             var description = "description";
 
-            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
             await _mongoDbFixture.InsertAsync(project.AsDocument());
 
 

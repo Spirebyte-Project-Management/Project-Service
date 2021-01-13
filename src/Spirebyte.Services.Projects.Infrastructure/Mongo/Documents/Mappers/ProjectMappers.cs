@@ -8,7 +8,7 @@ namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers
     internal static class ProjectMappers
     {
         public static Project AsEntity(this ProjectDocument document)
-            => new Project(document.Id, document.OwnerUserId, document.ProjectUserIds, document.InvitedUserIds, document.Pic, document.Title, document.Description, document.CreatedAt);
+            => new Project(document.Id, document.OwnerUserId, document.ProjectUserIds, document.InvitedUserIds, document.Pic, document.Title, document.Description, document.IssueCount, document.CreatedAt);
 
         public static ProjectDocument AsDocument(this Project entity)
             => new ProjectDocument
@@ -20,6 +20,7 @@ namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers
                 Pic = entity.Pic,
                 Title = entity.Title,
                 Description = entity.Description,
+                IssueCount = entity.IssueCount,
                 CreatedAt = entity.CreatedAt
             };
 
@@ -33,6 +34,7 @@ namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers
                 Pic = document.Pic,
                 Title = document.Title,
                 Description = document.Description,
+                IssueCount = document.IssueCount,
                 CreatedAt = document.CreatedAt
             };
     }

@@ -15,9 +15,10 @@ namespace Spirebyte.Services.Projects.Core.Entities
         public string Pic { get; private set; }
         public string Title { get; private set; }
         public string Description { get; private set; }
+        public int IssueCount { get; private set; }
         public DateTime CreatedAt { get; private set; }
 
-        public Project(string id, Guid ownerUserId, IEnumerable<Guid> projectUserIds, IEnumerable<Guid> invitedUserIds, string pic, string title, string description, DateTime createdAt)
+        public Project(string id, Guid ownerUserId, IEnumerable<Guid> projectUserIds, IEnumerable<Guid> invitedUserIds, string pic, string title, string description, int issueCount, DateTime createdAt)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
@@ -41,6 +42,7 @@ namespace Spirebyte.Services.Projects.Core.Entities
             Pic = pic;
             Title = title;
             Description = description;
+            IssueCount = issueCount;
             CreatedAt = createdAt == DateTime.MinValue ? DateTime.Now : createdAt;
         }
 
@@ -56,6 +58,16 @@ namespace Spirebyte.Services.Projects.Core.Entities
         {
             InvitedUserIds = InvitedUserIds.Where(u => u != userId);
             ProjectUserIds = InvitedUserIds.Where(u => u != userId);
+        }
+
+        public void AddIssue()
+        {
+            IssueCount++;
+        }
+
+        public void RemoveIssue()
+        {
+            IssueCount--;
         }
     }
 }

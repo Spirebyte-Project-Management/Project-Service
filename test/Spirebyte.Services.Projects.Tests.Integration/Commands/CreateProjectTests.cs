@@ -83,7 +83,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
             await _usersMongoDbFixture.InsertAsync(user.AsDocument());
 
             // Add project
-            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 

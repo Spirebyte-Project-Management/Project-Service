@@ -35,7 +35,7 @@ namespace Spirebyte.Services.Projects.Application.Commands.Handlers
                 throw new UserNotFoundException(command.OwnerId);
             }
 
-            var project = new Project(command.Id, command.OwnerId, command.ProjectUserIds, command.InvitedUserIds, command.Pic, command.Title, command.Description, command.CreatedAt);
+            var project = new Project(command.Id, command.OwnerId, command.ProjectUserIds, command.InvitedUserIds, command.Pic, command.Title, command.Description, 0, command.CreatedAt);
             await _projectRepository.AddAsync(project);
             await _messageBroker.PublishAsync(new ProjectCreated(project.Id));
         }

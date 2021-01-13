@@ -16,7 +16,7 @@ namespace Spirebyte.Services.Projects.Tests.Unit.Core.Entities
             var ownerId = new AggregateId();
             var title = "Title";
             var description = "description";
-            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, DateTime.UtcNow);
+            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
 
             project.Should().NotBeNull();
             project.Id.Should().Be(projectId);
@@ -34,7 +34,7 @@ namespace Spirebyte.Services.Projects.Tests.Unit.Core.Entities
             var title = "Title";
             var description = "description";
 
-            Action act = () => new Project(projectId, ownerId, null, null, "test.nl/image", title, description, DateTime.UtcNow);
+            Action act = () => new Project(projectId, ownerId, null, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
             act.Should().Throw<InvalidIdException>();
         }
 
@@ -46,7 +46,7 @@ namespace Spirebyte.Services.Projects.Tests.Unit.Core.Entities
             var title = "Title";
             var description = "description";
 
-            Action act = () => new Project(projectId, ownerId, null, null, "test.nl/image", title, description, DateTime.UtcNow);
+            Action act = () => new Project(projectId, ownerId, null, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
             act.Should().Throw<InvalidOwnerIdException>();
         }
 
@@ -58,7 +58,7 @@ namespace Spirebyte.Services.Projects.Tests.Unit.Core.Entities
             var title = string.Empty;
             var description = "description";
 
-            Action act = () => new Project(projectId, ownerId, null, null, "test.nl/image", title, description, DateTime.UtcNow);
+            Action act = () => new Project(projectId, ownerId, null, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
             act.Should().Throw<InvalidTitleException>();
         }
     }

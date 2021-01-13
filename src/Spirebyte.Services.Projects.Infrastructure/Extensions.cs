@@ -91,6 +91,8 @@ namespace Spirebyte.Services.Projects.Infrastructure
                 .UseRabbitMq()
                 .SubscribeCommand<CreateProject>()
                 .SubscribeCommand<UpdateProject>()
+                .SubscribeEvent<IssueCreated>()
+                .SubscribeEvent<IssueDeleted>()
                 .SubscribeEvent<SignedUp>();
 
             return app;
