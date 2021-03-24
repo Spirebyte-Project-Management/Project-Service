@@ -42,11 +42,12 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         public async Task get_project_query_succeeds_when_project_with_id_exists()
         {
             var projectId = "key";
+            var permissionSchemeId = 1;
             var ownerId = new AggregateId();
             var title = "Title";
             var description = "description";
 
-            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
+            var project = new Project(projectId, permissionSchemeId, ownerId, null, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
             await _mongoDbFixture.InsertAsync(project.AsDocument());
 
 

@@ -9,6 +9,7 @@ namespace Spirebyte.Services.Projects.Core.Entities
     {
         public string Id { get; private set; }
 
+        public int PermissionSchemeId { get; private set; }
         public Guid OwnerUserId { get; private set; }
         public IEnumerable<Guid> ProjectUserIds { get; private set; }
         public IEnumerable<Guid> InvitedUserIds { get; private set; }
@@ -18,11 +19,18 @@ namespace Spirebyte.Services.Projects.Core.Entities
         public int IssueCount { get; private set; }
         public DateTime CreatedAt { get; private set; }
 
-        public Project(string id, Guid ownerUserId, IEnumerable<Guid> projectUserIds, IEnumerable<Guid> invitedUserIds, string pic, string title, string description, int issueCount, DateTime createdAt)
+        private const int DefaultPermissionSchemeId = 1;
+
+        public Project(string id, int permissionSchemeId, Guid ownerUserId, IEnumerable<Guid> projectUserIds, IEnumerable<Guid> invitedUserIds, string pic, string title, string description, int issueCount, DateTime createdAt)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
                 throw new InvalidIdException(id);
+            }
+
+            if (permissionSchemeId == 0)
+            {
+                throw new InvalidPermissionSchemeIdException(permissionSchemeId);
             }
 
             if (ownerUserId == Guid.Empty)
@@ -36,6 +44,7 @@ namespace Spirebyte.Services.Projects.Core.Entities
             }
 
             Id = id;
+            PermissionSchemeId = permissionSchemeId;
             OwnerUserId = ownerUserId;
             ProjectUserIds = projectUserIds ?? Enumerable.Empty<Guid>();
             InvitedUserIds = invitedUserIds ?? Enumerable.Empty<Guid>();

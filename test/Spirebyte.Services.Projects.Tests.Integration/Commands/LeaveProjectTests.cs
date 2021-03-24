@@ -44,6 +44,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
         public async Task leave_project_command_should_remove_invited_user_from_project()
         {
             var projectId = "key";
+            var permissionSchemeId = 1;
             var ownerId = Guid.NewGuid();
             var invitedUserId = Guid.NewGuid();
             var title = "Title";
@@ -55,7 +56,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
             var invitedUser = new User(invitedUserId);
             await _usersMongoDbFixture.InsertAsync(invitedUser.AsDocument());
 
-            var project = new Project(projectId, ownerId, null, new[] { invitedUserId }, "test.nl/image", title, description, 0, DateTime.UtcNow);
+            var project = new Project(projectId, permissionSchemeId, ownerId, null, new[] { invitedUserId }, "test.nl/image", title, description, 0, DateTime.UtcNow);
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 
@@ -103,6 +104,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
         public async Task leave_project_command_fails_when_invited_user_does_not_exist()
         {
             var projectId = "key";
+            var permissionSchemeId = 1;
             var ownerId = Guid.NewGuid();
             var invitedUserId = Guid.NewGuid();
             var title = "Title";
@@ -111,7 +113,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
             var user = new User(ownerId);
             await _usersMongoDbFixture.InsertAsync(user.AsDocument());
 
-            var project = new Project(projectId, ownerId, null, new[] { invitedUserId }, "test.nl/image", title, description, 0, DateTime.UtcNow);
+            var project = new Project(projectId, permissionSchemeId, ownerId, null, new[] { invitedUserId }, "test.nl/image", title, description, 0, DateTime.UtcNow);
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 
@@ -128,6 +130,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
         public async Task leave_project_command_fails_when_user_is_not_invited()
         {
             var projectId = "key";
+            var permissionSchemeId = 1;
             var ownerId = Guid.NewGuid();
             var invitedUserId = Guid.NewGuid();
             var title = "Title";
@@ -139,7 +142,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
             var invitedUser = new User(invitedUserId);
             await _usersMongoDbFixture.InsertAsync(invitedUser.AsDocument());
 
-            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
+            var project = new Project(projectId, permissionSchemeId, ownerId, null, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 

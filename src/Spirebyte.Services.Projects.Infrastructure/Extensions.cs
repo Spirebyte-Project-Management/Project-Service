@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Spirebyte.Services.Projects.Infrastructure.Mongo;
 
 namespace Spirebyte.Services.Projects.Infrastructure
 {
@@ -55,6 +56,11 @@ namespace Spirebyte.Services.Projects.Infrastructure
             builder.Services.AddTransient<IMessageBroker, MessageBroker>();
             builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
+            builder.Services.AddTransient<IPermissionSchemeRepository, PermissionSchemeRepository>();
+            builder.Services.AddTransient<IProjectGroupRepository, ProjectGroupRepository>();
+
+            builder.Services.AddTransient<IMongoDbSeeder, MongoDbSeeder>();
+
             builder.Services.AddTransient<IAppContextFactory, AppContextFactory>();
             builder.Services.AddTransient<IIdentityApiHttpClient, IdentityApiHttpClient>();
             builder.Services.AddTransient(ctx => ctx.GetRequiredService<IAppContextFactory>().Create());
@@ -72,11 +78,13 @@ namespace Spirebyte.Services.Projects.Infrastructure
                 .AddExceptionToMessageMapper<ExceptionToMessageMapper>()
                 .AddRabbitMq(plugins: p => p.AddJaegerRabbitMqPlugin())
                 .AddMessageOutbox(o => o.AddMongo())
-                .AddMongo()
+                .AddMongo(seederType: typeof(MongoDbSeeder))
                 .AddRedis()
                 .AddJaeger()
                 .AddMongoRepository<ProjectDocument, string>("projects")
                 .AddMongoRepository<UserDocument, Guid>("users")
+                .AddMongoRepository<PermissionSchemeDocument, int>("permissionSchemes")
+                .AddMongoRepository<ProjectGroupDocument, Guid>("projectGroups")
                 .AddWebApiSwaggerDocs()
                 .AddAzureBlobStorage()
                 .AddSecurity();

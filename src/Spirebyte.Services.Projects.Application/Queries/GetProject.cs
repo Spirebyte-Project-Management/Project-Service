@@ -11,6 +11,5 @@ namespace Spirebyte.Services.Projects.Application.Queries
         {
             Id = id;
         }
-
     }
 }

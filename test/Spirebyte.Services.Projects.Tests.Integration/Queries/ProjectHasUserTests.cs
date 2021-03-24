@@ -40,12 +40,13 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         public async Task project_has_user_query_returns_true_when_project_owner_is_given_user_and_project_exists()
         {
             var projectId = "key";
+            var permissionSchemeId = 1;
             var ownerId = Guid.NewGuid();
             var userId = Guid.NewGuid();
             var title = "Title";
             var description = "description";
 
-            var project = new Project(projectId, ownerId, new[] { userId }, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
+            var project = new Project(projectId, permissionSchemeId, ownerId, new[] { userId }, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
             await _mongoDbFixture.InsertAsync(project.AsDocument());
 
 
@@ -67,12 +68,13 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         public async Task project_has_user_query_returns_true_when_project_members_contain_given_user_and_project_exists()
         {
             var projectId = "key";
+            var permissionSchemeId = 1;
             var ownerId = Guid.NewGuid();
             var userId = Guid.NewGuid();
             var title = "Title";
             var description = "description";
 
-            var project = new Project(projectId, ownerId, new[] { userId }, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
+            var project = new Project(projectId, permissionSchemeId, ownerId, new[] { userId }, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
             await _mongoDbFixture.InsertAsync(project.AsDocument());
 
 
@@ -94,13 +96,14 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         public async Task project_has_user_query_returns_false_when_project_does_not_contain_given_user_and_project_exists()
         {
             var projectId = "key";
+            var permissionSchemeId = 1;
             var ownerId = Guid.NewGuid();
             var userId = Guid.NewGuid();
             var notExistingUserId = Guid.NewGuid();
             var title = "Title";
             var description = "description";
 
-            var project = new Project(projectId, ownerId, new[] { userId }, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
+            var project = new Project(projectId, permissionSchemeId, ownerId, new[] { userId }, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
             await _mongoDbFixture.InsertAsync(project.AsDocument());
 
 

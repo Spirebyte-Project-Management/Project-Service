@@ -44,12 +44,13 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         {
             var projectId = "key" + Guid.NewGuid();
             var projectId2 = "key" + Guid.NewGuid();
+            var permissionSchemeId = 1;
             var ownerId = Guid.NewGuid();
             var title = "Title";
             var description = "description";
 
-            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
-            var project2 = new Project(projectId2, ownerId, null, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
+            var project = new Project(projectId, permissionSchemeId, ownerId, null, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
+            var project2 = new Project(projectId2, permissionSchemeId, ownerId, null, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
             await _mongoDbFixture.InsertAsync(project.AsDocument());
             await _mongoDbFixture.InsertAsync(project2.AsDocument());
 

@@ -61,7 +61,7 @@ namespace Spirebyte.Services.Projects.Application.Commands.Handlers
                 picUrl = uri.OriginalString;
             }
 
-            project = new Project(project.Id, project.OwnerUserId, command.ProjectUserIds, command.InvitedUserIds, picUrl, command.Title, command.Description, project.IssueCount, project.CreatedAt);
+            project = new Project(project.Id, project.PermissionSchemeId, project.OwnerUserId, command.ProjectUserIds, command.InvitedUserIds, picUrl, command.Title, command.Description, project.IssueCount, project.CreatedAt);
             await _projectRepository.UpdateAsync(project);
 
             _logger.LogInformation($"Updated project with id: {project.Id}.");

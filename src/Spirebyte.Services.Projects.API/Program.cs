@@ -40,6 +40,11 @@ namespace Spirebyte.Services.Projects.API
                     .UsePingEndpoint()
                     .UseDispatcherEndpoints(endpoints => endpoints
                         .Get("", ctx => ctx.Response.WriteAsync(ctx.RequestServices.GetService<AppOptions>().Name))
+                        .Get<GetProjectGroups, IEnumerable<ProjectGroupDto>>("projectGroups")
+                        .Get<GetProjectGroup, ProjectGroupDto>("projectGroups/{id}")
+                        .Post<CreateProjectGroup>("projectGroups",
+                            afterDispatch: async (cmd, ctx) => await ctx.Response.Created($"projectGroups/{cmd.ProjectGroupId}", await ctx.RequestServices.GetService<IQueryDispatcher>().QueryAsync<GetProjectGroup, ProjectGroupDto>(new GetProjectGroup(cmd.ProjectGroupId))))
+                        .Get<GetPermissionScheme, PermissionSchemeDto>("permissionScheme/{id}")
                         .Get<GetProjects, IEnumerable<ProjectDto>>("projects")
                         .Get<GetProject, ProjectDto>("projects/{id}")
                         .Get<DoesProjectExist, bool>("projects/exists/{id}")

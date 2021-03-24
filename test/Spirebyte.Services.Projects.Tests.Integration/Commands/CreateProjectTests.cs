@@ -74,6 +74,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
         public async Task create_project_command_fails_when_project_with_key_already_exists_in_database()
         {
             var projectId = "key";
+            var permissionSchemeId = 1;
             var ownerId = Guid.NewGuid();
             var title = "Title";
             var description = "description";
@@ -83,7 +84,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
             await _usersMongoDbFixture.InsertAsync(user.AsDocument());
 
             // Add project
-            var project = new Project(projectId, ownerId, null, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
+            var project = new Project(projectId, permissionSchemeId, ownerId, null, null, "test.nl/image", title, description, 0, DateTime.UtcNow);
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 
