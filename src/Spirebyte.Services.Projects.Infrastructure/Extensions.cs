@@ -26,7 +26,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using Partytitan.Convey.WindowsAzure.Blob;
 using Spirebyte.Services.Projects.Application;
 using Spirebyte.Services.Projects.Application.Clients.Interfaces;
 using Spirebyte.Services.Projects.Application.Commands;
@@ -37,6 +36,7 @@ using Spirebyte.Services.Projects.Infrastructure.Clients.HTTP;
 using Spirebyte.Services.Projects.Infrastructure.Contexts;
 using Spirebyte.Services.Projects.Infrastructure.Decorators;
 using Spirebyte.Services.Projects.Infrastructure.Exceptions;
+using Spirebyte.Services.Projects.Infrastructure.Mongo;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Repositories;
 using Spirebyte.Services.Projects.Infrastructure.Services;
@@ -45,7 +45,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Spirebyte.Services.Projects.Infrastructure.Mongo;
+using Partytitan.Convey.Minio;
 
 namespace Spirebyte.Services.Projects.Infrastructure
 {
@@ -83,10 +83,10 @@ namespace Spirebyte.Services.Projects.Infrastructure
                 .AddJaeger()
                 .AddMongoRepository<ProjectDocument, string>("projects")
                 .AddMongoRepository<UserDocument, Guid>("users")
-                .AddMongoRepository<PermissionSchemeDocument, int>("permissionSchemes")
+                .AddMongoRepository<PermissionSchemeDocument, Guid>("permissionSchemes")
                 .AddMongoRepository<ProjectGroupDocument, Guid>("projectGroups")
                 .AddWebApiSwaggerDocs()
-                .AddAzureBlobStorage()
+                .AddMinio()
                 .AddSecurity();
         }
         public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)

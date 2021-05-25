@@ -1,16 +1,17 @@
 ﻿using Convey.CQRS.Commands;
 using Microsoft.Extensions.Logging;
-using Partytitan.Convey.WindowsAzure.Blob.Services.Interfaces;
 using Spirebyte.Services.Projects.Application.Clients.Interfaces;
 using Spirebyte.Services.Projects.Application.Events;
 using Spirebyte.Services.Projects.Application.Exceptions;
 using Spirebyte.Services.Projects.Application.Services.Interfaces;
+using Spirebyte.Services.Projects.Core.Constants;
 using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Services.Projects.Core.Repositories;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Partytitan.Convey.Minio.Services.Interfaces;
 
 namespace Spirebyte.Services.Projects.Application.Commands.Handlers
 {
@@ -19,25 +20,34 @@ namespace Spirebyte.Services.Projects.Application.Commands.Handlers
         private readonly IProjectRepository _projectRepository;
         private readonly IIdentityApiHttpClient _identityApiHttpClient;
         private readonly ILogger<UpdateProjectHandler> _logger;
-        private readonly IBlobStorageService _blobStorageService;
+        private readonly IMinioService _minioService;
+        private readonly IPermissionService _permissionService;
         private readonly IMessageBroker _messageBroker;
+        private readonly IAppContext _appContext;
 
         public UpdateProjectHandler(IProjectRepository projectRepository, IIdentityApiHttpClient identityApiHttpClient, ILogger<UpdateProjectHandler> logger,
-            IBlobStorageService blobStorageService, IMessageBroker messageBroker)
+            IMinioService minioService, IPermissionService permissionService, IMessageBroker messageBroker, IAppContext appContext)
         {
             _projectRepository = projectRepository;
             _identityApiHttpClient = identityApiHttpClient;
             _logger = logger;
-            _blobStorageService = blobStorageService;
+            _minioService = minioService;
+            _permissionService = permissionService;
             _messageBroker = messageBroker;
+            _appContext = appContext;
         }
         public async Task HandleAsync(UpdateProject command)
         {
-
             var project = await _projectRepository.GetAsync(command.Id);
             if (project is null)
             {
                 throw new ProjectNotFoundException(command.Id);
+            }
+
+            // Check permissions
+            if (!await _permissionService.HasPermission(command.Id, _appContext.Identity.Id, ProjectPermissionKeys.AdministerProject))
+            {
+                throw new ActionNotAllowedException();
             }
 
             var newInvitations = command.InvitedUserIds.Except(project.InvitedUserIds);
@@ -51,14 +61,20 @@ namespace Spirebyte.Services.Projects.Application.Commands.Handlers
 
             if (!string.IsNullOrWhiteSpace(command.File))
             {
-                var mimeType = Extensions.GetMimeTypeFromBase64(command.File);
-                var data = Extensions.GetDataFromBase64(command.File);
-                var fileName = project.Id + "_" + DateTime.Now.ConvertToUnixTimestamp();
+                if (command.File == "delete")
+                {
+                    picUrl = string.Empty;
+                }
+                else
+                {
+                    var mimeType = Extensions.GetMimeTypeFromBase64(command.File);
+                    var data = Extensions.GetDataFromBase64(command.File);
+                    var fileName = _appContext.Identity.Id + "_" + DateTime.Now.ConvertToUnixTimestamp();
 
-                var bytes = Convert.FromBase64String(data);
-                Stream contents = new MemoryStream(bytes);
-                var uri = await _blobStorageService.UploadFileBlobAsync(contents, mimeType, fileName);
-                picUrl = uri.OriginalString;
+                    var bytes = Convert.FromBase64String(data);
+                    Stream contents = new MemoryStream(bytes);
+                    picUrl = await _minioService.UploadFileAsync(contents, mimeType, fileName);
+                }
             }
 
             project = new Project(project.Id, project.PermissionSchemeId, project.OwnerUserId, command.ProjectUserIds, command.InvitedUserIds, picUrl, command.Title, command.Description, project.IssueCount, project.CreatedAt);

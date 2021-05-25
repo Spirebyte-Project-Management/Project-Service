@@ -27,5 +27,6 @@ namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Repositories
         public Task AddAsync(Project project) => _repository.AddAsync(project.AsDocument());
 
         public Task UpdateAsync(Project project) => _repository.UpdateAsync(project.AsDocument());
+        public Task DeleteAsync(string projectId) => _repository.DeleteAsync(projectId);
     }
 }

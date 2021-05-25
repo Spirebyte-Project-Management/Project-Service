@@ -1,6 +1,9 @@
 ﻿using Convey;
 using Convey.CQRS.Commands;
 using Convey.CQRS.Events;
+using Microsoft.Extensions.DependencyInjection;
+using Spirebyte.Services.Projects.Application.Services;
+using Spirebyte.Services.Projects.Application.Services.Interfaces;
 using System;
 
 namespace Spirebyte.Services.Projects.Application
@@ -8,11 +11,15 @@ namespace Spirebyte.Services.Projects.Application
     public static class Extensions
     {
         public static IConveyBuilder AddApplication(this IConveyBuilder builder)
-            => builder
+        {
+            builder.Services.AddSingleton<IPermissionService, PermissionService>();
+
+            return builder
                 .AddCommandHandlers()
                 .AddEventHandlers()
                 .AddInMemoryCommandDispatcher()
                 .AddInMemoryEventDispatcher();
+        }
 
         public static string GetMimeTypeFromBase64(string base64Url)
         {

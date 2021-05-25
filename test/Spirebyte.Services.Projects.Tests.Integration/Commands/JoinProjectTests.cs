@@ -44,7 +44,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
         public async Task join_project_command_should_add_invited_user_to_project()
         {
             var projectId = "key";
-            var permissionSchemeId = 1;
+            var permissionSchemeId = Guid.NewGuid();
             var ownerId = Guid.NewGuid();
             var invitedUserId = Guid.NewGuid();
             var title = "Title";
@@ -104,7 +104,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
         public async Task join_project_command_fails_when_invited_user_does_not_exist()
         {
             var projectId = "key";
-            var permissionSchemeId = 1;
+            var permissionSchemeId = Guid.NewGuid();
             var ownerId = Guid.NewGuid();
             var invitedUserId = Guid.NewGuid();
             var title = "Title";
@@ -130,7 +130,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
         public async Task join_project_command_fails_when_user_is_not_invited()
         {
             var projectId = "key";
-            var permissionSchemeId = 1;
+            var permissionSchemeId = Guid.NewGuid();
             var ownerId = Guid.NewGuid();
             var invitedUserId = Guid.NewGuid();
             var title = "Title";

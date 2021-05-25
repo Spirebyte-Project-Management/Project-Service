@@ -41,7 +41,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         public async Task does_project_exist_query_returns_true_when_project_with_id_exist()
         {
             var projectId = "key";
-            var permissionSchemeId = 1;
+            var permissionSchemeId = Guid.NewGuid();
             var ownerId = new AggregateId();
             var title = "Title";
             var description = "description";

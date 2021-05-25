@@ -1,6 +1,4 @@
-﻿
-
-using Convey.CQRS.Queries;
+﻿using Convey.CQRS.Queries;
 using Convey.Persistence.MongoDB;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;

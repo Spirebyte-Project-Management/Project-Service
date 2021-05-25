@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Convey.CQRS.Events;
+﻿using Convey.CQRS.Events;
 
 namespace Spirebyte.Services.Projects.Application.Events
 {

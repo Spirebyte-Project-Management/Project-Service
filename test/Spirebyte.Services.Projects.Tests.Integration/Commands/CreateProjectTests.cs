@@ -74,7 +74,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
         public async Task create_project_command_fails_when_project_with_key_already_exists_in_database()
         {
             var projectId = "key";
-            var permissionSchemeId = 1;
+            var permissionSchemeId = Guid.NewGuid();
             var ownerId = Guid.NewGuid();
             var title = "Title";
             var description = "description";

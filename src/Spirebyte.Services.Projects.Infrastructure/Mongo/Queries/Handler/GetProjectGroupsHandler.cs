@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Convey.CQRS.Queries;
+﻿using Convey.CQRS.Queries;
 using Convey.Persistence.MongoDB;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Spirebyte.Services.Projects.Application;
 using Spirebyte.Services.Projects.Application.DTO;
 using Spirebyte.Services.Projects.Application.Queries;
-using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Queries.Handler
 {

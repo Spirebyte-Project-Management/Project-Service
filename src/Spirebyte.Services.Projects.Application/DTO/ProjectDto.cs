@@ -1,5 +1,4 @@
-﻿using Spirebyte.Services.Projects.Core.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Spirebyte.Services.Projects.Application.DTO
@@ -7,7 +6,7 @@ namespace Spirebyte.Services.Projects.Application.DTO
     public class ProjectDto
     {
         public string Id { get; set; }
-        public int PermissionSchemeId { get; set; }
+        public Guid PermissionSchemeId { get; set; }
         public Guid OwnerUserId { get; set; }
         public IEnumerable<Guid> ProjectUserIds { get; set; }
         public IEnumerable<Guid> InvitedUserIds { get; set; }

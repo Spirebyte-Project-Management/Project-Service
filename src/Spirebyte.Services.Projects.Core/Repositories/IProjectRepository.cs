@@ -9,5 +9,6 @@ namespace Spirebyte.Services.Projects.Core.Repositories
         Task<bool> ExistsAsync(string projectId);
         Task AddAsync(Project project);
         Task UpdateAsync(Project project);
+        Task DeleteAsync(string projectId);
     }
 }

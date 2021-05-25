@@ -1,19 +1,19 @@
-﻿using System;
+﻿using Spirebyte.Services.Projects.Core.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Spirebyte.Services.Projects.Core.Exceptions;
 
 namespace Spirebyte.Services.Projects.Core.Entities
 {
     public class PermissionScheme
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
+        public string ProjectId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public IEnumerable<Permission> Permissions { get; set; }
 
-        public PermissionScheme(int id, string name, string description, IEnumerable<Permission> permissions)
+        public PermissionScheme(Guid id, string projectId, string name, string description, IEnumerable<Permission> permissions)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -27,6 +27,7 @@ namespace Spirebyte.Services.Projects.Core.Entities
             }
 
             Id = id;
+            ProjectId = projectId;
             Name = name;
             Description = description;
             Permissions = permissionsArray;

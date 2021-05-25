@@ -42,7 +42,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         public async Task get_project_query_succeeds_when_project_with_id_exists()
         {
             var projectId = "key";
-            var permissionSchemeId = 1;
+            var permissionSchemeId = Guid.NewGuid();
             var ownerId = new AggregateId();
             var title = "Title";
             var description = "description";

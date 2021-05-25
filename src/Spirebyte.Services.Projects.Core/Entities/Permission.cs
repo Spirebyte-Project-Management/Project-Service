@@ -1,7 +1,5 @@
-﻿using System;
+﻿using Spirebyte.Services.Projects.Core.Exceptions;
 using System.Collections.Generic;
-using System.Text;
-using Spirebyte.Services.Projects.Core.Exceptions;
 
 namespace Spirebyte.Services.Projects.Core.Entities
 {
@@ -10,9 +8,10 @@ namespace Spirebyte.Services.Projects.Core.Entities
         public string Key { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string PermissionGroup { get; set; }
         public IEnumerable<Grant> Grants { get; set; }
 
-        public Permission(string key, string name, string description, IEnumerable<Grant> grants)
+        public Permission(string key, string name, string description, string permissionGroup, IEnumerable<Grant> grants)
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -27,6 +26,7 @@ namespace Spirebyte.Services.Projects.Core.Entities
             Key = key;
             Name = name;
             Description = description;
+            PermissionGroup = permissionGroup;
             Grants = grants;
         }
     }

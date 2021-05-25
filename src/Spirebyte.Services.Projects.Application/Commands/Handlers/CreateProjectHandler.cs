@@ -2,6 +2,7 @@
 using Spirebyte.Services.Projects.Application.Events;
 using Spirebyte.Services.Projects.Application.Exceptions;
 using Spirebyte.Services.Projects.Application.Services.Interfaces;
+using Spirebyte.Services.Projects.Core.Constants;
 using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Services.Projects.Core.Repositories;
 using System.Threading.Tasks;
@@ -14,8 +15,6 @@ namespace Spirebyte.Services.Projects.Application.Commands.Handlers
         private readonly IUserRepository _userRepository;
         private readonly IProjectRepository _projectRepository;
         private readonly IMessageBroker _messageBroker;
-
-        private const int DefaultPermissionSchemeId = 1;
 
         public CreateProjectHandler(IUserRepository userRepository, IProjectRepository projectRepository,
             IMessageBroker messageBroker)
@@ -37,7 +36,7 @@ namespace Spirebyte.Services.Projects.Application.Commands.Handlers
                 throw new UserNotFoundException(command.OwnerId);
             }
 
-            var project = new Project(command.Id, DefaultPermissionSchemeId, command.OwnerId, command.ProjectUserIds, command.InvitedUserIds, command.Pic, command.Title, command.Description, 0, command.CreatedAt);
+            var project = new Project(command.Id, ProjectConstants.DefaultPermissionSchemeId, command.OwnerId, command.ProjectUserIds, command.InvitedUserIds, command.Pic, command.Title, command.Description, 0, command.CreatedAt);
             await _projectRepository.AddAsync(project);
             await _messageBroker.PublishAsync(new ProjectCreated(project.Id));
         }

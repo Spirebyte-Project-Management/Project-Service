@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Convey.CQRS.Events;
+﻿using Convey.CQRS.Events;
 using Spirebyte.Services.Projects.Application.Exceptions;
 using Spirebyte.Services.Projects.Core.Repositories;
+using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Projects.Application.Events.External.Handlers
 {

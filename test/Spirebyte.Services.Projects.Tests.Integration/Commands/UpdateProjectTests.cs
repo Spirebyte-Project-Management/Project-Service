@@ -44,7 +44,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Commands
         public async Task update_project_command_should_modify_project_with_given_data()
         {
             var projectId = "key";
-            var permissionSchemeId = 1;
+            var permissionSchemeId = Guid.NewGuid();
             var ownerId = Guid.NewGuid();
             var title = "Title";
             var updatedTitle = "UpdatedTitle";

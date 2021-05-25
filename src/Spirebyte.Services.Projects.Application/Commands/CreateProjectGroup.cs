@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Convey.CQRS.Commands;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using Convey.CQRS.Commands;
 
 namespace Spirebyte.Services.Projects.Application.Commands
 {

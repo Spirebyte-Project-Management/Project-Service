@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Convey.Persistence.MongoDB;
+﻿using Convey.Persistence.MongoDB;
 using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Services.Projects.Core.Repositories;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
+using System;
+using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Repositories
 {
@@ -31,5 +29,6 @@ namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Repositories
         public Task AddAsync(ProjectGroup projectGroup) => _repository.AddAsync(projectGroup.AsDocument());
 
         public Task UpdateAsync(ProjectGroup projectGroup) => _repository.UpdateAsync(projectGroup.AsDocument());
+        public Task DeleteAsync(Guid projectGroupId) => _repository.DeleteAsync(projectGroupId);
     }
 }

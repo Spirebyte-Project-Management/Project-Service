@@ -44,7 +44,7 @@ namespace Spirebyte.Services.Projects.Tests.Integration.Queries
         {
             var projectId = "key" + Guid.NewGuid();
             var projectId2 = "key" + Guid.NewGuid();
-            var permissionSchemeId = 1;
+            var permissionSchemeId = Guid.NewGuid();
             var ownerId = Guid.NewGuid();
             var title = "Title";
             var description = "description";
