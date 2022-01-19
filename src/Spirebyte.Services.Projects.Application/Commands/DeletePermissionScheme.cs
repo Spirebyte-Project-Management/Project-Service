@@ -1,16 +1,15 @@
-﻿using Convey.CQRS.Commands;
-using System;
+﻿using System;
+using Convey.CQRS.Commands;
 
-namespace Spirebyte.Services.Projects.Application.Commands
+namespace Spirebyte.Services.Projects.Application.Commands;
+
+[Contract]
+public class DeletePermissionScheme : ICommand
 {
-    [Contract]
-    public class DeletePermissionScheme : ICommand
+    public DeletePermissionScheme(Guid id)
     {
-        public Guid Id { get; set; }
-
-        public DeletePermissionScheme(Guid id)
-        {
-            Id = id;
-        }
+        Id = id;
     }
+
+    public Guid Id { get; set; }
 }

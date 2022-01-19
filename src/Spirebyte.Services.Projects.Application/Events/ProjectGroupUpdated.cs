@@ -1,16 +1,15 @@
-﻿using Convey.CQRS.Events;
-using System;
+﻿using System;
+using Convey.CQRS.Events;
 
-namespace Spirebyte.Services.Projects.Application.Events
+namespace Spirebyte.Services.Projects.Application.Events;
+
+[Contract]
+public class ProjectGroupUpdated : IEvent
 {
-    [Contract]
-    public class ProjectGroupUpdated : IEvent
+    public ProjectGroupUpdated(Guid projectGroupId)
     {
-        public ProjectGroupUpdated(Guid projectGroupId)
-        {
-            ProjectGroupId = projectGroupId;
-        }
-
-        public Guid ProjectGroupId { get; set; }
+        ProjectGroupId = projectGroupId;
     }
+
+    public Guid ProjectGroupId { get; set; }
 }

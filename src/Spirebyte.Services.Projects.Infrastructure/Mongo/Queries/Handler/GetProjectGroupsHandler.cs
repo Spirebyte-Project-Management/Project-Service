@@ -1,51 +1,47 @@
-﻿using Convey.CQRS.Queries;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Convey.CQRS.Queries;
 using Convey.Persistence.MongoDB;
 using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 using Spirebyte.Services.Projects.Application;
 using Spirebyte.Services.Projects.Application.DTO;
 using Spirebyte.Services.Projects.Application.Queries;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Queries.Handler
+namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Queries.Handler;
+
+internal sealed class GetProjectGroupsHandler : IQueryHandler<GetProjectGroups, IEnumerable<ProjectGroupDto>>
 {
-    internal sealed class GetProjectGroupsHandler : IQueryHandler<GetProjectGroups, IEnumerable<ProjectGroupDto>>
+    private readonly IAppContext _appContext;
+    private readonly IMongoRepository<ProjectGroupDocument, Guid> _projectGroupRepository;
+    private readonly IMongoRepository<ProjectDocument, string> _projectRepository;
+
+    public GetProjectGroupsHandler(IMongoRepository<ProjectGroupDocument, Guid> projectGroupRepository,
+        IMongoRepository<ProjectDocument, string> projectRepository, IAppContext appContext)
     {
-        private readonly IMongoRepository<ProjectGroupDocument, Guid> _projectGroupRepository;
-        private readonly IMongoRepository<ProjectDocument, string> _projectRepository;
-        private readonly IAppContext _appContext;
+        _projectGroupRepository = projectGroupRepository;
+        _projectRepository = projectRepository;
+        _appContext = appContext;
+    }
 
-        public GetProjectGroupsHandler(IMongoRepository<ProjectGroupDocument, Guid> projectGroupRepository, IMongoRepository<ProjectDocument, string> projectRepository, IAppContext appContext)
-        {
-            _projectGroupRepository = projectGroupRepository;
-            _projectRepository = projectRepository;
-            _appContext = appContext;
-        }
+    public async Task<IEnumerable<ProjectGroupDto>> HandleAsync(GetProjectGroups query)
+    {
+        var documents = _projectGroupRepository.Collection.AsQueryable();
 
-        public async Task<IEnumerable<ProjectGroupDto>> HandleAsync(GetProjectGroups query)
-        {
-            var documents = _projectGroupRepository.Collection.AsQueryable();
+        if (query.ProjectId == null)
+            return Enumerable.Empty<ProjectGroupDto>();
 
-            if (query.ProjectId == null)
-                return Enumerable.Empty<ProjectGroupDto>();
+        var project = await _projectRepository.GetAsync(query.ProjectId);
+        if (project == null) return Enumerable.Empty<ProjectGroupDto>();
 
-            var project = await _projectRepository.GetAsync(query.ProjectId);
-            if (project == null)
-            {
-                return Enumerable.Empty<ProjectGroupDto>();
-            }
+        var filter = new Func<ProjectGroupDocument, bool>(p =>
+            p.ProjectId == project.Id);
 
-            var filter = new Func<ProjectGroupDocument, bool>(p =>
-                p.ProjectId == project.Id);
+        var projectGroups = documents.Where(filter).ToList();
 
-            var projectGroups = documents.Where(filter).ToList();
-
-            return projectGroups.Select(p => p.AsDto());
-        }
+        return projectGroups.Select(p => p.AsDto());
     }
 }

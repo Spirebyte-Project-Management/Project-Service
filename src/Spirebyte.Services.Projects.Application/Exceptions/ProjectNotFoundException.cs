@@ -1,15 +1,14 @@
 ﻿using Spirebyte.Services.Projects.Application.Exceptions.Base;
 
-namespace Spirebyte.Services.Projects.Application.Exceptions
-{
-    public class ProjectNotFoundException : AppException
-    {
-        public override string Code { get; } = "project_not_found";
-        public string ProjectId { get; }
+namespace Spirebyte.Services.Projects.Application.Exceptions;
 
-        public ProjectNotFoundException(string projectId) : base($"Project with Id: '{projectId}' was not found.")
-        {
-            ProjectId = projectId;
-        }
+public class ProjectNotFoundException : AppException
+{
+    public ProjectNotFoundException(string projectId) : base($"Project with Id: '{projectId}' was not found.")
+    {
+        ProjectId = projectId;
     }
+
+    public override string Code { get; } = "project_not_found";
+    public string ProjectId { get; }
 }

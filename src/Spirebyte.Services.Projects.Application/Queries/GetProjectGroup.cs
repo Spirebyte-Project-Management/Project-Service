@@ -1,16 +1,15 @@
-﻿using Convey.CQRS.Queries;
+﻿using System;
+using Convey.CQRS.Queries;
 using Spirebyte.Services.Projects.Application.DTO;
-using System;
 
-namespace Spirebyte.Services.Projects.Application.Queries
+namespace Spirebyte.Services.Projects.Application.Queries;
+
+public class GetProjectGroup : IQuery<ProjectGroupDto>
 {
-    public class GetProjectGroup : IQuery<ProjectGroupDto>
+    public GetProjectGroup(Guid id)
     {
-        public Guid Id { get; set; }
-
-        public GetProjectGroup(Guid id)
-        {
-            Id = id;
-        }
+        Id = id;
     }
+
+    public Guid Id { get; set; }
 }

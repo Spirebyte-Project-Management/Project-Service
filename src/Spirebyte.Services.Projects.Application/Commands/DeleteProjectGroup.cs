@@ -1,16 +1,15 @@
-﻿using Convey.CQRS.Commands;
-using System;
+﻿using System;
+using Convey.CQRS.Commands;
 
-namespace Spirebyte.Services.Projects.Application.Commands
+namespace Spirebyte.Services.Projects.Application.Commands;
+
+[Contract]
+public class DeleteProjectGroup : ICommand
 {
-    [Contract]
-    public class DeleteProjectGroup : ICommand
+    public DeleteProjectGroup(Guid id)
     {
-        public Guid Id { get; set; }
-
-        public DeleteProjectGroup(Guid id)
-        {
-            Id = id;
-        }
+        Id = id;
     }
+
+    public Guid Id { get; set; }
 }

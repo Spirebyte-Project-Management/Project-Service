@@ -1,10 +1,9 @@
-﻿namespace Spirebyte.Services.Projects.Core.Enums
+﻿namespace Spirebyte.Services.Projects.Core.Enums;
+
+public enum GrantTypes
 {
-    public enum GrantTypes
-    {
-        Anyone,
-        ProjectGroup,
-        ProjectLead,
-        ProjectUser
-    }
+    Anyone,
+    ProjectGroup,
+    ProjectLead,
+    ProjectUser
 }

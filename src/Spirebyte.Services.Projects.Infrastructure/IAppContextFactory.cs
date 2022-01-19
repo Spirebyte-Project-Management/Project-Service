@@ -1,9 +1,8 @@
 using Spirebyte.Services.Projects.Application;
 
-namespace Spirebyte.Services.Projects.Infrastructure
+namespace Spirebyte.Services.Projects.Infrastructure;
+
+public interface IAppContextFactory
 {
-    public interface IAppContextFactory
-    {
-        IAppContext Create();
-    }
+    IAppContext Create();
 }

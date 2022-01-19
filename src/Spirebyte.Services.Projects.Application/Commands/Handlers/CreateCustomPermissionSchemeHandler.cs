@@ -1,58 +1,55 @@
-﻿using Convey.CQRS.Commands;
+﻿using System.Threading.Tasks;
+using Convey.CQRS.Commands;
 using Spirebyte.Services.Projects.Application.Events;
 using Spirebyte.Services.Projects.Application.Exceptions;
 using Spirebyte.Services.Projects.Application.Services.Interfaces;
 using Spirebyte.Services.Projects.Core.Constants;
 using Spirebyte.Services.Projects.Core.Repositories;
-using System.Threading.Tasks;
 
-namespace Spirebyte.Services.Projects.Application.Commands.Handlers
+namespace Spirebyte.Services.Projects.Application.Commands.Handlers;
+
+internal sealed class CreateCustomPermissionSchemeHandler : ICommandHandler<CreateCustomPermissionScheme>
 {
-    internal sealed class CreateCustomPermissionSchemeHandler : ICommandHandler<CreateCustomPermissionScheme>
+    private readonly IAppContext _appContext;
+    private readonly IMessageBroker _messageBroker;
+    private readonly IPermissionSchemeRepository _permissionSchemeRepository;
+    private readonly IPermissionService _permissionService;
+    private readonly IProjectRepository _projectRepository;
+
+
+    public CreateCustomPermissionSchemeHandler(IPermissionSchemeRepository permissionSchemeRepository,
+        IProjectRepository projectRepository, IMessageBroker messageBroker, IPermissionService permissionService,
+        IAppContext appContext)
     {
-        private readonly IPermissionSchemeRepository _permissionSchemeRepository;
-        private readonly IProjectRepository _projectRepository;
-        private readonly IMessageBroker _messageBroker;
-        private readonly IPermissionService _permissionService;
-        private readonly IAppContext _appContext;
+        _permissionSchemeRepository = permissionSchemeRepository;
+        _projectRepository = projectRepository;
+        _messageBroker = messageBroker;
+        _permissionService = permissionService;
+        _appContext = appContext;
+    }
 
+    public async Task HandleAsync(CreateCustomPermissionScheme command)
+    {
+        if (!await _projectRepository.ExistsAsync(command.ProjectId))
+            throw new ProjectNotFoundException(command.ProjectId);
 
-        public CreateCustomPermissionSchemeHandler(IPermissionSchemeRepository permissionSchemeRepository,
-            IProjectRepository projectRepository, IMessageBroker messageBroker, IPermissionService permissionService, IAppContext appContext)
-        {
-            _permissionSchemeRepository = permissionSchemeRepository;
-            _projectRepository = projectRepository;
-            _messageBroker = messageBroker;
-            _permissionService = permissionService;
-            _appContext = appContext;
-        }
+        if (!await _permissionService.HasPermission(command.ProjectId, _appContext.Identity.Id,
+                ProjectPermissionKeys.AdministerProject)) throw new ActionNotAllowedException();
 
-        public async Task HandleAsync(CreateCustomPermissionScheme command)
-        {
-            if (!await _projectRepository.ExistsAsync(command.ProjectId))
-            {
-                throw new ProjectNotFoundException(command.ProjectId);
-            }
+        var project = await _projectRepository.GetAsync(command.ProjectId);
 
-            if (!await _permissionService.HasPermission(command.ProjectId, _appContext.Identity.Id, ProjectPermissionKeys.AdministerProject))
-            {
-                throw new ActionNotAllowedException();
-            }
+        var defaultPermissionSchemeCopy =
+            await _permissionSchemeRepository.GetAsync(ProjectConstants.DefaultPermissionSchemeId);
+        defaultPermissionSchemeCopy.Id = command.Id;
+        defaultPermissionSchemeCopy.ProjectId = command.ProjectId;
+        defaultPermissionSchemeCopy.Description = $"Copy of {defaultPermissionSchemeCopy.Name}";
+        defaultPermissionSchemeCopy.Name = $"{project.Title} Permission scheme";
 
-            var project = await _projectRepository.GetAsync(command.ProjectId);
+        await _permissionSchemeRepository.AddAsync(defaultPermissionSchemeCopy);
 
-            var defaultPermissionSchemeCopy = await _permissionSchemeRepository.GetAsync(ProjectConstants.DefaultPermissionSchemeId);
-            defaultPermissionSchemeCopy.Id = command.Id;
-            defaultPermissionSchemeCopy.ProjectId = command.ProjectId;
-            defaultPermissionSchemeCopy.Description = $"Copy of {defaultPermissionSchemeCopy.Name}";
-            defaultPermissionSchemeCopy.Name = $"{project.Title} Permission scheme";
+        project.SetPermissionSchemeId(command.Id);
+        await _projectRepository.UpdateAsync(project);
 
-            await _permissionSchemeRepository.AddAsync(defaultPermissionSchemeCopy);
-
-            project.SetPermissionSchemeId(command.Id);
-            await _projectRepository.UpdateAsync(project);
-
-            await _messageBroker.PublishAsync(new CustomPermissionSchemeCreated(project.Id, command.Id));
-        }
+        await _messageBroker.PublishAsync(new CustomPermissionSchemeCreated(project.Id, command.Id));
     }
 }

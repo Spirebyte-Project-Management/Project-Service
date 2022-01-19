@@ -1,10 +1,9 @@
-﻿using Convey.CQRS.Events;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Convey.CQRS.Events;
 
-namespace Spirebyte.Services.Projects.Application.Services.Interfaces
+namespace Spirebyte.Services.Projects.Application.Services.Interfaces;
+
+public interface IMessageBroker
 {
-    public interface IMessageBroker
-    {
-        Task PublishAsync(params IEvent[] events);
-    }
+    Task PublishAsync(params IEvent[] events);
 }

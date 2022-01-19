@@ -1,20 +1,19 @@
-﻿using Convey.CQRS.Events;
-using System;
+﻿using System;
+using Convey.CQRS.Events;
 
-namespace Spirebyte.Services.Projects.Application.Events.Rejected
+namespace Spirebyte.Services.Projects.Application.Events.Rejected;
+
+[Contract]
+public class CreateProjectRejected : IRejectedEvent
 {
-    [Contract]
-    public class CreateProjectRejected : IRejectedEvent
+    public CreateProjectRejected(Guid ownerId, string reason, string code)
     {
-        public Guid OwnerId { get; }
-        public string Reason { get; }
-        public string Code { get; }
-
-        public CreateProjectRejected(Guid ownerId, string reason, string code)
-        {
-            OwnerId = ownerId;
-            Reason = reason;
-            Code = code;
-        }
+        OwnerId = ownerId;
+        Reason = reason;
+        Code = code;
     }
+
+    public Guid OwnerId { get; }
+    public string Reason { get; }
+    public string Code { get; }
 }

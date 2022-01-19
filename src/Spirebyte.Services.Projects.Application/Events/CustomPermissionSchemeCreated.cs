@@ -1,18 +1,17 @@
-﻿using Convey.CQRS.Events;
-using System;
+﻿using System;
+using Convey.CQRS.Events;
 
-namespace Spirebyte.Services.Projects.Application.Events
+namespace Spirebyte.Services.Projects.Application.Events;
+
+[Contract]
+public class CustomPermissionSchemeCreated : IEvent
 {
-    [Contract]
-    public class CustomPermissionSchemeCreated : IEvent
+    public CustomPermissionSchemeCreated(string projectId, Guid permissionSchemeId)
     {
-        public string ProjectId { get; }
-        public Guid PermissionSchemeId { get; }
-
-        public CustomPermissionSchemeCreated(string projectId, Guid permissionSchemeId)
-        {
-            ProjectId = projectId;
-            PermissionSchemeId = permissionSchemeId;
-        }
+        ProjectId = projectId;
+        PermissionSchemeId = permissionSchemeId;
     }
+
+    public string ProjectId { get; }
+    public Guid PermissionSchemeId { get; }
 }

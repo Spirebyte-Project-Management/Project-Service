@@ -1,4 +1,9 @@
-﻿using Convey;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Convey;
 using Convey.Auth;
 using Convey.CQRS.Commands;
 using Convey.CQRS.Events;
@@ -26,6 +31,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Partytitan.Convey.Minio;
 using Spirebyte.Services.Projects.Application;
 using Spirebyte.Services.Projects.Application.Clients.Interfaces;
 using Spirebyte.Services.Projects.Application.Commands;
@@ -40,113 +46,110 @@ using Spirebyte.Services.Projects.Infrastructure.Mongo;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Repositories;
 using Spirebyte.Services.Projects.Infrastructure.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Partytitan.Convey.Minio;
 
-namespace Spirebyte.Services.Projects.Infrastructure
+namespace Spirebyte.Services.Projects.Infrastructure;
+
+public static class Extensions
 {
-    public static class Extensions
+    public static IConveyBuilder AddInfrastructure(this IConveyBuilder builder)
     {
-        public static IConveyBuilder AddInfrastructure(this IConveyBuilder builder)
-        {
-            builder.Services.AddTransient<IMessageBroker, MessageBroker>();
-            builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
-            builder.Services.AddTransient<IUserRepository, UserRepository>();
-            builder.Services.AddTransient<IPermissionSchemeRepository, PermissionSchemeRepository>();
-            builder.Services.AddTransient<IProjectGroupRepository, ProjectGroupRepository>();
+        builder.Services.AddTransient<IMessageBroker, MessageBroker>();
+        builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
+        builder.Services.AddTransient<IIssueRepository, IssueRepository>();
+        builder.Services.AddTransient<ISprintRepository, SprintRepository>();
+        builder.Services.AddTransient<IUserRepository, UserRepository>();
+        builder.Services.AddTransient<IPermissionSchemeRepository, PermissionSchemeRepository>();
+        builder.Services.AddTransient<IProjectGroupRepository, ProjectGroupRepository>();
 
-            builder.Services.AddTransient<IMongoDbSeeder, MongoDbSeeder>();
+        builder.Services.AddTransient<IMongoDbSeeder, MongoDbSeeder>();
 
-            builder.Services.AddTransient<IAppContextFactory, AppContextFactory>();
-            builder.Services.AddTransient<IIdentityApiHttpClient, IdentityApiHttpClient>();
-            builder.Services.AddTransient(ctx => ctx.GetRequiredService<IAppContextFactory>().Create());
-            builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(OutboxCommandHandlerDecorator<>));
-            builder.Services.TryDecorate(typeof(IEventHandler<>), typeof(OutboxEventHandlerDecorator<>));
+        builder.Services.AddTransient<IAppContextFactory, AppContextFactory>();
+        builder.Services.AddTransient<IIdentityApiHttpClient, IdentityApiHttpClient>();
+        builder.Services.AddTransient(ctx => ctx.GetRequiredService<IAppContextFactory>().Create());
+        builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(OutboxCommandHandlerDecorator<>));
+        builder.Services.TryDecorate(typeof(IEventHandler<>), typeof(OutboxEventHandlerDecorator<>));
 
-            return builder
-                .AddErrorHandler<ExceptionToResponseMapper>()
-                .AddQueryHandlers()
-                .AddInMemoryQueryDispatcher()
-                .AddJwt()
-                .AddHttpClient()
-                .AddConsul()
-                .AddFabio()
-                .AddExceptionToMessageMapper<ExceptionToMessageMapper>()
-                .AddRabbitMq(plugins: p => p.AddJaegerRabbitMqPlugin())
-                .AddMessageOutbox(o => o.AddMongo())
-                .AddMongo(seederType: typeof(MongoDbSeeder))
-                .AddRedis()
-                .AddJaeger()
-                .AddMongoRepository<ProjectDocument, string>("projects")
-                .AddMongoRepository<UserDocument, Guid>("users")
-                .AddMongoRepository<PermissionSchemeDocument, Guid>("permissionSchemes")
-                .AddMongoRepository<ProjectGroupDocument, Guid>("projectGroups")
-                .AddWebApiSwaggerDocs()
-                .AddMinio()
-                .AddSecurity();
-        }
-        public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
-        {
-            app.UseErrorHandler()
-                .UseSwaggerDocs()
-                .UseJaeger()
-                .UseConvey()
-                .UsePublicContracts<ContractAttribute>()
-                .UseRabbitMq()
-                .SubscribeCommand<CreateProject>()
-                .SubscribeCommand<UpdateProject>()
-                .SubscribeEvent<IssueCreated>()
-                .SubscribeEvent<IssueDeleted>()
-                .SubscribeEvent<SignedUp>();
+        return builder
+            .AddErrorHandler<ExceptionToResponseMapper>()
+            .AddQueryHandlers()
+            .AddInMemoryQueryDispatcher()
+            .AddJwt()
+            .AddHttpClient()
+            .AddConsul()
+            .AddFabio()
+            .AddExceptionToMessageMapper<ExceptionToMessageMapper>()
+            .AddRabbitMq(plugins: p => p.AddJaegerRabbitMqPlugin())
+            .AddMessageOutbox(o => o.AddMongo())
+            .AddMongo(seederType: typeof(MongoDbSeeder))
+            .AddRedis()
+            .AddJaeger()
+            .AddMongoRepository<ProjectDocument, string>("projects")
+            .AddMongoRepository<UserDocument, Guid>("users")
+            .AddMongoRepository<IssueDocument, string>("issues")
+            .AddMongoRepository<SprintDocument, string>("sprints")
+            .AddMongoRepository<PermissionSchemeDocument, Guid>("permissionSchemes")
+            .AddMongoRepository<ProjectGroupDocument, Guid>("projectGroups")
+            .AddWebApiSwaggerDocs()
+            .AddMinio()
+            .AddSecurity();
+    }
 
-            return app;
-        }
+    public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
+    {
+        app.UseErrorHandler()
+            .UseSwaggerDocs()
+            .UseJaeger()
+            .UseConvey()
+            .UsePublicContracts<ContractAttribute>()
+            .UseRabbitMq()
+            .SubscribeCommand<CreateProject>()
+            .SubscribeCommand<UpdateProject>()
+            .SubscribeEvent<IssueCreated>()
+            .SubscribeEvent<IssueUpdated>()
+            .SubscribeEvent<IssueDeleted>()
+            .SubscribeEvent<SprintCreated>()
+            .SubscribeEvent<SprintUpdated>()
+            .SubscribeEvent<SprintDeleted>()
+            .SubscribeEvent<SignedUp>();
 
-        public static async Task<Guid> AuthenticateUsingJwtAsync(this HttpContext context)
-        {
-            var authentication = await context.AuthenticateAsync(JwtBearerDefaults.AuthenticationScheme);
+        return app;
+    }
 
-            return authentication.Succeeded ? Guid.Parse(authentication.Principal.Identity.Name) : Guid.Empty;
-        }
+    public static async Task<Guid> AuthenticateUsingJwtAsync(this HttpContext context)
+    {
+        var authentication = await context.AuthenticateAsync(JwtBearerDefaults.AuthenticationScheme);
 
-        internal static CorrelationContext GetCorrelationContext(this IHttpContextAccessor accessor)
-            => accessor.HttpContext?.Request.Headers.TryGetValue("Correlation-Context", out var json) is true
-                ? JsonConvert.DeserializeObject<CorrelationContext>(json.FirstOrDefault())
-                : null;
+        return authentication.Succeeded ? Guid.Parse(authentication.Principal.Identity.Name) : Guid.Empty;
+    }
 
-        internal static IDictionary<string, object> GetHeadersToForward(this IMessageProperties messageProperties)
-        {
-            const string sagaHeader = "Saga";
-            if (messageProperties?.Headers is null || !messageProperties.Headers.TryGetValue(sagaHeader, out var saga))
+    internal static CorrelationContext GetCorrelationContext(this IHttpContextAccessor accessor)
+    {
+        return accessor.HttpContext?.Request.Headers.TryGetValue("Correlation-Context", out var json) is true
+            ? JsonConvert.DeserializeObject<CorrelationContext>(json.FirstOrDefault())
+            : null;
+    }
+
+    internal static IDictionary<string, object> GetHeadersToForward(this IMessageProperties messageProperties)
+    {
+        const string sagaHeader = "Saga";
+        if (messageProperties?.Headers is null ||
+            !messageProperties.Headers.TryGetValue(sagaHeader, out var saga)) return null;
+
+        return saga is null
+            ? null
+            : new Dictionary<string, object>
             {
-                return null;
-            }
+                [sagaHeader] = saga
+            };
+    }
 
-            return saga is null
-                ? null
-                : new Dictionary<string, object>
-                {
-                    [sagaHeader] = saga
-                };
-        }
+    internal static string GetSpanContext(this IMessageProperties messageProperties, string header)
+    {
+        if (messageProperties is null) return string.Empty;
 
-        internal static string GetSpanContext(this IMessageProperties messageProperties, string header)
-        {
-            if (messageProperties is null)
-            {
-                return string.Empty;
-            }
+        if (messageProperties.Headers.TryGetValue(header, out var span) && span is byte[] spanBytes)
+            return Encoding.UTF8.GetString(spanBytes);
 
-            if (messageProperties.Headers.TryGetValue(header, out var span) && span is byte[] spanBytes)
-            {
-                return Encoding.UTF8.GetString(spanBytes);
-            }
-
-            return string.Empty;
-        }
+        return string.Empty;
     }
 }

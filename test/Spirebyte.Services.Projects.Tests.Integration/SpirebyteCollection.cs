@@ -5,10 +5,9 @@ using Xunit;
 [assembly: CollectionBehavior(MaxParallelThreads = 1, DisableTestParallelization = true)]
 
 
-namespace Spirebyte.Services.Projects.Tests.Integration
+namespace Spirebyte.Services.Projects.Tests.Integration;
+
+[CollectionDefinition("Spirebyte collection", DisableParallelization = true)]
+public class SpirebyteCollection : ICollectionFixture<SpirebyteApplicationFactory<Program>>
 {
-    [CollectionDefinition("Spirebyte collection", DisableParallelization = true)]
-    public class SpirebyteCollection : ICollectionFixture<SpirebyteApplicationFactory<Program>>
-    {
-    }
 }

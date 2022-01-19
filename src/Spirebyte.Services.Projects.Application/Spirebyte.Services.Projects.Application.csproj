@@ -1,22 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <LangVersion>latestmajor</LangVersion>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Convey" Version="0.4.354" />
-    <PackageReference Include="Convey.CQRS.Commands" Version="0.4.354" />
-    <PackageReference Include="Convey.CQRS.Events" Version="0.4.354" />
-    <PackageReference Include="Convey.CQRS.Queries" Version="0.4.354" />
-    <PackageReference Include="Convey.MessageBrokers" Version="0.4.354" />
-    <PackageReference Include="Convey.WebApi" Version="0.4.349" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.3" />
-    <PackageReference Include="Partytitan.Convey.Minio" Version="1.0.4" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Convey" Version="0.4.354"/>
+        <PackageReference Include="Convey.CQRS.Commands" Version="0.4.354"/>
+        <PackageReference Include="Convey.CQRS.Events" Version="0.4.354"/>
+        <PackageReference Include="Convey.CQRS.Queries" Version="0.4.354"/>
+        <PackageReference Include="Convey.MessageBrokers" Version="0.4.354"/>
+        <PackageReference Include="Convey.WebApi" Version="0.4.349"/>
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.3"/>
+        <PackageReference Include="Partytitan.Convey.Minio" Version="1.0.4"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Spirebyte.Services.Projects.Core\Spirebyte.Services.Projects.Core.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Spirebyte.Services.Projects.Core\Spirebyte.Services.Projects.Core.csproj"/>
+    </ItemGroup>
 
 </Project>

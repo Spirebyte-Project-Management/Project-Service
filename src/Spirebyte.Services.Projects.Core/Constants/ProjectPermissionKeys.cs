@@ -1,7 +1,6 @@
-﻿namespace Spirebyte.Services.Projects.Core.Constants
+﻿namespace Spirebyte.Services.Projects.Core.Constants;
+
+public static class ProjectPermissionKeys
 {
-    public static class ProjectPermissionKeys
-    {
-        public static string AdministerProject = "ADMINISTER_PROJECT";
-    }
+    public static string AdministerProject = "ADMINISTER_PROJECT";
 }

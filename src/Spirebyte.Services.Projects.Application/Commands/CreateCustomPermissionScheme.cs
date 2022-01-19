@@ -1,18 +1,17 @@
-﻿using Convey.CQRS.Commands;
-using System;
+﻿using System;
+using Convey.CQRS.Commands;
 
-namespace Spirebyte.Services.Projects.Application.Commands
+namespace Spirebyte.Services.Projects.Application.Commands;
+
+[Contract]
+public class CreateCustomPermissionScheme : ICommand
 {
-    [Contract]
-    public class CreateCustomPermissionScheme : ICommand
-    {
-        public Guid Id { get; set; }
-        public string ProjectId { get; set; }
+    public Guid Id = Guid.NewGuid();
 
-        public CreateCustomPermissionScheme(Guid id, string projectId)
-        {
-            Id = id;
-            ProjectId = projectId;
-        }
+    public CreateCustomPermissionScheme(string projectId)
+    {
+        ProjectId = projectId;
     }
+
+    public string ProjectId { get; set; }
 }

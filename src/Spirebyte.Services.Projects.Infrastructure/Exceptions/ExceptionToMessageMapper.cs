@@ -1,19 +1,20 @@
-﻿using Convey.MessageBrokers.RabbitMQ;
+﻿using System;
+using Convey.MessageBrokers.RabbitMQ;
 using Spirebyte.Services.Projects.Application.Events.Rejected;
 using Spirebyte.Services.Projects.Application.Exceptions;
-using System;
 
-namespace Spirebyte.Services.Projects.Infrastructure.Exceptions
+namespace Spirebyte.Services.Projects.Infrastructure.Exceptions;
+
+internal sealed class ExceptionToMessageMapper : IExceptionToMessageMapper
 {
-    internal sealed class ExceptionToMessageMapper : IExceptionToMessageMapper
+    public object Map(Exception exception, object message)
     {
-        public object Map(Exception exception, object message)
-            => exception switch
+        return exception switch
 
-            {
-                UserNotFoundException ex => new CreateProjectRejected(ex.UserId, ex.Message, ex.Code),
-                ProjectAlreadyExistsException ex => new CreateProjectRejected(ex.UserId, ex.Message, ex.Code),
-                _ => null
-            };
+        {
+            UserNotFoundException ex => new CreateProjectRejected(ex.UserId, ex.Message, ex.Code),
+            ProjectAlreadyExistsException ex => new CreateProjectRejected(ex.UserId, ex.Message, ex.Code),
+            _ => null
+        };
     }
 }

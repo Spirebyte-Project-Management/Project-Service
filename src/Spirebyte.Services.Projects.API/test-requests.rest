@@ -5,7 +5,9 @@ POST {{api}}/sign-up HTTP/1.1
 content-type: application/json
 
 {
-"email": "spirebyte-user1@mailinator.com", "password": "secret", "role": "user"
+  "email": "spirebyte-user1@mailinator.com",
+  "password": "secret",
+  "role": "user"
 }
 
 ### Authenticate and grab the access token 
@@ -14,11 +16,12 @@ POST {{api}}/sign-in HTTP/1.1
 Content-Type: application/json
 
 {
-"email": "spirebyte-user1@mailinator.com", "password": "secret"
+  "email": "spirebyte-user1@mailinator.com",
+  "password": "secret"
 }
 
 ### Get your user account details 
-@accessToken = {{sign_in.response.body.$.accessToken}} 
+@accessToken = {{sign_in.response.body.$.accessToken}}
 GET {{api}}/me HTTP/1.1
 Authorization: Bearer {{accessToken}}
 

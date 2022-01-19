@@ -1,17 +1,15 @@
-﻿using Convey.CQRS.Queries;
+﻿using System;
+using Convey.CQRS.Queries;
 using Spirebyte.Services.Projects.Application.DTO;
-using System;
 
-namespace Spirebyte.Services.Projects.Application.Queries
+namespace Spirebyte.Services.Projects.Application.Queries;
+
+public class GetPermissionScheme : IQuery<PermissionSchemeDto>
 {
-
-    public class GetPermissionScheme : IQuery<PermissionSchemeDto>
+    public GetPermissionScheme(Guid id)
     {
-        public Guid Id { get; set; }
-
-        public GetPermissionScheme(Guid id)
-        {
-            Id = id;
-        }
+        Id = id;
     }
+
+    public Guid Id { get; set; }
 }

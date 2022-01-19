@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Spirebyte.Services.Projects.Application.DTO
+namespace Spirebyte.Services.Projects.Application.DTO;
+
+public class ProjectGroupDto
 {
-    public class ProjectGroupDto
-    {
-        public Guid Id { get; set; }
-        public string ProjectId { get; set; }
-        public string Name { get; set; }
-        public IEnumerable<Guid> UserIds { get; set; }
-    }
+    public Guid Id { get; set; }
+    public string ProjectId { get; set; }
+    public string Name { get; set; }
+    public IEnumerable<Guid> UserIds { get; set; }
 }

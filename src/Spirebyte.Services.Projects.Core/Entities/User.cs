@@ -1,14 +1,13 @@
 using System;
 
-namespace Spirebyte.Services.Projects.Core.Entities
-{
-    public class User
-    {
-        public Guid Id { get; private set; }
+namespace Spirebyte.Services.Projects.Core.Entities;
 
-        public User(Guid id)
-        {
-            Id = id;
-        }
+public class User
+{
+    public User(Guid id)
+    {
+        Id = id;
     }
+
+    public Guid Id { get; }
 }
