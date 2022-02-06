@@ -1,7 +1,8 @@
 ﻿using System;
 using Convey.MessageBrokers.RabbitMQ;
-using Spirebyte.Services.Projects.Application.Events.Rejected;
-using Spirebyte.Services.Projects.Application.Exceptions;
+using Spirebyte.Services.Projects.Application.Projects.Events.Rejected;
+using Spirebyte.Services.Projects.Application.Projects.Exceptions;
+using Spirebyte.Services.Projects.Application.Users.Exceptions;
 
 namespace Spirebyte.Services.Projects.Infrastructure.Exceptions;
 

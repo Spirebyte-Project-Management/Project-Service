@@ -6,8 +6,8 @@ using Convey.CQRS.Queries;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Services.Projects.API;
-using Spirebyte.Services.Projects.Application.DTO;
-using Spirebyte.Services.Projects.Application.Queries;
+using Spirebyte.Services.Projects.Application.Projects.DTO;
+using Spirebyte.Services.Projects.Application.Projects.Queries;
 using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Services.Projects.Core.Entities.Objects;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
@@ -65,7 +65,7 @@ public class GetProjectsTests : IDisposable
         var requestResult = _queryHandler
             .Awaiting(c => c.HandleAsync(query));
 
-        requestResult.Should().NotThrow();
+        await requestResult.Should().NotThrowAsync();
 
         var result = await requestResult();
 
@@ -84,7 +84,7 @@ public class GetProjectsTests : IDisposable
         var requestResult = _queryHandler
             .Awaiting(c => c.HandleAsync(query));
 
-        requestResult.Should().NotThrow();
+        await requestResult.Should().NotThrowAsync();
 
         var result = await requestResult();
 

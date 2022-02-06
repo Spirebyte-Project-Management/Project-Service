@@ -3,8 +3,8 @@ using Convey;
 using Convey.CQRS.Commands;
 using Convey.CQRS.Events;
 using Microsoft.Extensions.DependencyInjection;
-using Spirebyte.Services.Projects.Application.Services;
-using Spirebyte.Services.Projects.Application.Services.Interfaces;
+using Spirebyte.Services.Projects.Application.PermissionSchemes.Services;
+using Spirebyte.Services.Projects.Application.PermissionSchemes.Services.Interfaces;
 
 namespace Spirebyte.Services.Projects.Application;
 

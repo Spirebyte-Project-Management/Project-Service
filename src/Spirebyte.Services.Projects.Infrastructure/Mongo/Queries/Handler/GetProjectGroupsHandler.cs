@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Convey.CQRS.Queries;
 using Convey.Persistence.MongoDB;
 using MongoDB.Driver;
-using Spirebyte.Services.Projects.Application;
-using Spirebyte.Services.Projects.Application.DTO;
-using Spirebyte.Services.Projects.Application.Queries;
+using Spirebyte.Services.Projects.Application.Contexts;
+using Spirebyte.Services.Projects.Application.ProjectGroups.DTO;
+using Spirebyte.Services.Projects.Application.ProjectGroups.Queries;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
 
@@ -27,7 +28,8 @@ internal sealed class GetProjectGroupsHandler : IQueryHandler<GetProjectGroups, 
         _appContext = appContext;
     }
 
-    public async Task<IEnumerable<ProjectGroupDto>> HandleAsync(GetProjectGroups query)
+    public async Task<IEnumerable<ProjectGroupDto>> HandleAsync(GetProjectGroups query,
+        CancellationToken cancellationToken = default)
     {
         var documents = _projectGroupRepository.Collection.AsQueryable();
 

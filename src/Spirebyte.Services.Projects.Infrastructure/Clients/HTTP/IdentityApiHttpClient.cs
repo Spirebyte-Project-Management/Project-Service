@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Convey.HTTP;
-using Spirebyte.Services.Projects.Application.Clients.DTO;
-using Spirebyte.Services.Projects.Application.Clients.Interfaces;
+using Spirebyte.Services.Projects.Application.Users.Clients.DTO;
+using Spirebyte.Services.Projects.Application.Users.Clients.Interfaces;
 
 namespace Spirebyte.Services.Projects.Infrastructure.Clients.HTTP;
 

@@ -4,7 +4,7 @@ using Convey.CQRS.Queries;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Services.Projects.API;
-using Spirebyte.Services.Projects.Application.Queries;
+using Spirebyte.Services.Projects.Application.Projects.Queries;
 using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Services.Projects.Core.Entities.Base;
 using Spirebyte.Services.Projects.Core.Entities.Objects;
@@ -59,7 +59,7 @@ public class DoesProjectExistTests : IDisposable
         var requestResult = _queryHandler
             .Awaiting(c => c.HandleAsync(query));
 
-        requestResult.Should().NotThrow();
+        await requestResult.Should().NotThrowAsync();
 
         var result = await requestResult();
 
@@ -78,7 +78,7 @@ public class DoesProjectExistTests : IDisposable
         var requestResult = _queryHandler
             .Awaiting(c => c.HandleAsync(query));
 
-        requestResult.Should().NotThrow();
+        await requestResult.Should().NotThrowAsync();
 
         var result = await requestResult();
 

@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Convey.CQRS.Queries;
 using Convey.Persistence.MongoDB;
-using Spirebyte.Services.Projects.Application.DTO;
-using Spirebyte.Services.Projects.Application.Queries;
+using Spirebyte.Services.Projects.Application.PermissionSchemes.DTO;
+using Spirebyte.Services.Projects.Application.PermissionSchemes.Queries;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
 
@@ -18,7 +19,8 @@ internal sealed class GetPermissionSchemeHandler : IQueryHandler<GetPermissionSc
         _permissionSchemeRepository = permissionSchemeRepository;
     }
 
-    public async Task<PermissionSchemeDto> HandleAsync(GetPermissionScheme query)
+    public async Task<PermissionSchemeDto> HandleAsync(GetPermissionScheme query,
+        CancellationToken cancellationToken = default)
     {
         var permissionScheme = await _permissionSchemeRepository.GetAsync(p => p.Id == query.Id);
 

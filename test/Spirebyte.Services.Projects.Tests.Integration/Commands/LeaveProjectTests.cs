@@ -4,8 +4,9 @@ using Convey.CQRS.Commands;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Services.Projects.API;
-using Spirebyte.Services.Projects.Application.Commands;
-using Spirebyte.Services.Projects.Application.Exceptions;
+using Spirebyte.Services.Projects.Application.Projects.Commands;
+using Spirebyte.Services.Projects.Application.Projects.Exceptions;
+using Spirebyte.Services.Projects.Application.Users.Exceptions;
 using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Services.Projects.Core.Entities.Objects;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
@@ -66,9 +67,9 @@ public class LeaveProjectTests : IDisposable
 
         // Check if exception is thrown
 
-        _commandHandler
+        await _commandHandler
             .Awaiting(c => c.HandleAsync(command))
-            .Should().NotThrow();
+            .Should().NotThrowAsync();
 
 
         var updatedProject = await _projectsMongoDbFixture.GetAsync(projectId);
@@ -97,9 +98,9 @@ public class LeaveProjectTests : IDisposable
 
         // Check if exception is thrown
 
-        _commandHandler
+        await _commandHandler
             .Awaiting(c => c.HandleAsync(command))
-            .Should().Throw<ProjectNotFoundException>();
+            .Should().ThrowAsync<ProjectNotFoundException>();
     }
 
     [Fact]
@@ -124,9 +125,9 @@ public class LeaveProjectTests : IDisposable
 
         // Check if exception is thrown
 
-        _commandHandler
+        await _commandHandler
             .Awaiting(c => c.HandleAsync(command))
-            .Should().Throw<UserNotFoundException>();
+            .Should().ThrowAsync<UserNotFoundException>();
     }
 
     [Fact]
@@ -154,8 +155,8 @@ public class LeaveProjectTests : IDisposable
 
         // Check if exception is thrown
 
-        _commandHandler
+        await _commandHandler
             .Awaiting(c => c.HandleAsync(command))
-            .Should().Throw<UserNotInvitedException>();
+            .Should().ThrowAsync<UserNotInvitedException>();
     }
 }

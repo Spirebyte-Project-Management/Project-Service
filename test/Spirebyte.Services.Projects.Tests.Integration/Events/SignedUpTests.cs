@@ -4,8 +4,9 @@ using Convey.CQRS.Events;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Services.Projects.API;
-using Spirebyte.Services.Projects.Application.Events.External;
-using Spirebyte.Services.Projects.Application.Exceptions;
+using Spirebyte.Services.Projects.Application.PermissionSchemes.Exceptions;
+using Spirebyte.Services.Projects.Application.Users.Exceptions;
+using Spirebyte.Services.Projects.Application.Users.External;
 using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
@@ -49,9 +50,9 @@ public class SignedUpTests : IDisposable
 
         // Check if exception is thrown
 
-        _eventHandler
+        await _eventHandler
             .Awaiting(c => c.HandleAsync(externalEvent))
-            .Should().NotThrow();
+            .Should().NotThrowAsync();
 
 
         var user = await _usersMongoDbFixture.GetAsync(externalEvent.UserId);
@@ -72,9 +73,9 @@ public class SignedUpTests : IDisposable
 
         // Check if exception is thrown
 
-        _eventHandler
+        await _eventHandler
             .Awaiting(c => c.HandleAsync(externalEvent))
-            .Should().Throw<InvalidRoleException>();
+            .Should().ThrowAsync<InvalidRoleException>();
     }
 
     [Fact]
@@ -91,8 +92,8 @@ public class SignedUpTests : IDisposable
 
         // Check if exception is thrown
 
-        _eventHandler
+        await _eventHandler
             .Awaiting(c => c.HandleAsync(externalEvent))
-            .Should().Throw<UserAlreadyCreatedException>();
+            .Should().ThrowAsync<UserAlreadyCreatedException>();
     }
 }

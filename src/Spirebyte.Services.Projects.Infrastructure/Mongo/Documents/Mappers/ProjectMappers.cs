@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Spirebyte.Services.Projects.Application.DTO;
+using Spirebyte.Services.Projects.Application.Projects.DTO;
 using Spirebyte.Services.Projects.Core.Entities;
 
 namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;

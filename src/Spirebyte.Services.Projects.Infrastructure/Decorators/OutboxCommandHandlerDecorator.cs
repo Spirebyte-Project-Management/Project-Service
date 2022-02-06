@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Convey.CQRS.Commands;
 using Convey.MessageBrokers;
@@ -22,17 +22,13 @@ internal sealed class OutboxCommandHandlerDecorator<TCommand> : ICommandHandler<
         _handler = handler;
         _outbox = outbox;
         _enabled = outboxOptions.Enabled;
-
-        var messageProperties = messagePropertiesAccessor.MessageProperties;
-        _messageId = string.IsNullOrWhiteSpace(messageProperties?.MessageId)
-            ? Guid.NewGuid().ToString("N")
-            : messageProperties.MessageId;
+        _messageId = messagePropertiesAccessor.MessageProperties?.MessageId;
     }
 
-    public Task HandleAsync(TCommand command)
+    public Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
     {
-        return _enabled
-            ? _outbox.HandleAsync(_messageId, () => _handler.HandleAsync(command))
-            : _handler.HandleAsync(command);
+        return _enabled && !string.IsNullOrWhiteSpace(_messageId)
+            ? _outbox.HandleAsync(_messageId, () => _handler.HandleAsync(command, cancellationToken))
+            : _handler.HandleAsync(command, cancellationToken);
     }
 }

@@ -6,13 +6,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Convey" Version="0.4.354"/>
-        <PackageReference Include="Convey.CQRS.Commands" Version="0.4.354"/>
-        <PackageReference Include="Convey.CQRS.Events" Version="0.4.354"/>
-        <PackageReference Include="Convey.CQRS.Queries" Version="0.4.354"/>
-        <PackageReference Include="Convey.MessageBrokers" Version="0.4.354"/>
-        <PackageReference Include="Convey.WebApi" Version="0.4.349"/>
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.3"/>
+        <PackageReference Include="Convey" Version="1.0.531"/>
+        <PackageReference Include="Convey.CQRS.Commands" Version="1.0.531"/>
+        <PackageReference Include="Convey.CQRS.Events" Version="1.0.531"/>
+        <PackageReference Include="Convey.CQRS.Queries" Version="1.0.531"/>
+        <PackageReference Include="Convey.MessageBrokers" Version="1.0.531"/>
+        <PackageReference Include="Convey.WebApi" Version="1.0.531"/>
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0"/>
         <PackageReference Include="Partytitan.Convey.Minio" Version="1.0.4"/>
     </ItemGroup>
 

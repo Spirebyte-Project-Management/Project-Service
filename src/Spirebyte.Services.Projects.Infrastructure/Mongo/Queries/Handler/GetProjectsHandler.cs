@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Convey.CQRS.Queries;
 using Convey.Persistence.MongoDB;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using Spirebyte.Services.Projects.Application;
-using Spirebyte.Services.Projects.Application.DTO;
-using Spirebyte.Services.Projects.Application.Queries;
+using Spirebyte.Services.Projects.Application.Contexts;
+using Spirebyte.Services.Projects.Application.Projects.DTO;
+using Spirebyte.Services.Projects.Application.Projects.Queries;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
 
@@ -24,13 +25,14 @@ internal sealed class GetProjectsHandler : IQueryHandler<GetProjects, IEnumerabl
         _appContext = appContext;
     }
 
-    public async Task<IEnumerable<ProjectDto>> HandleAsync(GetProjects query)
+    public async Task<IEnumerable<ProjectDto>> HandleAsync(GetProjects query,
+        CancellationToken cancellationToken = default)
     {
         var documents = _projectRepository.Collection.AsQueryable();
         if (query.OwnerId.HasValue)
         {
             var identity = _appContext.Identity;
-            if (identity.IsAuthenticated && identity.Id != query.OwnerId && !identity.IsAdmin)
+            if (identity.IsAuthenticated && identity.Id != query.OwnerId && !identity.IsAdmin())
                 return Enumerable.Empty<ProjectDto>();
             var userId = query.OwnerId.Value;
             documents = documents.Where(p =>
@@ -38,7 +40,7 @@ internal sealed class GetProjectsHandler : IQueryHandler<GetProjects, IEnumerabl
                 p.OwnerUserId == query.OwnerId);
         }
 
-        var projects = await documents.ToListAsync();
+        var projects = await documents.ToListAsync(cancellationToken);
 
         return projects.Select(p => p.AsDto());
     }

@@ -19,6 +19,6 @@ internal class CorrelationContext
         public string Id { get; set; }
         public bool IsAuthenticated { get; set; }
         public string Role { get; set; }
-        public IDictionary<string, string> Claims { get; set; }
+        public Dictionary<string, IEnumerable<string>> Claims { get; set; }
     }
 }
