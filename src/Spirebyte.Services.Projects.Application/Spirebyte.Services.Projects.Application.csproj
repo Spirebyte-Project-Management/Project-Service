@@ -6,18 +6,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Convey" Version="1.0.531"/>
-        <PackageReference Include="Convey.CQRS.Commands" Version="1.0.531"/>
-        <PackageReference Include="Convey.CQRS.Events" Version="1.0.531"/>
-        <PackageReference Include="Convey.CQRS.Queries" Version="1.0.531"/>
-        <PackageReference Include="Convey.MessageBrokers" Version="1.0.531"/>
-        <PackageReference Include="Convey.WebApi" Version="1.0.531"/>
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0"/>
-        <PackageReference Include="Partytitan.Convey.Minio" Version="1.0.4"/>
+        <PackageReference Include="Convey" Version="1.0.531" />
+        <PackageReference Include="Convey.CQRS.Commands" Version="1.0.531" />
+        <PackageReference Include="Convey.CQRS.Events" Version="1.0.531" />
+        <PackageReference Include="Convey.CQRS.Queries" Version="1.0.531" />
+        <PackageReference Include="Convey.MessageBrokers" Version="1.0.531" />
+        <PackageReference Include="Convey.WebApi" Version="1.0.531" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+        <PackageReference Include="Partytitan.Convey.Minio" Version="1.0.4" />
+        <PackageReference Include="Spirebyte.Shared" Version="1.0.1" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Spirebyte.Services.Projects.Core\Spirebyte.Services.Projects.Core.csproj"/>
+        <ProjectReference Include="..\Spirebyte.Services.Projects.Core\Spirebyte.Services.Projects.Core.csproj" />
     </ItemGroup>
 
 </Project>

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using Convey.CQRS.Queries;
 using Convey.Persistence.MongoDB;
 using MongoDB.Driver;
-using Spirebyte.Services.Projects.Application.Contexts;
 using Spirebyte.Services.Projects.Application.ProjectGroups.DTO;
 using Spirebyte.Services.Projects.Application.ProjectGroups.Queries;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
+using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Queries.Handler;
 

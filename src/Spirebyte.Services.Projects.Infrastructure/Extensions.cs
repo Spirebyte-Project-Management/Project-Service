@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Convey;
 using Convey.Auth;
 using Convey.CQRS.Commands;
@@ -22,9 +21,7 @@ using Convey.WebApi;
 using Convey.WebApi.CQRS;
 using Convey.WebApi.Swagger;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Open.Serialization.Json;
 using Partytitan.Convey.Minio;
 using Spirebyte.Services.Projects.Application;
 using Spirebyte.Services.Projects.Application.Projects.Commands;
@@ -34,13 +31,13 @@ using Spirebyte.Services.Projects.Application.Users.Clients.Interfaces;
 using Spirebyte.Services.Projects.Application.Users.External;
 using Spirebyte.Services.Projects.Core.Repositories;
 using Spirebyte.Services.Projects.Infrastructure.Clients.HTTP;
-using Spirebyte.Services.Projects.Infrastructure.Contexts;
 using Spirebyte.Services.Projects.Infrastructure.Decorators;
 using Spirebyte.Services.Projects.Infrastructure.Exceptions;
 using Spirebyte.Services.Projects.Infrastructure.Mongo;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Repositories;
 using Spirebyte.Services.Projects.Infrastructure.Services;
+using Spirebyte.Shared.Contexts;
 
 namespace Spirebyte.Services.Projects.Infrastructure;
 
@@ -58,11 +55,11 @@ public static class Extensions
 
         builder.Services.AddTransient<IMongoDbSeeder, MongoDbSeeder>();
 
-        builder.Services.AddTransient<IAppContextFactory, AppContextFactory>();
         builder.Services.AddTransient<IIdentityApiHttpClient, IdentityApiHttpClient>();
-        builder.Services.AddTransient(ctx => ctx.GetRequiredService<IAppContextFactory>().Create());
         builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(OutboxCommandHandlerDecorator<>));
         builder.Services.TryDecorate(typeof(IEventHandler<>), typeof(OutboxEventHandlerDecorator<>));
+
+        builder.Services.AddSharedContexts();
 
         return builder
             .AddErrorHandler<ExceptionToResponseMapper>()
@@ -111,31 +108,5 @@ public static class Extensions
             .SubscribeEvent<SignedUp>();
 
         return app;
-    }
-
-    internal static CorrelationContext GetCorrelationContext(this IHttpContextAccessor accessor)
-    {
-        if (accessor.HttpContext is null) return null;
-
-        if (!accessor.HttpContext.Request.Headers.TryGetValue("x-correlation-context", out var json)) return null;
-
-        var jsonSerializer = accessor.HttpContext.RequestServices.GetRequiredService<IJsonSerializer>();
-        var value = json.FirstOrDefault();
-
-        return string.IsNullOrWhiteSpace(value) ? null : jsonSerializer.Deserialize<CorrelationContext>(value);
-    }
-
-    public static string GetUserIpAddress(this HttpContext context)
-    {
-        if (context is null) return string.Empty;
-
-        var ipAddress = context.Connection.RemoteIpAddress?.ToString();
-        if (context.Request.Headers.TryGetValue("x-forwarded-for", out var forwardedFor))
-        {
-            var ipAddresses = forwardedFor.ToString().Split(",", StringSplitOptions.RemoveEmptyEntries);
-            if (ipAddresses.Any()) ipAddress = ipAddresses[0];
-        }
-
-        return ipAddress ?? string.Empty;
     }
 }

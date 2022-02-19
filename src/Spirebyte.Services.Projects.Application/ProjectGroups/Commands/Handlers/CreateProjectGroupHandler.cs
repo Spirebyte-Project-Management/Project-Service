@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Convey.CQRS.Commands;
-using Spirebyte.Services.Projects.Application.Contexts;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Exceptions;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Services.Interfaces;
 using Spirebyte.Services.Projects.Application.ProjectGroups.Events;
@@ -11,6 +10,7 @@ using Spirebyte.Services.Projects.Application.Services.Interfaces;
 using Spirebyte.Services.Projects.Core.Constants;
 using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Services.Projects.Core.Repositories;
+using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Projects.Application.ProjectGroups.Commands.Handlers;
 
