@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sd:6.0 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:6.0 AS build
 WORKDIR /app
 COPY . .
 RUN dotnet publish src/Spirebyte.Services.Projects.API -c release -o out
