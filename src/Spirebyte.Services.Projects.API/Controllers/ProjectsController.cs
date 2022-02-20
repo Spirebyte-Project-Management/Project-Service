@@ -9,7 +9,6 @@ using Spirebyte.Services.Projects.Application.PermissionSchemes.Queries;
 using Spirebyte.Services.Projects.Application.Projects.Commands;
 using Spirebyte.Services.Projects.Application.Projects.DTO;
 using Spirebyte.Services.Projects.Application.Projects.Queries;
-using Spirebyte.Shared.Contexts.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Spirebyte.Services.Projects.API.Controllers;
@@ -18,12 +17,10 @@ namespace Spirebyte.Services.Projects.API.Controllers;
 public class ProjectsController : BaseController
 {
     private readonly IDispatcher _dispatcher;
-    private readonly IAppContext _appContext;
 
-    public ProjectsController(IDispatcher dispatcher, IAppContext appContext)
+    public ProjectsController(IDispatcher dispatcher)
     {
         _dispatcher = dispatcher;
-        _appContext = appContext;
     }
 
     [HttpGet]
@@ -75,7 +72,7 @@ public class ProjectsController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> JoinProject(string projectId)
     {
-        await _dispatcher.SendAsync(new JoinProject(projectId, _appContext.Identity.Id));
+        await _dispatcher.SendAsync(new JoinProject(projectId));
         return Ok();
     }
 
@@ -85,7 +82,7 @@ public class ProjectsController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> LeaveProject(string projectId)
     {
-        await _dispatcher.SendAsync(new LeaveProject(projectId, _appContext.Identity.Id));
+        await _dispatcher.SendAsync(new LeaveProject(projectId));
         return Ok();
     }
 

@@ -46,15 +46,14 @@ public class CreateProjectTests : IDisposable
     public async Task create_project_command_should_add_project_with_given_data_to_database()
     {
         var projectId = "key";
-        var ownerId = Guid.NewGuid();
         var title = "Title";
         var description = "description";
 
-        var user = new User(ownerId);
+        var user = new User(Guid.NewGuid());
         await _usersMongoDbFixture.InsertAsync(user.AsDocument());
 
 
-        var command = new CreateProject(projectId, ownerId, null, null, "test.nl/image", title, description);
+        var command = new CreateProject(projectId, null, null, "test.nl/image", title, description);
 
         // Check if exception is thrown
 
@@ -67,7 +66,6 @@ public class CreateProjectTests : IDisposable
 
         project.Should().NotBeNull();
         project.Id.Should().Be(projectId);
-        project.OwnerUserId.Should().Be(ownerId);
         project.Title.Should().Be(title);
         project.Description.Should().Be(description);
     }
@@ -91,7 +89,7 @@ public class CreateProjectTests : IDisposable
         await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 
-        var command = new CreateProject(projectId, ownerId, null, null, "test.nl/image", title, description);
+        var command = new CreateProject(projectId, null, null, "test.nl/image", title, description);
 
         // Check if exception is thrown
 
@@ -104,12 +102,11 @@ public class CreateProjectTests : IDisposable
     public async Task create_project_command_fails_when_owner_does_not_exist()
     {
         var projectId = "key";
-        var ownerId = Guid.NewGuid();
         var key = "key";
         var title = "Title";
         var description = "description";
 
-        var command = new CreateProject(projectId, ownerId, null, null, "test.nl/image", title, description);
+        var command = new CreateProject(projectId, null, null, "test.nl/image", title, description);
 
         // Check if exception is thrown
 

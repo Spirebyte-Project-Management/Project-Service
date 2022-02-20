@@ -63,7 +63,7 @@ public class JoinProjectTests : IDisposable
         await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 
-        var command = new JoinProject(projectId, invitedUserId);
+        var command = new JoinProject(projectId);
 
         // Check if exception is thrown
 
@@ -94,7 +94,7 @@ public class JoinProjectTests : IDisposable
         await _usersMongoDbFixture.InsertAsync(invitedUser.AsDocument());
 
 
-        var command = new JoinProject(projectId, invitedUserId);
+        var command = new JoinProject(projectId);
 
         // Check if exception is thrown
 
@@ -121,7 +121,7 @@ public class JoinProjectTests : IDisposable
         await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 
-        var command = new JoinProject(projectId, invitedUserId);
+        var command = new JoinProject(projectId);
 
         // Check if exception is thrown
 
@@ -151,7 +151,7 @@ public class JoinProjectTests : IDisposable
         await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 
-        var command = new JoinProject(projectId, invitedUserId);
+        var command = new JoinProject(projectId);
 
         // Check if exception is thrown
 
