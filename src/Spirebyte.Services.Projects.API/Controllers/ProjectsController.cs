@@ -9,6 +9,7 @@ using Spirebyte.Services.Projects.Application.PermissionSchemes.Queries;
 using Spirebyte.Services.Projects.Application.Projects.Commands;
 using Spirebyte.Services.Projects.Application.Projects.DTO;
 using Spirebyte.Services.Projects.Application.Projects.Queries;
+using Spirebyte.Shared.Contexts.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Spirebyte.Services.Projects.API.Controllers;
@@ -17,10 +18,12 @@ namespace Spirebyte.Services.Projects.API.Controllers;
 public class ProjectsController : BaseController
 {
     private readonly IDispatcher _dispatcher;
+    private readonly IAppContext _appContext;
 
-    public ProjectsController(IDispatcher dispatcher)
+    public ProjectsController(IDispatcher dispatcher, IAppContext appContext)
     {
         _dispatcher = dispatcher;
+        _appContext = appContext;
     }
 
     [HttpGet]
@@ -66,23 +69,23 @@ public class ProjectsController : BaseController
         return Created($"projects/{project.Id}", project);
     }
 
-    [HttpPost]
+    [HttpPost("{projectId}/join")]
     [SwaggerOperation("Join project")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> JoinProject(JoinProject command)
+    public async Task<ActionResult> JoinProject(string projectId)
     {
-        await _dispatcher.SendAsync(command);
+        await _dispatcher.SendAsync(new JoinProject(projectId, _appContext.Identity.Id));
         return Ok();
     }
 
-    [HttpPost]
+    [HttpPost("{projectId}/leave")]
     [SwaggerOperation("Leave project")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> LeaveProject(LeaveProject command)
+    public async Task<ActionResult> LeaveProject(string projectId)
     {
-        await _dispatcher.SendAsync(command);
+        await _dispatcher.SendAsync(new LeaveProject(projectId, _appContext.Identity.Id));
         return Ok();
     }
 
