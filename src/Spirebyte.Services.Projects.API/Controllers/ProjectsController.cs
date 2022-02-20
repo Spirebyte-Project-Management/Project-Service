@@ -98,6 +98,7 @@ public class ProjectsController : BaseController
         return Ok();
     }
 
+    [AllowAnonymous]
     [HttpGet("{projectId}/user/{userId:guid}/hasPermission/{permissionKey}")]
     [SwaggerOperation("Has permission")]
     [ProducesResponseType(StatusCodes.Status200OK)]
