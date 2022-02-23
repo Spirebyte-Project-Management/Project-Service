@@ -6,9 +6,9 @@ using Spirebyte.Services.Projects.Core.Entities;
 namespace Spirebyte.Services.Projects.Application.PermissionSchemes.Events;
 
 [Contract]
-public class CustomPermissionSchemeCreated : IEvent
+public class ProjectPermissionSchemeDeleted : IEvent
 {
-    public CustomPermissionSchemeCreated(string projectId, Guid permissionSchemeId, string name, string description, IEnumerable<Permission> permissions)
+    public ProjectPermissionSchemeDeleted(string projectId, Guid permissionSchemeId, string name, string description, IEnumerable<Permission> permissions)
     {
         ProjectId = projectId;
         Id = permissionSchemeId;
@@ -17,7 +17,7 @@ public class CustomPermissionSchemeCreated : IEvent
         Permissions = permissions;
     }
     
-    public CustomPermissionSchemeCreated(PermissionScheme permissionScheme)
+    public ProjectPermissionSchemeDeleted(PermissionScheme permissionScheme)
     {
         ProjectId = permissionScheme.ProjectId;
         Id = permissionScheme.Id;

@@ -21,8 +21,8 @@ public class IssueUpdatedHandler : IEventHandler<IssueUpdated>
 
     public async Task HandleAsync(IssueUpdated @event, CancellationToken cancellationToken = default)
     {
-        var issue = await _issueRepository.GetAsync(@event.IssueId);
-        if (issue is null) throw new IssueNotFoundException(@event.IssueId);
+        var issue = await _issueRepository.GetAsync(@event.Id);
+        if (issue is null) throw new IssueNotFoundException(@event.Id);
 
         var project = await _projectRepository.GetAsync(issue.ProjectId);
         if (project is null) throw new ProjectNotFoundException(issue.ProjectId);

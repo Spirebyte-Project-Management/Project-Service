@@ -8,9 +8,9 @@ namespace Spirebyte.Services.Projects.Application.Projects.Commands;
 [Contract]
 public class UpdateProject : ICommand
 {
-    public UpdateProject(string id, IEnumerable<Guid> projectUserIds, IEnumerable<Guid> invitedUserIds, string pic,
-        string file, string title,
-        string description)
+    public UpdateProject(string id, IEnumerable<Guid> projectUserIds, IEnumerable<Guid> invitedUserIds, string pic = "",
+        string file = "", string title ="",
+        string description = "")
     {
         Id = id;
         ProjectUserIds = projectUserIds ?? Enumerable.Empty<Guid>();

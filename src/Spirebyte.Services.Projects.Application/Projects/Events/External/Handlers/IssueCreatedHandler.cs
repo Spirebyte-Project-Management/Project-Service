@@ -25,7 +25,7 @@ public class IssueCreatedHandler : IEventHandler<IssueCreated>
         var project = await _projectRepository.GetAsync(@event.ProjectId);
         if (project is null) throw new ProjectNotFoundException(@event.ProjectId);
 
-        var issue = new Issue(@event.IssueId, @event.ProjectId, IssueStatus.TODO);
+        var issue = new Issue(@event.Id, @event.ProjectId, IssueStatus.TODO);
         await _issueRepository.AddAsync(issue);
 
         project.IssueInsights.IssueAdded();

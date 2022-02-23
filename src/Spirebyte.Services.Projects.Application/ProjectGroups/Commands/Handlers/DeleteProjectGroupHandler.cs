@@ -39,6 +39,6 @@ internal sealed class DeleteProjectGroupHandler : ICommandHandler<DeleteProjectG
                 ProjectPermissionKeys.AdministerProject)) throw new ActionNotAllowedException();
 
         await _projectGroupRepository.DeleteAsync(command.Id);
-        await _messageBroker.PublishAsync(new ProjectGroupDeleted(command.Id));
+        await _messageBroker.PublishAsync(new ProjectGroupDeleted(projectGroup));
     }
 }

@@ -54,6 +54,6 @@ internal sealed class CreateCustomPermissionSchemeHandler : ICommandHandler<Crea
         project.SetPermissionSchemeId(command.Id);
         await _projectRepository.UpdateAsync(project);
 
-        await _messageBroker.PublishAsync(new CustomPermissionSchemeCreated(project.Id, command.Id));
+        await _messageBroker.PublishAsync(new CustomPermissionSchemeCreated(defaultPermissionSchemeCopy));
     }
 }

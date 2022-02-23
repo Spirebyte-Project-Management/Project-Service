@@ -6,10 +6,10 @@ namespace Spirebyte.Services.Projects.Application.Projects.Events.External;
 [Message("sprints")]
 public class SprintDeleted : IEvent
 {
-    public SprintDeleted(string sprintId)
+    public SprintDeleted(string id)
     {
-        SprintId = sprintId;
+        Id = id;
     }
 
-    public string SprintId { get; }
+    public string Id { get; }
 }

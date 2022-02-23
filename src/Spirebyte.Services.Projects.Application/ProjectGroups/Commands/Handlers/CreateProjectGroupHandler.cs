@@ -47,6 +47,6 @@ internal sealed class CreateProjectGroupHandler : ICommandHandler<CreateProjectG
         var projectGroup =
             new ProjectGroup(command.ProjectGroupId, command.ProjectId, command.Name, command.UserIds);
         await _projectGroupRepository.AddAsync(projectGroup);
-        await _messageBroker.PublishAsync(new ProjectGroupCreated(projectGroup.Id));
+        await _messageBroker.PublishAsync(new ProjectGroupCreated(projectGroup.Id, projectGroup.ProjectId, projectGroup.Name, projectGroup.UserIds));
     }
 }

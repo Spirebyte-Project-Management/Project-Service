@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Convey.CQRS.Commands;
+using Spirebyte.Services.Projects.Application.PermissionSchemes.Events;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Exceptions;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Services.Interfaces;
 using Spirebyte.Services.Projects.Application.ProjectGroups.Events;
@@ -49,6 +50,6 @@ internal sealed class DeletePermissionSchemeHandler : ICommandHandler<DeletePerm
         await _projectRepository.UpdateAsync(project);
 
         await _permissionSchemeRepository.DeleteAsync(command.Id);
-        await _messageBroker.PublishAsync(new ProjectGroupDeleted(command.Id));
+        await _messageBroker.PublishAsync(new ProjectPermissionSchemeDeleted(permissionScheme));
     }
 }

@@ -6,8 +6,8 @@ namespace Spirebyte.Services.Projects.Application.Projects.Commands;
 
 [Contract]
 public record CreateProject(string Id, IEnumerable<Guid> ProjectUserIds,
-    IEnumerable<Guid> InvitedUserIds, string Pic, string Title,
-    string Description) : ICommand
+    IEnumerable<Guid> InvitedUserIds, string Pic = "", string Title = "",
+    string Description = "") : ICommand
 {
     public DateTime CreatedAt = DateTime.Now;
 }

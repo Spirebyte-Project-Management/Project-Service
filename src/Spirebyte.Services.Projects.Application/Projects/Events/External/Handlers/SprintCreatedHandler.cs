@@ -25,7 +25,7 @@ public class SprintCreatedHandler : IEventHandler<SprintCreated>
         var project = await _projectRepository.GetAsync(@event.ProjectId);
         if (project is null) throw new ProjectNotFoundException(@event.ProjectId);
 
-        var sprint = new Sprint(@event.SprintId, @event.ProjectId, SprintStatus.PLANNED);
+        var sprint = new Sprint(@event.Id, @event.ProjectId, SprintStatus.PLANNED);
         await _sprintRepository.AddAsync(sprint);
 
         project.SprintInsights.SprintAdded();

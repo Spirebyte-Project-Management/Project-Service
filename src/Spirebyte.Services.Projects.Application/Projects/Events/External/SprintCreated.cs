@@ -6,12 +6,12 @@ namespace Spirebyte.Services.Projects.Application.Projects.Events.External;
 [Message("sprints")]
 public class SprintCreated : IEvent
 {
-    public SprintCreated(string sprintId, string projectId)
+    public SprintCreated(string id, string projectId)
     {
-        SprintId = sprintId;
+        Id = id;
         ProjectId = projectId;
     }
 
-    public string SprintId { get; }
+    public string Id { get; }
     public string ProjectId { get; }
 }

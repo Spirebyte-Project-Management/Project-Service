@@ -1,15 +1,40 @@
 ﻿using System;
+using System.Collections.Generic;
 using Convey.CQRS.Events;
+using Spirebyte.Services.Activities.Core.ValueObjects;
+using Spirebyte.Services.Projects.Core.Entities;
+using Spirebyte.Shared.Changes;
 
 namespace Spirebyte.Services.Projects.Application.PermissionSchemes.Events;
 
 [Contract]
 public class ProjectPermissionSchemeUpdated : IEvent
 {
-    public ProjectPermissionSchemeUpdated(Guid projectPermissionSchemeId)
+    public ProjectPermissionSchemeUpdated(string projectId, Guid permissionSchemeId, string name, string description, IEnumerable<Permission> permissions)
     {
-        ProjectPermissionSchemeId = projectPermissionSchemeId;
+        ProjectId = projectId;
+        Id = permissionSchemeId;
+        Name = name;
+        Description = description;
+        Permissions = permissions;
+    }
+    
+    public ProjectPermissionSchemeUpdated(PermissionScheme permissionScheme, PermissionScheme old)
+    {
+        ProjectId = permissionScheme.ProjectId;
+        Id = permissionScheme.Id;
+        Name = permissionScheme.Name;
+        Description = permissionScheme.Description;
+        Permissions = permissionScheme.Permissions;
+
+        Changes = ChangedFieldsHelper.GetChanges(old, permissionScheme);
     }
 
-    public Guid ProjectPermissionSchemeId { get; set; }
+    public string ProjectId { get; }
+    public Guid Id { get; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public IEnumerable<Permission> Permissions { get; set; }
+    
+    public Change[] Changes { get; set; }
 }

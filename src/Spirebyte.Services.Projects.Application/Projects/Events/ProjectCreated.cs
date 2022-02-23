@@ -8,10 +8,10 @@ namespace Spirebyte.Services.Projects.Application.Projects.Events;
 [Contract]
 public class ProjectCreated : IEvent
 {
-    public ProjectCreated(string projectId, Guid permissionSchemeId, Guid ownerUserId, IEnumerable<Guid> projectUserIds,
+    public ProjectCreated(string id, Guid permissionSchemeId, Guid ownerUserId, IEnumerable<Guid> projectUserIds,
         IEnumerable<Guid> invitedUserIds, string pic, string title, string description, DateTime createdAt)
     {
-        ProjectId = projectId;
+        Id = id;
         PermissionSchemeId = permissionSchemeId;
         OwnerUserId = ownerUserId;
         ProjectUserIds = projectUserIds;
@@ -24,7 +24,7 @@ public class ProjectCreated : IEvent
 
     public ProjectCreated(Project entity)
     {
-        ProjectId = entity.Id;
+        Id = entity.Id;
         PermissionSchemeId = entity.PermissionSchemeId;
         OwnerUserId = entity.OwnerUserId;
         ProjectUserIds = entity.ProjectUserIds;
@@ -35,7 +35,7 @@ public class ProjectCreated : IEvent
         CreatedAt = entity.CreatedAt;
     }
 
-    public string ProjectId { get; }
+    public string Id { get; }
     public Guid PermissionSchemeId { get; set; }
     public Guid OwnerUserId { get; set; }
     public IEnumerable<Guid> ProjectUserIds { get; set; }

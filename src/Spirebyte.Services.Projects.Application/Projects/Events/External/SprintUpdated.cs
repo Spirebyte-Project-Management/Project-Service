@@ -8,14 +8,14 @@ namespace Spirebyte.Services.Projects.Application.Projects.Events.External;
 [Message("sprints")]
 public class SprintUpdated : IEvent
 {
-    public SprintUpdated(string sprintId, DateTime startedAt, DateTime endedAt)
+    public SprintUpdated(string id, DateTime startedAt, DateTime endedAt)
     {
-        SprintId = sprintId;
+        Id = id;
         StartedAt = startedAt;
         EndedAt = endedAt;
     }
 
-    public string SprintId { get; }
+    public string Id { get; }
     public DateTime StartedAt { get; set; }
     public DateTime EndedAt { get; set; }
 

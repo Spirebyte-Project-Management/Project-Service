@@ -6,13 +6,13 @@ namespace Spirebyte.Services.Projects.Application.Projects.Events;
 [Contract]
 public class ProjectLeft : IEvent
 {
-    public ProjectLeft(string projectId, Guid userId)
+    public ProjectLeft(string id, Guid userId)
     {
-        ProjectId = projectId;
+        Id = id;
         UserId = userId;
     }
 
-    public string ProjectId { get; }
+    public string Id { get; }
 
     public Guid UserId { get; }
 }

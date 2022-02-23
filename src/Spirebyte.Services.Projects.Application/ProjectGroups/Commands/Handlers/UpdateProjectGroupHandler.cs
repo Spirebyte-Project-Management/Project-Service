@@ -50,6 +50,6 @@ internal sealed class UpdateProjectGroupHandler : ICommandHandler<UpdateProjectG
             command.UserIds);
 
         await _projectGroupRepository.UpdateAsync(updatedProjectGroup);
-        await _messageBroker.PublishAsync(new ProjectGroupUpdated(projectGroup.Id));
+        await _messageBroker.PublishAsync(new ProjectGroupUpdated(updatedProjectGroup, projectGroup));
     }
 }

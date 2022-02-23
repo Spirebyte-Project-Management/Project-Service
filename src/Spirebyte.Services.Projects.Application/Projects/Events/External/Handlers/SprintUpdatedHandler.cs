@@ -21,8 +21,8 @@ public class SprintUpdatedHandler : IEventHandler<SprintUpdated>
 
     public async Task HandleAsync(SprintUpdated @event, CancellationToken cancellationToken = default)
     {
-        var sprint = await _sprintRepository.GetAsync(@event.SprintId);
-        if (sprint is null) throw new SprintNotFoundException(@event.SprintId);
+        var sprint = await _sprintRepository.GetAsync(@event.Id);
+        if (sprint is null) throw new SprintNotFoundException(@event.Id);
 
         var project = await _projectRepository.GetAsync(sprint.ProjectId);
         if (project is null) throw new ProjectNotFoundException(sprint.ProjectId);

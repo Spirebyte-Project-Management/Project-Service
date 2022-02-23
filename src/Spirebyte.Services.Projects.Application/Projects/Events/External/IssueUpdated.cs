@@ -7,14 +7,14 @@ namespace Spirebyte.Services.Projects.Application.Projects.Events.External;
 [Message("issues")]
 public class IssueUpdated : IEvent
 {
-    public IssueUpdated(string issueId, int storyPoints, IssueStatus status)
+    public IssueUpdated(string id, int storyPoints, IssueStatus status)
     {
-        IssueId = issueId;
+        Id = id;
         StoryPoints = storyPoints;
         Status = status;
     }
 
-    public string IssueId { get; }
+    public string Id { get; }
     public int StoryPoints { get; }
 
     public IssueStatus Status { get; }

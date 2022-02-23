@@ -23,7 +23,7 @@ public class IssueDeletedHandler : IEventHandler<IssueDeleted>
         var project = await _projectRepository.GetAsync(@event.ProjectId);
         if (project is null) throw new ProjectNotFoundException(@event.ProjectId);
 
-        var issue = await _issueRepository.GetAsync(@event.IssueId);
+        var issue = await _issueRepository.GetAsync(@event.Id);
         if (issue is null) throw new IssueNotFoundException(@event.ProjectId);
 
         project.IssueInsights.IssueRemoved(issue);

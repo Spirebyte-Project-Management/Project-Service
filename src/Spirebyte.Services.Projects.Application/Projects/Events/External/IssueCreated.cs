@@ -6,14 +6,14 @@ namespace Spirebyte.Services.Projects.Application.Projects.Events.External;
 [Message("issues")]
 public class IssueCreated : IEvent
 {
-    public IssueCreated(string issueId, string projectId, int storyPoints)
+    public IssueCreated(string id, string projectId, int storyPoints)
     {
-        IssueId = issueId;
+        Id = id;
         ProjectId = projectId;
         StoryPoints = storyPoints;
     }
 
-    public string IssueId { get; }
+    public string Id { get; }
     public string ProjectId { get; }
     public int StoryPoints { get; }
 }
