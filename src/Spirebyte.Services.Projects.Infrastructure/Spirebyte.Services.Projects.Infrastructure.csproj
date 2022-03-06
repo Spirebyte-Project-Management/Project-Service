@@ -27,7 +27,7 @@
         <PackageReference Include="Convey.Tracing.Jaeger.RabbitMQ" Version="1.0.531" />
         <PackageReference Include="Convey.WebApi.CQRS" Version="1.0.531" />
         <PackageReference Include="Convey.WebApi.Swagger" Version="1.0.531" />
-        <PackageReference Include="Partytitan.Convey.Minio" Version="1.0.4" />
+        <PackageReference Include="Partytitan.Convey.Minio" Version="1.0.10" />
     </ItemGroup>
 
     <ItemGroup>
