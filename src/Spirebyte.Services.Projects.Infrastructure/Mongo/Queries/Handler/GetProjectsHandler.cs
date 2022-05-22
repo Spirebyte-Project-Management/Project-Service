@@ -29,12 +29,9 @@ internal sealed class GetProjectsHandler : IQueryHandler<GetProjects, IEnumerabl
         CancellationToken cancellationToken = default)
     {
         var documents = _projectRepository.Collection.AsQueryable();
-        if (query.OwnerId.HasValue)
+        if (_appContext.Identity.IsAuthenticated)
         {
-            var identity = _appContext.Identity;
-            if (identity.IsAuthenticated && identity.Id != query.OwnerId && !identity.IsAdmin())
-                return Enumerable.Empty<ProjectDto>();
-            var userId = query.OwnerId.Value;
+            var userId = _appContext.Identity.Id;
             documents = documents.Where(p =>
                 p.ProjectUserIds.Any(u => u == userId) || p.InvitedUserIds.Any(u => u == userId) ||
                 p.OwnerUserId == query.OwnerId);

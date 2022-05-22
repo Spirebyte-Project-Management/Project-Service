@@ -21,8 +21,6 @@ public class SignedUpHandler : IEventHandler<SignedUp>
 
     public async Task HandleAsync(SignedUp @event, CancellationToken cancellationToken = default)
     {
-        if (@event.Role != RequiredRole) throw new InvalidRoleException(@event.UserId, @event.Role, RequiredRole);
-
         if (await _userRepository.ExistsAsync(@event.UserId)) throw new UserAlreadyCreatedException(@event.UserId);
 
         var user = new User(@event.UserId);
