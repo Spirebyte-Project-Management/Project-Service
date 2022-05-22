@@ -40,7 +40,7 @@ internal sealed class GetProjectsHandler : IQueryHandler<GetProjects, IEnumerabl
             
             documents = documents.Where(p =>
                 p.ProjectUserIds.Any(u => u == userId) || p.InvitedUserIds.Any(u => u == userId) ||
-                p.OwnerUserId == query.OwnerId);
+                p.OwnerUserId == userId);
         }
 
         var projects = await documents.ToListAsync(cancellationToken);
