@@ -103,43 +103,39 @@ internal sealed class MongoDbSeeder : IMongoDbSeeder
                 "Edit Own Comments",
                 "Ability to edit own comments made on issues.",
                 CommentPermissionGroup, new[] { projectUserGrant }),
-            
+
             new(RepositoryPermissionKeys.CreateRepositories,
                 "Create Repositories",
                 "Ability to create repositories within project",
-                RepositoryPermissionGroup, new []{ projectLeadGrant }),
-            
+                RepositoryPermissionGroup, new[] { projectLeadGrant }),
+
             new(RepositoryPermissionKeys.CreateBranches,
                 "Create Branches",
                 "Ability to create branches within a repository",
-                RepositoryPermissionGroup, new []{ projectUserGrant }),
-            
+                RepositoryPermissionGroup, new[] { projectUserGrant }),
+
             new(RepositoryPermissionKeys.CreatePullRequests,
                 "Create Pull Requests",
                 "Ability to create pull requests within a repository",
-                RepositoryPermissionGroup, new []{ projectUserGrant }),
-            
+                RepositoryPermissionGroup, new[] { projectUserGrant }),
+
             new(RepositoryPermissionKeys.MergePullRequests,
                 "Merge Pull Requests",
                 "Ability to merge pull requests within a repository",
-                RepositoryPermissionGroup, new []{ projectLeadGrant }),
-            
+                RepositoryPermissionGroup, new[] { projectLeadGrant }),
+
             new(RepositoryPermissionKeys.Commit,
                 "Commit to repositories",
                 "Ability to commit to repositories within project",
-                RepositoryPermissionGroup, new []{ projectUserGrant })
+                RepositoryPermissionGroup, new[] { projectUserGrant })
         };
 
         var defaultPermissionScheme = new PermissionScheme(ProjectConstants.DefaultPermissionSchemeId, "",
             "Default Permission Scheme", "Default scheme for projects", permissions);
 
         if (!await _permissionSchemeRepository.ExistsAsync(ProjectConstants.DefaultPermissionSchemeId))
-        {
             await _permissionSchemeRepository.AddAsync(defaultPermissionScheme);
-        }
         else
-        {
             await _permissionSchemeRepository.UpdateAsync(defaultPermissionScheme);
-        }
     }
 }

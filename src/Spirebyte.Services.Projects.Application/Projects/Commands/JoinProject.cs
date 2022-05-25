@@ -1,5 +1,4 @@
-﻿using System;
-using Convey.CQRS.Commands;
+﻿using Convey.CQRS.Commands;
 
 namespace Spirebyte.Services.Projects.Application.Projects.Commands;
 

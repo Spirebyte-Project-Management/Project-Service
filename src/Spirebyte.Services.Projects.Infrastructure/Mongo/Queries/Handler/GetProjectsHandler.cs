@@ -21,7 +21,8 @@ internal sealed class GetProjectsHandler : IQueryHandler<GetProjects, IEnumerabl
     private readonly ILogger _logger;
     private readonly IMongoRepository<ProjectDocument, string> _projectRepository;
 
-    public GetProjectsHandler(IMongoRepository<ProjectDocument, string> projectRepository, IAppContext appContext, ILogger<GetProjectsHandler> logger)
+    public GetProjectsHandler(IMongoRepository<ProjectDocument, string> projectRepository, IAppContext appContext,
+        ILogger<GetProjectsHandler> logger)
     {
         _projectRepository = projectRepository;
         _appContext = appContext;
@@ -35,9 +36,9 @@ internal sealed class GetProjectsHandler : IQueryHandler<GetProjects, IEnumerabl
         if (_appContext.Identity.IsAuthenticated)
         {
             var userId = _appContext.Identity.Id;
-            
+
             _logger.LogInformation("Getting project for user with id: {id}", userId);
-            
+
             documents = documents.Where(p =>
                 p.ProjectUserIds.Any(u => u == userId) || p.InvitedUserIds.Any(u => u == userId) ||
                 p.OwnerUserId == userId);

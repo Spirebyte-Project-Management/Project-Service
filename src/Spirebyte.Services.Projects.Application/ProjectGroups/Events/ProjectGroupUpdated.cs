@@ -17,7 +17,7 @@ public class ProjectGroupUpdated : IEvent
         Name = name;
         UserIds = userIds;
     }
-    
+
     public ProjectGroupUpdated(ProjectGroup entity, ProjectGroup oldProject)
     {
         Id = entity.Id;
@@ -30,9 +30,8 @@ public class ProjectGroupUpdated : IEvent
 
     public Guid Id { get; }
     public string ProjectId { get; }
-    public string Name { get; } 
+    public string Name { get; }
     public IEnumerable<Guid> UserIds { get; }
-    
-    public Change[] Changes { get; set; }
 
+    public Change[] Changes { get; set; }
 }

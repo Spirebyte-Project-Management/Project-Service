@@ -8,7 +8,8 @@ namespace Spirebyte.Services.Projects.Application.PermissionSchemes.Events;
 [Contract]
 public class ProjectPermissionSchemeDeleted : IEvent
 {
-    public ProjectPermissionSchemeDeleted(string projectId, Guid permissionSchemeId, string name, string description, IEnumerable<Permission> permissions)
+    public ProjectPermissionSchemeDeleted(string projectId, Guid permissionSchemeId, string name, string description,
+        IEnumerable<Permission> permissions)
     {
         ProjectId = projectId;
         Id = permissionSchemeId;
@@ -16,7 +17,7 @@ public class ProjectPermissionSchemeDeleted : IEvent
         Description = description;
         Permissions = permissions;
     }
-    
+
     public ProjectPermissionSchemeDeleted(PermissionScheme permissionScheme)
     {
         ProjectId = permissionScheme.ProjectId;

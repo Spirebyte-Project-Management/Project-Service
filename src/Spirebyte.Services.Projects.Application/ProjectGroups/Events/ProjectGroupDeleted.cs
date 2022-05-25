@@ -15,7 +15,7 @@ public class ProjectGroupDeleted : IEvent
         Name = name;
         UserIds = userIds;
     }
-    
+
     public ProjectGroupDeleted(ProjectGroup entity)
     {
         Id = entity.Id;
@@ -23,8 +23,9 @@ public class ProjectGroupDeleted : IEvent
         Name = entity.Name;
         UserIds = entity.UserIds;
     }
+
     public Guid Id { get; }
     public string ProjectId { get; }
-    public string Name { get; } 
+    public string Name { get; }
     public IEnumerable<Guid> UserIds { get; }
 }

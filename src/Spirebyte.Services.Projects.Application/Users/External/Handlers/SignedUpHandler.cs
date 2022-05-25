@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Convey.CQRS.Events;
-using Spirebyte.Services.Projects.Application.PermissionSchemes.Exceptions;
 using Spirebyte.Services.Projects.Application.Users.Exceptions;
 using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Services.Projects.Core.Repositories;

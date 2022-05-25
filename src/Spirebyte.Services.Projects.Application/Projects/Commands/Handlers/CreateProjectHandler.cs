@@ -16,8 +16,8 @@ namespace Spirebyte.Services.Projects.Application.Projects.Commands.Handlers;
 // Simple wrapper
 internal sealed class CreateProjectHandler : ICommandHandler<CreateProject>
 {
-    private readonly IMessageBroker _messageBroker;
     private readonly IAppContext _appContext;
+    private readonly IMessageBroker _messageBroker;
     private readonly IProjectRepository _projectRepository;
     private readonly IUserRepository _userRepository;
 
@@ -35,7 +35,8 @@ internal sealed class CreateProjectHandler : ICommandHandler<CreateProject>
         if (await _projectRepository.ExistsAsync(command.Id))
             throw new ProjectAlreadyExistsException(command.Id, _appContext.Identity.Id);
 
-        if (!await _userRepository.ExistsAsync(_appContext.Identity.Id)) throw new UserNotFoundException(_appContext.Identity.Id);
+        if (!await _userRepository.ExistsAsync(_appContext.Identity.Id))
+            throw new UserNotFoundException(_appContext.Identity.Id);
 
         var project = new Project(command.Id, ProjectConstants.DefaultPermissionSchemeId, _appContext.Identity.Id,
             command.ProjectUserIds, command.InvitedUserIds, command.Pic, command.Title, command.Description,

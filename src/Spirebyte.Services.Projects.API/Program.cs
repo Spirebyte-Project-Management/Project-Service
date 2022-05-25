@@ -4,8 +4,6 @@ using Convey.Logging;
 using Convey.Secrets.Vault;
 using Convey.Types;
 using Convey.WebApi;
-using IdentityModel;
-using IdentityModel.AspNetCore.AccessTokenValidation;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

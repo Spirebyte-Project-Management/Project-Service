@@ -14,8 +14,9 @@ public class ProjectGroupCreated : IEvent
         Name = name;
         UserIds = userIds;
     }
+
     public Guid Id { get; }
     public string ProjectId { get; }
-    public string Name { get; } 
+    public string Name { get; }
     public IEnumerable<Guid> UserIds { get; }
 }

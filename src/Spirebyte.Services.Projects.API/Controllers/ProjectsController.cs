@@ -18,8 +18,8 @@ namespace Spirebyte.Services.Projects.API.Controllers;
 [Authorize]
 public class ProjectsController : BaseController
 {
-    private readonly IDispatcher _dispatcher;
     private readonly IAppContext _appContext;
+    private readonly IDispatcher _dispatcher;
 
     public ProjectsController(IDispatcher dispatcher, IAppContext appContext)
     {

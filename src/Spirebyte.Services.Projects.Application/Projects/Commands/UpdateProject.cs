@@ -9,7 +9,7 @@ namespace Spirebyte.Services.Projects.Application.Projects.Commands;
 public class UpdateProject : ICommand
 {
     public UpdateProject(string id, IEnumerable<Guid> projectUserIds, IEnumerable<Guid> invitedUserIds, string pic = "",
-        string file = "", string title ="",
+        string file = "", string title = "",
         string description = "")
     {
         Id = id;

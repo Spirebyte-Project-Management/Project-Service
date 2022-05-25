@@ -10,7 +10,8 @@ namespace Spirebyte.Services.Projects.Application.PermissionSchemes.Events;
 [Contract]
 public class ProjectPermissionSchemeUpdated : IEvent
 {
-    public ProjectPermissionSchemeUpdated(string projectId, Guid permissionSchemeId, string name, string description, IEnumerable<Permission> permissions)
+    public ProjectPermissionSchemeUpdated(string projectId, Guid permissionSchemeId, string name, string description,
+        IEnumerable<Permission> permissions)
     {
         ProjectId = projectId;
         Id = permissionSchemeId;
@@ -18,7 +19,7 @@ public class ProjectPermissionSchemeUpdated : IEvent
         Description = description;
         Permissions = permissions;
     }
-    
+
     public ProjectPermissionSchemeUpdated(PermissionScheme permissionScheme, PermissionScheme old)
     {
         ProjectId = permissionScheme.ProjectId;
@@ -35,6 +36,6 @@ public class ProjectPermissionSchemeUpdated : IEvent
     public string Name { get; set; }
     public string Description { get; set; }
     public IEnumerable<Permission> Permissions { get; set; }
-    
+
     public Change[] Changes { get; set; }
 }

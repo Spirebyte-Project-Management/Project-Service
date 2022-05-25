@@ -14,8 +14,8 @@ namespace Spirebyte.Services.Projects.Application.Projects.Commands.Handlers;
 // Simple wrapper
 internal sealed class JoinProjectHandler : ICommandHandler<JoinProject>
 {
-    private readonly IMessageBroker _messageBroker;
     private readonly IAppContext _appContext;
+    private readonly IMessageBroker _messageBroker;
     private readonly IProjectRepository _projectRepository;
     private readonly IUserRepository _userRepository;
 
@@ -33,7 +33,8 @@ internal sealed class JoinProjectHandler : ICommandHandler<JoinProject>
         if (!await _projectRepository.ExistsAsync(command.ProjectId))
             throw new ProjectNotFoundException(command.ProjectId);
 
-        if (!await _userRepository.ExistsAsync(_appContext.Identity.Id)) throw new UserNotFoundException(_appContext.Identity.Id);
+        if (!await _userRepository.ExistsAsync(_appContext.Identity.Id))
+            throw new UserNotFoundException(_appContext.Identity.Id);
 
         var project = await _projectRepository.GetAsync(command.ProjectId);
         if (!project.InvitedUserIds.Contains(_appContext.Identity.Id))

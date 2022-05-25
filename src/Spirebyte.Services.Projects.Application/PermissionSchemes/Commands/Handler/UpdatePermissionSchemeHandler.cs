@@ -50,6 +50,7 @@ internal sealed class UpdatePermissionSchemeHandler : ICommandHandler<UpdatePerm
             projectPermissionScheme.ProjectId, command.Name, command.Description, command.Permissions);
 
         await _permissionSchemeRepository.UpdateAsync(updatedProjectPermissionScheme);
-        await _messageBroker.PublishAsync(new ProjectPermissionSchemeUpdated(updatedProjectPermissionScheme, projectPermissionScheme));
+        await _messageBroker.PublishAsync(
+            new ProjectPermissionSchemeUpdated(updatedProjectPermissionScheme, projectPermissionScheme));
     }
 }

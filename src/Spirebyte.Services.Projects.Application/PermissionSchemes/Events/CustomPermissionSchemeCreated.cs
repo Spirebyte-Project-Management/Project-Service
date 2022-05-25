@@ -8,7 +8,8 @@ namespace Spirebyte.Services.Projects.Application.PermissionSchemes.Events;
 [Contract]
 public class CustomPermissionSchemeCreated : IEvent
 {
-    public CustomPermissionSchemeCreated(string projectId, Guid permissionSchemeId, string name, string description, IEnumerable<Permission> permissions)
+    public CustomPermissionSchemeCreated(string projectId, Guid permissionSchemeId, string name, string description,
+        IEnumerable<Permission> permissions)
     {
         ProjectId = projectId;
         Id = permissionSchemeId;
@@ -16,7 +17,7 @@ public class CustomPermissionSchemeCreated : IEvent
         Description = description;
         Permissions = permissions;
     }
-    
+
     public CustomPermissionSchemeCreated(PermissionScheme permissionScheme)
     {
         ProjectId = permissionScheme.ProjectId;
