@@ -35,7 +35,6 @@ public class ProjectsController : BaseController
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<ProjectDto>> BrowseAsync([FromQuery] GetProjects query)
     {
-        var test = _appContext;
         return Ok(await _dispatcher.QueryAsync(query));
     }
 

@@ -11,11 +11,11 @@ namespace Spirebyte.Services.Projects.Application.PermissionSchemes.Queries.Hand
 internal sealed class HasPermissionHandler : IQueryHandler<HasPermission, bool>
 {
     private readonly IAppContext _appContext;
-    private readonly ILogger<HasPermission> _logger;
+    private readonly ILogger<HasPermissionHandler> _logger;
     private readonly IPermissionService _permissionService;
 
     public HasPermissionHandler(IPermissionService permissionService, IAppContext appContext,
-        ILogger<HasPermission> logger)
+        ILogger<HasPermissionHandler> logger)
     {
         _permissionService = permissionService;
         _appContext = appContext;
