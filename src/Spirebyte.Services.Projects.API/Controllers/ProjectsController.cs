@@ -10,6 +10,7 @@ using Spirebyte.Services.Projects.Application.Projects.Commands;
 using Spirebyte.Services.Projects.Application.Projects.DTO;
 using Spirebyte.Services.Projects.Application.Projects.Queries;
 using Spirebyte.Services.Projects.Core.Constants;
+using Spirebyte.Shared.Contexts.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Spirebyte.Services.Projects.API.Controllers;
@@ -18,10 +19,12 @@ namespace Spirebyte.Services.Projects.API.Controllers;
 public class ProjectsController : BaseController
 {
     private readonly IDispatcher _dispatcher;
+    private readonly IAppContext _appContext;
 
-    public ProjectsController(IDispatcher dispatcher)
+    public ProjectsController(IDispatcher dispatcher, IAppContext appContext)
     {
         _dispatcher = dispatcher;
+        _appContext = appContext;
     }
 
     [HttpGet]
@@ -32,6 +35,7 @@ public class ProjectsController : BaseController
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<ProjectDto>> BrowseAsync([FromQuery] GetProjects query)
     {
+        var test = _appContext;
         return Ok(await _dispatcher.QueryAsync(query));
     }
 
