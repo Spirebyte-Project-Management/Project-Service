@@ -8,6 +8,7 @@ using Spirebyte.Services.Projects.API.Controllers.Base;
 using Spirebyte.Services.Projects.Application.ProjectGroups.Commands;
 using Spirebyte.Services.Projects.Application.ProjectGroups.DTO;
 using Spirebyte.Services.Projects.Application.ProjectGroups.Queries;
+using Spirebyte.Services.Projects.Core.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Spirebyte.Services.Projects.API.Controllers;
@@ -23,6 +24,7 @@ public class ProjectGroupsController : BaseController
     }
 
     [HttpGet]
+    [Authorize(ApiScopes.Read)]
     [SwaggerOperation("Browse project groups")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -33,6 +35,7 @@ public class ProjectGroupsController : BaseController
     }
 
     [HttpGet("{projectGroupId:guid}")]
+    [Authorize(ApiScopes.Read)]
     [SwaggerOperation("Get project group")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -44,6 +47,7 @@ public class ProjectGroupsController : BaseController
     }
 
     [HttpPost]
+    [Authorize(ApiScopes.Write)]
     [SwaggerOperation("Create project group")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -56,6 +60,7 @@ public class ProjectGroupsController : BaseController
 
 
     [HttpPut("{projectGroupId:guid}")]
+    [Authorize(ApiScopes.Write)]
     [SwaggerOperation("Update project group")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -68,6 +73,7 @@ public class ProjectGroupsController : BaseController
     }
 
     [HttpDelete("{projectGroupId:guid}")]
+    [Authorize(ApiScopes.Delete)]
     [SwaggerOperation("Delete project group")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

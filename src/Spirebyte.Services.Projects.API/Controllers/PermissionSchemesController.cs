@@ -9,6 +9,7 @@ using Spirebyte.Services.Projects.Application.PermissionSchemes.Commands;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.DTO;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Queries;
 using Spirebyte.Services.Projects.Application.ProjectGroups.Commands;
+using Spirebyte.Services.Projects.Core.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Spirebyte.Services.Projects.API.Controllers;
@@ -24,6 +25,7 @@ public class PermissionSchemesController : BaseController
     }
 
     [HttpGet]
+    [Authorize(ApiScopes.Read)]
     [SwaggerOperation("Browse permission schemes")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -34,6 +36,7 @@ public class PermissionSchemesController : BaseController
     }
 
     [HttpGet("{permissionSchemeId:guid}")]
+    [Authorize(ApiScopes.Read)]
     [SwaggerOperation("Get Permission scheme")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -45,6 +48,7 @@ public class PermissionSchemesController : BaseController
     }
 
     [HttpPost]
+    [Authorize(ApiScopes.Write)]
     [SwaggerOperation("Create Permission scheme")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -57,6 +61,7 @@ public class PermissionSchemesController : BaseController
 
 
     [HttpPut("{permissionSchemeId:guid}")]
+    [Authorize(ApiScopes.Write)]
     [SwaggerOperation("Update permission scheme")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -69,6 +74,7 @@ public class PermissionSchemesController : BaseController
     }
 
     [HttpDelete("{permissionSchemeId:guid}")]
+    [Authorize(ApiScopes.Delete)]
     [SwaggerOperation("Delete permission scheme")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

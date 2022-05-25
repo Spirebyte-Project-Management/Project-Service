@@ -9,6 +9,7 @@ using Spirebyte.Services.Projects.Application.PermissionSchemes.Queries;
 using Spirebyte.Services.Projects.Application.Projects.Commands;
 using Spirebyte.Services.Projects.Application.Projects.DTO;
 using Spirebyte.Services.Projects.Application.Projects.Queries;
+using Spirebyte.Services.Projects.Core.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Spirebyte.Services.Projects.API.Controllers;
@@ -24,6 +25,7 @@ public class ProjectsController : BaseController
     }
 
     [HttpGet]
+    [Authorize(ApiScopes.Read)]
     [SwaggerOperation("Browse projects")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -34,6 +36,7 @@ public class ProjectsController : BaseController
     }
 
     [HttpGet("{projectId}")]
+    [Authorize(ApiScopes.Read)]
     [SwaggerOperation("Get project")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -45,6 +48,7 @@ public class ProjectsController : BaseController
     }
 
     [HttpGet("{projectId}/exists")]
+    [Authorize(ApiScopes.Read)]
     [SwaggerOperation("Does project exist")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -56,6 +60,7 @@ public class ProjectsController : BaseController
     }
 
     [HttpPost]
+    [Authorize(ApiScopes.Write)]
     [SwaggerOperation("Create project")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -67,6 +72,7 @@ public class ProjectsController : BaseController
     }
 
     [HttpPost("{projectId}/join")]
+    [Authorize(ApiScopes.Write)]
     [SwaggerOperation("Join project")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -77,6 +83,7 @@ public class ProjectsController : BaseController
     }
 
     [HttpPost("{projectId}/leave")]
+    [Authorize(ApiScopes.Write)]
     [SwaggerOperation("Leave project")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -87,6 +94,7 @@ public class ProjectsController : BaseController
     }
 
     [HttpPut("{projectId}")]
+    [Authorize(ApiScopes.Write)]
     [SwaggerOperation("Update project")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
