@@ -14,7 +14,7 @@
         <PackageReference Include="Convey.WebApi" Version="1.0.531" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
         <PackageReference Include="Partytitan.Convey.Minio" Version="1.0.12" />
-        <PackageReference Include="Spirebyte.Shared" Version="1.0.14" />
+        <PackageReference Include="Spirebyte.Shared" Version="1.0.15" />
     </ItemGroup>
 
     <ItemGroup>
