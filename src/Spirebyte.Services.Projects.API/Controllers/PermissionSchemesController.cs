@@ -80,7 +80,7 @@ public class PermissionSchemesController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> DeleteProjectGroup(Guid permissionSchemeId)
     {
-        await _dispatcher.SendAsync(new DeleteProjectGroup(permissionSchemeId));
+        await _dispatcher.SendAsync(new DeletePermissionScheme(permissionSchemeId));
         return Ok();
     }
 }
