@@ -56,8 +56,8 @@ internal sealed class UpdateProjectHandler : ICommandHandler<UpdateProject>
         foreach (var newInvitation in newInvitations)
         {
             var user = await _identityApiHttpClient.GetUserAsync(newInvitation);
-            await _messageBroker.PublishAsync(new UserInvitedToProject(currentProject.Id, user.Id, currentProject.Title,
-                user.Fullname, user.Email));
+            await _messageBroker.PublishAsync(new UserInvitedToProject(currentProject.Id, Guid.Parse(user.Id), currentProject.Title,
+                user.PreferredUsername, user.Email));
         }
 
         var picUrl = currentProject.Pic;
