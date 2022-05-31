@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Convey.HTTP;
 using Convey.WebApi.CQRS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using Spirebyte.Services.Projects.API.Controllers.Base;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Queries;
 using Spirebyte.Services.Projects.Application.Projects.Commands;
@@ -20,10 +25,12 @@ public class ProjectsController : BaseController
 {
     private readonly IAppContext _appContext;
     private readonly IDispatcher _dispatcher;
+    private readonly IHttpClient _httpClient;
 
-    public ProjectsController(IDispatcher dispatcher, IAppContext appContext)
+    public ProjectsController(IDispatcher dispatcher, IHttpClient httpClient, IAppContext appContext)
     {
         _dispatcher = dispatcher;
+        _httpClient = httpClient;
         _appContext = appContext;
     }
 
