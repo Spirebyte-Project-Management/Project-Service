@@ -10,6 +10,7 @@ using Spirebyte.Services.Projects.Application.Services.Interfaces;
 using Spirebyte.Services.Projects.Core.Constants;
 using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Services.Projects.Core.Repositories;
+using Spirebyte.Shared.Changes;
 using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Projects.Application.ProjectGroups.Commands.Handlers;
@@ -50,6 +51,10 @@ internal sealed class UpdateProjectGroupHandler : ICommandHandler<UpdateProjectG
             command.UserIds);
 
         await _projectGroupRepository.UpdateAsync(updatedProjectGroup);
-        await _messageBroker.PublishAsync(new ProjectGroupUpdated(updatedProjectGroup, projectGroup));
+
+        if (ChangedFieldsHelper.HasChanges(projectGroup, updatedProjectGroup))
+        {
+            await _messageBroker.PublishAsync(new ProjectGroupUpdated(updatedProjectGroup, projectGroup));
+        }
     }
 }
