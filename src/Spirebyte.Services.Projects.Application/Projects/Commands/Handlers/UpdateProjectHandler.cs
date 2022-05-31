@@ -15,6 +15,7 @@ using Spirebyte.Services.Projects.Application.Users.Clients.Interfaces;
 using Spirebyte.Services.Projects.Core.Constants;
 using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Services.Projects.Core.Repositories;
+using Spirebyte.Shared.Changes;
 using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Projects.Application.Projects.Commands.Handlers;
@@ -88,6 +89,9 @@ internal sealed class UpdateProjectHandler : ICommandHandler<UpdateProject>
 
         _logger.LogInformation($"Updated project with id: {newProject.Id}.");
 
-        await _messageBroker.PublishAsync(new ProjectUpdated(newProject, currentProject));
+        if (ChangedFieldsHelper.HasChanges(newProject, currentProject))
+        {
+            await _messageBroker.PublishAsync(new ProjectUpdated(newProject, currentProject));
+        }
     }
 }
