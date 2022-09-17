@@ -1,4 +1,4 @@
-﻿using Convey.Types;
+﻿using Spirebyte.Framework.Shared.Types;
 using Spirebyte.Services.Projects.Core.Enums;
 
 namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;

@@ -1,9 +1,9 @@
-﻿using Convey.CQRS.Events;
-using Convey.MessageBrokers;
+﻿using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 
 namespace Spirebyte.Services.Projects.Application.Projects.Events.External;
 
-[Message("sprints")]
+[Message("sprints", "sprint_created", "projects.sprint_created")]
 public class SprintDeleted : IEvent
 {
     public SprintDeleted(string id)

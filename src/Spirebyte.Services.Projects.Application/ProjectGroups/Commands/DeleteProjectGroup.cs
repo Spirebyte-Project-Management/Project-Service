@@ -1,7 +1,8 @@
 ﻿using System;
-using Convey.CQRS.Commands;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 
 namespace Spirebyte.Services.Projects.Application.ProjectGroups.Commands;
 
-[Contract]
+[Message("projects", "delete_project_group", "projects.delete_project_group")]
 public record DeleteProjectGroup(Guid Id) : ICommand;

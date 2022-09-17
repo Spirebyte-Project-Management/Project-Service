@@ -1,4 +1,4 @@
-﻿using Spirebyte.Services.Projects.Application.Exceptions.Base;
+﻿using Spirebyte.Framework.Shared.Exceptions;
 
 namespace Spirebyte.Services.Projects.Application.PermissionSchemes.Exceptions;
 
@@ -9,7 +9,5 @@ public class PermissionNotFoundException : AppException
     {
         PermissionKey = permissionKey;
     }
-
-    public override string Code { get; } = "permission_not_found";
     private string PermissionKey { get; }
 }

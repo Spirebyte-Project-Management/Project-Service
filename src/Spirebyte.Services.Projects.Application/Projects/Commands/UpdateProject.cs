@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Convey.CQRS.Commands;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 
 namespace Spirebyte.Services.Projects.Application.Projects.Commands;
 
-[Contract]
+[Message("projects", "update_project", "projects.update_project")]
 public class UpdateProject : ICommand
 {
     public UpdateProject(string id, IEnumerable<Guid> projectUserIds, IEnumerable<Guid> invitedUserIds, string pic = "",

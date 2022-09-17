@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Queries;
-using Convey.Persistence.MongoDB;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using Spirebyte.Framework.DAL.MongoDb.Interfaces;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Projects.Application.Projects.Queries;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 

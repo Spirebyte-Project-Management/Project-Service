@@ -1,5 +1,5 @@
 ﻿using System;
-using Spirebyte.Services.Projects.Application.Exceptions.Base;
+using Spirebyte.Framework.Shared.Exceptions;
 
 namespace Spirebyte.Services.Projects.Application.Projects.Exceptions;
 
@@ -11,8 +11,6 @@ public class UserNotInvitedException : AppException
         UserId = userId;
         ProjectId = projectId;
     }
-
-    public override string Code { get; } = "user_not_invited";
     public Guid UserId { get; }
     public string ProjectId { get; }
 }

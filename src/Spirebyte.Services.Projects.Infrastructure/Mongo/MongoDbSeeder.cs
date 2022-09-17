@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Convey.Persistence.MongoDB;
-using MongoDB.Driver;
+using Spirebyte.Framework.DAL.MongoDb.Initializer;
 using Spirebyte.Services.Projects.Core.Constants;
 using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Services.Projects.Core.Enums;
@@ -9,7 +8,7 @@ using Spirebyte.Services.Projects.Core.Repositories;
 
 namespace Spirebyte.Services.Projects.Infrastructure.Mongo;
 
-internal sealed class MongoDbSeeder : IMongoDbSeeder
+internal sealed class MongoDbSeeder : IDataInitializer
 {
     private const string ProjectPermissionGroup = "Project Permissions";
     private const string IssuePermissionGroup = "Issue Permissions";
@@ -22,7 +21,7 @@ internal sealed class MongoDbSeeder : IMongoDbSeeder
         _permissionSchemeRepository = permissionSchemeRepository;
     }
 
-    public async Task SeedAsync(IMongoDatabase database)
+    public async Task InitAsync()
     {
         await SeedPermissionSchemes();
     }

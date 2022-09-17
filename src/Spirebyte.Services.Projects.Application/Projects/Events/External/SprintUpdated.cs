@@ -1,11 +1,11 @@
 ﻿using System;
-using Convey.CQRS.Events;
-using Convey.MessageBrokers;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 using Spirebyte.Services.Projects.Core.Enums;
 
 namespace Spirebyte.Services.Projects.Application.Projects.Events.External;
 
-[Message("sprints")]
+[Message("sprints", "sprint_updated", "projects.sprint_updated")]
 public class SprintUpdated : IEvent
 {
     public SprintUpdated(string id, DateTime startedAt, DateTime endedAt)

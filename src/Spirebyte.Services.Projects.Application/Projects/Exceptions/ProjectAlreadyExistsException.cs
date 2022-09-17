@@ -1,5 +1,5 @@
 ﻿using System;
-using Spirebyte.Services.Projects.Application.Exceptions.Base;
+using Spirebyte.Framework.Shared.Exceptions;
 
 namespace Spirebyte.Services.Projects.Application.Projects.Exceptions;
 
@@ -11,8 +11,6 @@ public class ProjectAlreadyExistsException : AppException
         Key = key;
         UserId = userId;
     }
-
-    public override string Code { get; } = "id_already_exists";
     public string Key { get; }
     public Guid UserId { get; }
 }

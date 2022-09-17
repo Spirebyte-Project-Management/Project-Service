@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Open.Serialization.Json;
+using Spirebyte.Framework.Contexts;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Exceptions;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Services.Interfaces;
 using Spirebyte.Services.Projects.Application.Projects.Exceptions;
@@ -14,24 +16,49 @@ namespace Spirebyte.Services.Projects.Application.PermissionSchemes.Services;
 public class PermissionService : IPermissionService
 {
     private readonly IJsonSerializer _jsonSerializer;
+    private readonly IContextAccessor _contextAccessor;
     private readonly IPermissionSchemeRepository _permissionSchemeRepository;
     private readonly IProjectGroupRepository _projectGroupRepository;
     private readonly IProjectRepository _projectRepository;
+    private readonly ILogger<PermissionService> _logger;
     private readonly IUserRepository _userRepository;
 
-    public PermissionService(IProjectRepository projectRepository,
+    public PermissionService(IProjectRepository projectRepository, ILogger<PermissionService> logger,
         IPermissionSchemeRepository permissionSchemeRepository, IProjectGroupRepository projectGroupRepository,
-        IUserRepository userRepository, IJsonSerializer jsonSerializer)
+        IUserRepository userRepository, IJsonSerializer jsonSerializer, IContextAccessor contextAccessor)
     {
         _projectRepository = projectRepository;
+        _logger = logger;
         _permissionSchemeRepository = permissionSchemeRepository;
         _projectGroupRepository = projectGroupRepository;
         _userRepository = userRepository;
         _jsonSerializer = jsonSerializer;
+        _contextAccessor = contextAccessor;
+    }
+    
+    public async Task<bool> HasPermission(string projectId, string permissionKey)
+    {
+        if (_contextAccessor.Context?.UserId is null)
+        {
+            return false;
+        }
+        return await UserHasPermission(projectId, _contextAccessor.Context.GetUserId(), permissionKey);
     }
 
-    public async Task<bool> HasPermission(string projectId, Guid userId, string permissionKey)
+    public async Task<bool> HasPermissions(string projectId, params string[] permissionKeys)
     {
+        if (_contextAccessor.Context?.UserId is null)
+        {
+            return false;
+        }
+        return await UserHasPermissions(projectId, _contextAccessor.Context.GetUserId(), permissionKeys);
+    }
+
+    public async Task<bool> UserHasPermission(string projectId, Guid userId, string permissionKey)
+    {
+        _logger.LogInformation("Checking permission '{permissionKey}' for user '{userId}' on project {projectId}",
+            permissionKey, userId, projectId);
+        
         if (!await _projectRepository.ExistsAsync(projectId)) throw new ProjectNotFoundException(projectId);
 
         if (!await _userRepository.ExistsAsync(userId)) throw new UserNotFoundException(userId);
@@ -84,13 +111,15 @@ public class PermissionService : IPermissionService
                     throw new ArgumentOutOfRangeException();
             }
 
+        _logger.LogInformation("User '{userId}' does not have '{permissionKey}' on project {projectId}",
+            userId, permissionKey, projectId);
         return false;
     }
 
-    public async Task<bool> HasPermissions(string projectId, Guid userId, params string[] permissionKeys)
+    public async Task<bool> UserHasPermissions(string projectId, Guid userId, params string[] permissionKeys)
     {
         foreach (var permissionKey in permissionKeys)
-            if (!await HasPermission(projectId, userId, permissionKey))
+            if (!await UserHasPermission(projectId, userId, permissionKey))
                 return false;
 
         return true;

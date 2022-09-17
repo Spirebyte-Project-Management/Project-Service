@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Convey.CQRS.Events;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 using Spirebyte.Services.Projects.Core.Entities;
 
 namespace Spirebyte.Services.Projects.Application.Projects.Events;
 
-[Contract]
+[Message("projects", "project_created")]
 public class ProjectCreated : IEvent
 {
     public ProjectCreated(string id, Guid permissionSchemeId, Guid ownerUserId, IEnumerable<Guid> projectUserIds,

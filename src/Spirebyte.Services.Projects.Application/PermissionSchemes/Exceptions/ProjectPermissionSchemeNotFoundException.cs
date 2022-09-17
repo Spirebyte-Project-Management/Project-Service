@@ -1,5 +1,5 @@
 ﻿using System;
-using Spirebyte.Services.Projects.Application.Exceptions.Base;
+using Spirebyte.Framework.Shared.Exceptions;
 
 namespace Spirebyte.Services.Projects.Application.PermissionSchemes.Exceptions;
 
@@ -10,7 +10,5 @@ public class ProjectPermissionSchemeNotFoundException : AppException
     {
         Id = id;
     }
-
-    public override string Code { get; } = "project_permission_scheme_does_not_exist";
     public Guid Id { get; }
 }

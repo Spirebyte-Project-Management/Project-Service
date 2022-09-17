@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Convey.CQRS.Commands;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 using Spirebyte.Services.Projects.Core.Entities;
 
 namespace Spirebyte.Services.Projects.Application.PermissionSchemes.Commands;
 
-[Contract]
+[Message("projects", "update_permission_scheme", "projects.update_permission_scheme")]
 public class UpdatePermissionScheme : ICommand
 {
     public UpdatePermissionScheme(Guid id, string name, string description, IEnumerable<Permission> permissions)

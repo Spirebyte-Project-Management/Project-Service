@@ -1,9 +1,10 @@
 ﻿using System;
-using Convey.CQRS.Events;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 
 namespace Spirebyte.Services.Projects.Application.Projects.Events;
 
-[Contract]
+[Message("projects", "project_joined")]
 public class ProjectJoined : IEvent
 {
     public ProjectJoined(string id, Guid userId)

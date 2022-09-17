@@ -1,0 +1,30 @@
+﻿version: "3.7"
+
+services:
+  spirebyte-projects-integration-mongo:
+    image: mongo
+    container_name: spirebyte-projects-integration-mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=4UeQAJgTqbCwjPCH
+    networks:
+      - spirebyte-projects-tests
+    ports:
+      - "5779:27017"
+
+  spirebyte-projects-integration-rabbitmq:
+    image: rabbitmq
+    container_name: spirebyte-projects-integration-rabbitmq
+    networks:
+      - spirebyte-projects-tests
+    ports:
+      - "5777:5672"
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 5s
+      timeout: 15s
+      retries: 1
+
+networks:
+  spirebyte-projects-tests:
+    name: spirebyte-projects-tests-network

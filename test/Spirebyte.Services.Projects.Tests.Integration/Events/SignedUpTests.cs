@@ -1,43 +1,39 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Convey.CQRS.Events;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using Spirebyte.Services.Projects.API;
-using Spirebyte.Services.Projects.Application.PermissionSchemes.Exceptions;
+using Spirebyte.Framework.Shared.Handlers;
+using Spirebyte.Framework.Tests.Shared.Fixtures;
 using Spirebyte.Services.Projects.Application.Users.Exceptions;
 using Spirebyte.Services.Projects.Application.Users.External;
+using Spirebyte.Services.Projects.Application.Users.External.Handlers;
 using Spirebyte.Services.Projects.Core.Entities;
+using Spirebyte.Services.Projects.Core.Repositories;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
-using Spirebyte.Services.Projects.Tests.Shared.Factories;
-using Spirebyte.Services.Projects.Tests.Shared.Fixtures;
+using Spirebyte.Services.Projects.Infrastructure.Mongo.Repositories;
 using Xunit;
 
 namespace Spirebyte.Services.Projects.Tests.Integration.Events;
 
-[Collection("Spirebyte collection")]
-public class SignedUpTests : IDisposable
+public class SignedUpTests : TestBase
 {
-    private const string Exchange = "projects";
     private readonly IEventHandler<SignedUp> _eventHandler;
-    private readonly RabbitMqFixture _rabbitMqFixture;
-    private readonly MongoDbFixture<UserDocument, Guid> _usersMongoDbFixture;
 
-    public SignedUpTests(SpirebyteApplicationFactory<Program> factory)
+    private readonly IUserRepository _userRepository;
+
+    public SignedUpTests(
+        MongoDbFixture<IssueDocument, string> issuesMongoDbFixture,
+        MongoDbFixture<PermissionSchemeDocument, Guid> permissionSchemesMongoDbFixture,
+        MongoDbFixture<ProjectGroupDocument, Guid> projectGroupsMongoDbFixture,
+        MongoDbFixture<ProjectDocument, string> projectsMongoDbFixture,
+        MongoDbFixture<SprintDocument, string> sprintsMongoDbFixture,
+        MongoDbFixture<UserDocument, Guid> usersMongoDbFixture) : base(issuesMongoDbFixture, permissionSchemesMongoDbFixture, projectGroupsMongoDbFixture, projectsMongoDbFixture, sprintsMongoDbFixture, usersMongoDbFixture)
     {
-        _rabbitMqFixture = new RabbitMqFixture();
-        _usersMongoDbFixture = new MongoDbFixture<UserDocument, Guid>("users");
-        factory.Server.AllowSynchronousIO = true;
-        _eventHandler = factory.Services.GetRequiredService<IEventHandler<SignedUp>>();
+        _userRepository = new UserRepository(UsersMongoDbFixture);
+        
+        _eventHandler = new SignedUpHandler(_userRepository);
     }
-
-    public void Dispose()
-    {
-        _usersMongoDbFixture.Dispose();
-    }
-
-
+    
     [Fact]
     public async Task signedup_event_should_add_user_with_given_data_to_database()
     {
@@ -54,26 +50,10 @@ public class SignedUpTests : IDisposable
             .Should().NotThrowAsync();
 
 
-        var user = await _usersMongoDbFixture.GetAsync(externalEvent.UserId);
+        var user = await UsersMongoDbFixture.GetAsync(externalEvent.UserId);
 
         user.Should().NotBeNull();
         user.Id.Should().Be(userId);
-    }
-
-    [Fact]
-    public async Task signedup_event_fails_when_user_does_not_have_required_role()
-    {
-        var userId = Guid.NewGuid();
-        var email = "email@test.com";
-
-
-        var externalEvent = new SignedUp(userId, email);
-
-        // Check if exception is thrown
-
-        await _eventHandler
-            .Awaiting(c => c.HandleAsync(externalEvent))
-            .Should().ThrowAsync<InvalidRoleException>();
     }
 
     [Fact]
@@ -83,7 +63,7 @@ public class SignedUpTests : IDisposable
         var email = "email@test.com";
 
         var user = new User(userId);
-        await _usersMongoDbFixture.InsertAsync(user.AsDocument());
+        await UsersMongoDbFixture.AddAsync(user.AsDocument());
 
         var externalEvent = new SignedUp(userId, email);
 

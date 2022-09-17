@@ -1,103 +1,98 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using Spirebyte.Services.Projects.API;
+using NSubstitute;
+using Spirebyte.Framework.Contexts;
+using Spirebyte.Framework.Shared.Handlers;
+using Spirebyte.Framework.Tests.Shared.Fixtures;
+using Spirebyte.Framework.Tests.Shared.Infrastructure;
 using Spirebyte.Services.Projects.Application.Projects.Commands;
+using Spirebyte.Services.Projects.Application.Projects.Commands.Handlers;
 using Spirebyte.Services.Projects.Application.Projects.Exceptions;
 using Spirebyte.Services.Projects.Application.Users.Exceptions;
 using Spirebyte.Services.Projects.Core.Entities;
-using Spirebyte.Services.Projects.Core.Entities.Objects;
+using Spirebyte.Services.Projects.Core.Repositories;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
-using Spirebyte.Services.Projects.Tests.Shared.Factories;
-using Spirebyte.Services.Projects.Tests.Shared.Fixtures;
+using Spirebyte.Services.Projects.Infrastructure.Mongo.Repositories;
+using Spirebyte.Services.Projects.Tests.Shared.MockData.Entities;
 using Xunit;
 
 namespace Spirebyte.Services.Projects.Tests.Integration.Commands;
 
-[Collection("Spirebyte collection")]
-public class LeaveProjectTests : IDisposable
+public class LeaveProjectTests : TestBase
 {
-    private const string Exchange = "projects";
+    private readonly TestMessageBroker _messageBroker;
+
     private readonly ICommandHandler<LeaveProject> _commandHandler;
-    private readonly MongoDbFixture<ProjectDocument, string> _projectsMongoDbFixture;
-    private readonly RabbitMqFixture _rabbitMqFixture;
-    private readonly MongoDbFixture<UserDocument, Guid> _usersMongoDbFixture;
+    
+    private readonly IUserRepository _userRepository;
+    private readonly IProjectRepository _projectRepository;
+    private readonly IContextAccessor _contextAccessor;
 
-    public LeaveProjectTests(SpirebyteApplicationFactory<Program> factory)
+    
+    public LeaveProjectTests(
+        MongoDbFixture<IssueDocument, string> issuesMongoDbFixture,
+        MongoDbFixture<PermissionSchemeDocument, Guid> permissionSchemesMongoDbFixture,
+        MongoDbFixture<ProjectGroupDocument, Guid> projectGroupsMongoDbFixture,
+        MongoDbFixture<ProjectDocument, string> projectsMongoDbFixture,
+        MongoDbFixture<SprintDocument, string> sprintsMongoDbFixture,
+        MongoDbFixture<UserDocument, Guid> usersMongoDbFixture) : base(issuesMongoDbFixture, permissionSchemesMongoDbFixture, projectGroupsMongoDbFixture, projectsMongoDbFixture, sprintsMongoDbFixture, usersMongoDbFixture)
     {
-        _rabbitMqFixture = new RabbitMqFixture();
-        _projectsMongoDbFixture = new MongoDbFixture<ProjectDocument, string>("projects");
-        _usersMongoDbFixture = new MongoDbFixture<UserDocument, Guid>("users");
-        factory.Server.AllowSynchronousIO = true;
-        _commandHandler = factory.Services.GetRequiredService<ICommandHandler<LeaveProject>>();
+        _messageBroker = new TestMessageBroker();
+
+        _userRepository = new UserRepository(UsersMongoDbFixture);
+        _projectRepository = new ProjectRepository(ProjectsMongoDbFixture);
+
+        _contextAccessor = Substitute.For<IContextAccessor>();
+        _contextAccessor.Context.Returns(new Context("some-activity-id", "some-trace-id", "some-correlation-id", "some-message-id", "some-causation-id", Guid.NewGuid().ToString()));
+
+        _commandHandler = new LeaveProjectHandler(_userRepository, _projectRepository, _messageBroker, _contextAccessor);
     }
-
-    public void Dispose()
-    {
-        _projectsMongoDbFixture.Dispose();
-        _usersMongoDbFixture.Dispose();
-    }
-
-
+    
     [Fact]
     public async Task leave_project_command_should_remove_invited_user_from_project()
     {
-        var projectId = "key";
-        var permissionSchemeId = Guid.NewGuid();
-        var ownerId = Guid.NewGuid();
-        var invitedUserId = Guid.NewGuid();
-        var title = "Title";
-        var description = "description";
+        var fakedProject = ProjectFaker.Instance.Generate();
 
-        var user = new User(ownerId);
-        await _usersMongoDbFixture.InsertAsync(user.AsDocument());
+        await UsersMongoDbFixture.AddAsync(new User(fakedProject.OwnerUserId).AsDocument());
 
-        var invitedUser = new User(invitedUserId);
-        await _usersMongoDbFixture.InsertAsync(invitedUser.AsDocument());
+        var invitedUser = new User(Guid.NewGuid());
+        await UsersMongoDbFixture.AddAsync(invitedUser.AsDocument());
+        _contextAccessor.Context.Returns(new Context("some-activity-id", "some-trace-id", "some-correlation-id",
+            "some-message-id", "some-causation-id", invitedUser.Id.ToString()));
 
-        var project = new Project(projectId, permissionSchemeId, ownerId, null, new[] { invitedUserId },
-            "test.nl/image", title, description, IssueInsights.Empty, SprintInsights.Empty, DateTime.UtcNow);
-        await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
-
-
-        var command = new LeaveProject(projectId);
+        fakedProject.InvitedUserIds.Add(invitedUser.Id);
+        await ProjectsMongoDbFixture.AddAsync(fakedProject.AsDocument());
+        
+        var command = new LeaveProject(fakedProject.Id);
 
         // Check if exception is thrown
-
         await _commandHandler
             .Awaiting(c => c.HandleAsync(command))
             .Should().NotThrowAsync();
 
-
-        var updatedProject = await _projectsMongoDbFixture.GetAsync(projectId);
+        var updatedProject = await ProjectsMongoDbFixture.GetAsync(fakedProject.Id);
 
         updatedProject.Should().NotBeNull();
-        updatedProject.ProjectUserIds.Should().NotContain(i => i == invitedUserId);
+        updatedProject.InvitedUserIds.Should().NotContain(i => i == invitedUser.Id);
+        updatedProject.ProjectUserIds.Should().NotContain(i => i == invitedUser.Id);
     }
 
     [Fact]
     public async Task leave_project_command_fails_when_no_project_with_id_exists()
     {
-        var projectId = "key";
-        var ownerId = Guid.NewGuid();
-        var invitedUserId = Guid.NewGuid();
-        var title = "Title";
-        var description = "description";
+        var fakedProject = ProjectFaker.Instance.Generate();
 
-        var user = new User(ownerId);
-        await _usersMongoDbFixture.InsertAsync(user.AsDocument());
+        await UsersMongoDbFixture.AddAsync(new User(fakedProject.OwnerUserId).AsDocument());
+        
+        var invitedUser = new User(Guid.NewGuid());
+        await UsersMongoDbFixture.AddAsync(invitedUser.AsDocument());
+        _contextAccessor.Context.Returns(new Context("some-activity-id", "some-trace-id", "some-correlation-id", "some-message-id", "some-causation-id", invitedUser.Id.ToString()));
 
-        var invitedUser = new User(invitedUserId);
-        await _usersMongoDbFixture.InsertAsync(invitedUser.AsDocument());
-
-
-        var command = new LeaveProject(projectId);
+        var command = new LeaveProject(fakedProject.Id);
 
         // Check if exception is thrown
-
         await _commandHandler
             .Awaiting(c => c.HandleAsync(command))
             .Should().ThrowAsync<ProjectNotFoundException>();
@@ -106,25 +101,19 @@ public class LeaveProjectTests : IDisposable
     [Fact]
     public async Task leave_project_command_fails_when_invited_user_does_not_exist()
     {
-        var projectId = "key";
-        var permissionSchemeId = Guid.NewGuid();
-        var ownerId = Guid.NewGuid();
-        var invitedUserId = Guid.NewGuid();
-        var title = "Title";
-        var description = "description";
+        var fakedProject = ProjectFaker.Instance.Generate();
 
-        var user = new User(ownerId);
-        await _usersMongoDbFixture.InsertAsync(user.AsDocument());
-
-        var project = new Project(projectId, permissionSchemeId, ownerId, null, new[] { invitedUserId },
-            "test.nl/image", title, description, IssueInsights.Empty, SprintInsights.Empty, DateTime.UtcNow);
-        await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
-
-
-        var command = new LeaveProject(projectId);
+        await UsersMongoDbFixture.AddAsync(new User(fakedProject.OwnerUserId).AsDocument());
+        
+        var invitedUser = new User(Guid.NewGuid());
+        _contextAccessor.Context.Returns(new Context("some-activity-id", "some-trace-id", "some-correlation-id", "some-message-id", "some-causation-id", invitedUser.Id.ToString()));
+        
+        fakedProject.InvitedUserIds.Add(invitedUser.Id);
+        await ProjectsMongoDbFixture.AddAsync(fakedProject.AsDocument());
+        
+        var command = new LeaveProject(fakedProject.Id);
 
         // Check if exception is thrown
-
         await _commandHandler
             .Awaiting(c => c.HandleAsync(command))
             .Should().ThrowAsync<UserNotFoundException>();
@@ -133,28 +122,20 @@ public class LeaveProjectTests : IDisposable
     [Fact]
     public async Task leave_project_command_fails_when_user_is_not_invited()
     {
-        var projectId = "key";
-        var permissionSchemeId = Guid.NewGuid();
-        var ownerId = Guid.NewGuid();
-        var invitedUserId = Guid.NewGuid();
-        var title = "Title";
-        var description = "description";
+        var fakedProject = ProjectFaker.Instance.Generate();
 
-        var user = new User(ownerId);
-        await _usersMongoDbFixture.InsertAsync(user.AsDocument());
+        await UsersMongoDbFixture.AddAsync(new User(fakedProject.OwnerUserId).AsDocument());
 
-        var invitedUser = new User(invitedUserId);
-        await _usersMongoDbFixture.InsertAsync(invitedUser.AsDocument());
+        var invitedUser = new User(Guid.NewGuid());
+        await UsersMongoDbFixture.AddAsync(invitedUser.AsDocument());
+        _contextAccessor.Context.Returns(new Context("some-activity-id", "some-trace-id", "some-correlation-id",
+            "some-message-id", "some-causation-id", invitedUser.Id.ToString()));
 
-        var project = new Project(projectId, permissionSchemeId, ownerId, null, null, "test.nl/image", title,
-            description, IssueInsights.Empty, SprintInsights.Empty, DateTime.UtcNow);
-        await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
-
-
-        var command = new LeaveProject(projectId);
+        await ProjectsMongoDbFixture.AddAsync(fakedProject.AsDocument());
+        
+        var command = new LeaveProject(fakedProject.Id);
 
         // Check if exception is thrown
-
         await _commandHandler
             .Awaiting(c => c.HandleAsync(command))
             .Should().ThrowAsync<UserNotInvitedException>();

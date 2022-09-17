@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Queries;
-using Convey.Persistence.MongoDB;
+using Spirebyte.Framework.DAL.MongoDb.Interfaces;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.DTO;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Queries;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;

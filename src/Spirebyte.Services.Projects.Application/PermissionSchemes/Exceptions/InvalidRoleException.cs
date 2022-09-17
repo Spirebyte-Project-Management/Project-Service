@@ -1,5 +1,5 @@
 ﻿using System;
-using Spirebyte.Services.Projects.Application.Exceptions.Base;
+using Spirebyte.Framework.Shared.Exceptions;
 
 namespace Spirebyte.Services.Projects.Application.PermissionSchemes.Exceptions;
 
@@ -10,6 +10,4 @@ public class InvalidRoleException : AppException
                $"due to the invalid role: {role} (required: {requiredRole}).")
     {
     }
-
-    public override string Code { get; } = "invalid_role";
 }

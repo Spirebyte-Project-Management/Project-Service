@@ -1,4 +1,4 @@
-﻿using Spirebyte.Services.Projects.Application.Exceptions.Base;
+﻿using Spirebyte.Framework.Shared.Exceptions;
 
 namespace Spirebyte.Services.Projects.Application.Projects.Exceptions;
 
@@ -8,7 +8,5 @@ public class SprintNotFoundException : AppException
     {
         SprintKey = sprintKey;
     }
-
-    public override string Code { get; } = "sprint_not_found";
     public string SprintKey { get; }
 }

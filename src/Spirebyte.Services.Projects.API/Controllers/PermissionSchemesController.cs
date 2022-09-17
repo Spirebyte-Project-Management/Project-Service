@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Convey.WebApi.CQRS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Projects.API.Controllers.Base;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Commands;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.DTO;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Queries;
-using Spirebyte.Services.Projects.Application.ProjectGroups.Commands;
 using Spirebyte.Services.Projects.Core.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 

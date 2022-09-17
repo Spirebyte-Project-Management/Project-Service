@@ -21,8 +21,8 @@ public class Project
         Id = id;
         PermissionSchemeId = permissionSchemeId;
         OwnerUserId = ownerUserId;
-        ProjectUserIds = projectUserIds ?? Enumerable.Empty<Guid>();
-        InvitedUserIds = invitedUserIds ?? Enumerable.Empty<Guid>();
+        ProjectUserIds = new List<Guid>(projectUserIds ?? Enumerable.Empty<Guid>());
+        InvitedUserIds = new List<Guid>(invitedUserIds ?? Enumerable.Empty<Guid>());
         Pic = pic;
         Title = title;
         Description = description;
@@ -31,22 +31,22 @@ public class Project
         CreatedAt = createdAt == DateTime.MinValue ? DateTime.Now : createdAt;
     }
 
-    public string Id { get; }
+    public string Id { get; set; }
 
-    public Guid PermissionSchemeId { get; private set; }
-    public Guid OwnerUserId { get; }
-    public IEnumerable<Guid> ProjectUserIds { get; private set; }
-    public IEnumerable<Guid> InvitedUserIds { get; private set; }
-    public string Pic { get; }
-    public string Title { get; }
-    public string Description { get; }
-    public IssueInsights IssueInsights { get; }
-    public SprintInsights SprintInsights { get; }
-    public DateTime CreatedAt { get; }
+    public Guid PermissionSchemeId { get; set; }
+    public Guid OwnerUserId { get; set; }
+    public List<Guid> ProjectUserIds { get; set; }
+    public List<Guid> InvitedUserIds { get; set; }
+    public string Pic { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public IssueInsights IssueInsights { get; set; }
+    public SprintInsights SprintInsights { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     public void JoinProject(Guid userId)
     {
-        InvitedUserIds = InvitedUserIds.Where(u => u != userId);
+        InvitedUserIds.Remove(userId);
         var projectUsers = ProjectUserIds.ToList();
         projectUsers.Add(userId);
         ProjectUserIds = projectUsers;
@@ -54,8 +54,8 @@ public class Project
 
     public void LeaveProject(Guid userId)
     {
-        InvitedUserIds = InvitedUserIds.Where(u => u != userId);
-        ProjectUserIds = InvitedUserIds.Where(u => u != userId);
+        InvitedUserIds.Remove(userId);
+        ProjectUserIds.Remove(userId);
     }
 
     public void SetPermissionSchemeId(Guid permissionSchemeId)

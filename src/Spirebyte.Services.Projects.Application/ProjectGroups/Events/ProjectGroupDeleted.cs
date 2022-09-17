@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Convey.CQRS.Events;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 using Spirebyte.Services.Projects.Core.Entities;
 
 namespace Spirebyte.Services.Projects.Application.ProjectGroups.Events;
 
-[Contract]
+[Message("projects", "project_group_deleted")]
 public class ProjectGroupDeleted : IEvent
 {
     public ProjectGroupDeleted(Guid projectGroupId, string projectId, string name, IEnumerable<Guid> userIds)

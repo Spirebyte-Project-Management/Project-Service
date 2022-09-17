@@ -1,48 +1,49 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
+using Spirebyte.Framework.Contexts;
+using Spirebyte.Framework.Messaging.Brokers;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Projects.Application.Projects.Events;
 using Spirebyte.Services.Projects.Application.Projects.Exceptions;
-using Spirebyte.Services.Projects.Application.Services.Interfaces;
 using Spirebyte.Services.Projects.Application.Users.Exceptions;
 using Spirebyte.Services.Projects.Core.Repositories;
-using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Projects.Application.Projects.Commands.Handlers;
 
-// Simple wrapper
 internal sealed class JoinProjectHandler : ICommandHandler<JoinProject>
 {
-    private readonly IAppContext _appContext;
+    private readonly IContextAccessor _contextAccessor;
     private readonly IMessageBroker _messageBroker;
     private readonly IProjectRepository _projectRepository;
     private readonly IUserRepository _userRepository;
 
     public JoinProjectHandler(IUserRepository userRepository, IProjectRepository projectRepository,
-        IMessageBroker messageBroker, IAppContext appContext)
+        IMessageBroker messageBroker, IContextAccessor contextAccessor)
     {
         _userRepository = userRepository;
         _projectRepository = projectRepository;
         _messageBroker = messageBroker;
-        _appContext = appContext;
+        _contextAccessor = contextAccessor;
     }
 
     public async Task HandleAsync(JoinProject command, CancellationToken cancellationToken = default)
     {
+        var invitedUserId = _contextAccessor.Context.GetUserId();
+
         if (!await _projectRepository.ExistsAsync(command.ProjectId))
             throw new ProjectNotFoundException(command.ProjectId);
 
-        if (!await _userRepository.ExistsAsync(_appContext.Identity.Id))
-            throw new UserNotFoundException(_appContext.Identity.Id);
+        if (!await _userRepository.ExistsAsync(invitedUserId))
+            throw new UserNotFoundException(invitedUserId);
 
         var project = await _projectRepository.GetAsync(command.ProjectId);
-        if (!project.InvitedUserIds.Contains(_appContext.Identity.Id))
-            throw new UserNotInvitedException(_appContext.Identity.Id, command.ProjectId);
+        if (!project.InvitedUserIds.Contains(invitedUserId))
+            throw new UserNotInvitedException(invitedUserId, command.ProjectId);
 
-        project.JoinProject(_appContext.Identity.Id);
+        project.JoinProject(invitedUserId);
 
         await _projectRepository.UpdateAsync(project);
-        await _messageBroker.PublishAsync(new ProjectJoined(project.Id, _appContext.Identity.Id));
+        await _messageBroker.SendAsync(new ProjectJoined(project.Id, invitedUserId), cancellationToken);
     }
 }

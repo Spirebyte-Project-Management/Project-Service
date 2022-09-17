@@ -1,98 +1,93 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using Spirebyte.Services.Projects.API;
+using NSubstitute;
+using Spirebyte.Framework.Contexts;
+using Spirebyte.Framework.Shared.Handlers;
+using Spirebyte.Framework.Tests.Shared.Fixtures;
+using Spirebyte.Framework.Tests.Shared.Infrastructure;
 using Spirebyte.Services.Projects.Application.Projects.Commands;
+using Spirebyte.Services.Projects.Application.Projects.Commands.Handlers;
 using Spirebyte.Services.Projects.Application.Projects.Exceptions;
 using Spirebyte.Services.Projects.Application.Users.Exceptions;
 using Spirebyte.Services.Projects.Core.Entities;
-using Spirebyte.Services.Projects.Core.Entities.Objects;
+using Spirebyte.Services.Projects.Core.Repositories;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
-using Spirebyte.Services.Projects.Tests.Shared.Factories;
-using Spirebyte.Services.Projects.Tests.Shared.Fixtures;
+using Spirebyte.Services.Projects.Infrastructure.Mongo.Repositories;
+using Spirebyte.Services.Projects.Tests.Shared.MockData.Entities;
 using Xunit;
 
 namespace Spirebyte.Services.Projects.Tests.Integration.Commands;
 
-[Collection("Spirebyte collection")]
-public class CreateProjectTests : IDisposable
+public class CreateProjectTests : TestBase
 {
-    private const string Exchange = "projects";
+    private readonly TestMessageBroker _messageBroker;
+
     private readonly ICommandHandler<CreateProject> _commandHandler;
-    private readonly MongoDbFixture<ProjectDocument, string> _projectsMongoDbFixture;
-    private readonly RabbitMqFixture _rabbitMqFixture;
-    private readonly MongoDbFixture<UserDocument, Guid> _usersMongoDbFixture;
+    
+    private readonly IUserRepository _userRepository;
+    private readonly IProjectRepository _projectRepository;
+    private readonly IContextAccessor _contextAccessor;
 
-    public CreateProjectTests(SpirebyteApplicationFactory<Program> factory)
+    
+    public CreateProjectTests(
+        MongoDbFixture<IssueDocument, string> issuesMongoDbFixture,
+        MongoDbFixture<PermissionSchemeDocument, Guid> permissionSchemesMongoDbFixture,
+        MongoDbFixture<ProjectGroupDocument, Guid> projectGroupsMongoDbFixture,
+        MongoDbFixture<ProjectDocument, string> projectsMongoDbFixture,
+        MongoDbFixture<SprintDocument, string> sprintsMongoDbFixture,
+        MongoDbFixture<UserDocument, Guid> usersMongoDbFixture) : base(issuesMongoDbFixture, permissionSchemesMongoDbFixture, projectGroupsMongoDbFixture, projectsMongoDbFixture, sprintsMongoDbFixture, usersMongoDbFixture)
     {
-        _rabbitMqFixture = new RabbitMqFixture();
-        _projectsMongoDbFixture = new MongoDbFixture<ProjectDocument, string>("projects");
-        _usersMongoDbFixture = new MongoDbFixture<UserDocument, Guid>("users");
-        factory.Server.AllowSynchronousIO = true;
-        _commandHandler = factory.Services.GetRequiredService<ICommandHandler<CreateProject>>();
-    }
+        _messageBroker = new TestMessageBroker();
 
-    public void Dispose()
-    {
-        _projectsMongoDbFixture.Dispose();
-        _usersMongoDbFixture.Dispose();
+        _userRepository = new UserRepository(UsersMongoDbFixture);
+        _projectRepository = new ProjectRepository(ProjectsMongoDbFixture);
+
+        _contextAccessor = Substitute.For<IContextAccessor>();
+
+        _commandHandler = new CreateProjectHandler(_userRepository, _projectRepository, _messageBroker, _contextAccessor);
     }
 
 
     [Fact]
     public async Task create_project_command_should_add_project_with_given_data_to_database()
     {
-        var projectId = "key";
-        var title = "Title";
-        var description = "description";
+        var fakedProject = ProjectFaker.Instance.Generate();
 
-        var user = new User(Guid.NewGuid());
-        await _usersMongoDbFixture.InsertAsync(user.AsDocument());
+        await _userRepository.AddAsync(new User(fakedProject.OwnerUserId));
+        _contextAccessor.Context.Returns(new Context("some-activity-id", "some-trace-id", "some-correlation-id", "some-message-id", "some-causation-id", fakedProject.OwnerUserId.ToString()));
 
-
-        var command = new CreateProject(projectId, null, null, "test.nl/image", title, description);
+        var command = new CreateProject(fakedProject.Id, fakedProject.ProjectUserIds, fakedProject.InvitedUserIds,
+            "test.nl/image", fakedProject.Title, fakedProject.Description);
 
         // Check if exception is thrown
-
         await _commandHandler
             .Awaiting(c => c.HandleAsync(command))
             .Should().NotThrowAsync();
 
 
-        var project = await _projectsMongoDbFixture.GetAsync(command.Id);
+        var project = await ProjectsMongoDbFixture.GetAsync(command.Id);
 
         project.Should().NotBeNull();
-        project.Id.Should().Be(projectId);
-        project.Title.Should().Be(title);
-        project.Description.Should().Be(description);
+        project.Id.Should().Be(fakedProject.Id);
+        project.Title.Should().Be(fakedProject.Title);
+        project.Description.Should().Be(fakedProject.Description  );
     }
 
     [Fact]
     public async Task create_project_command_fails_when_project_with_key_already_exists_in_database()
     {
-        var projectId = "key";
-        var permissionSchemeId = Guid.NewGuid();
-        var ownerId = Guid.NewGuid();
-        var title = "Title";
-        var description = "description";
-
-        // Add owner
-        var user = new User(ownerId);
-        await _usersMongoDbFixture.InsertAsync(user.AsDocument());
+        var fakedProject = ProjectFaker.Instance.Generate();
+        await UsersMongoDbFixture.AddAsync(new User(fakedProject.OwnerUserId).AsDocument());
+        _contextAccessor.Context.Returns(new Context("some-activity-id", "some-trace-id", "some-correlation-id", "some-message-id", "some-causation-id", fakedProject.OwnerUserId.ToString()));
 
         // Add project
-        var project = new Project(projectId, permissionSchemeId, ownerId, null, null, "test.nl/image", title,
-            description, IssueInsights.Empty, SprintInsights.Empty, DateTime.UtcNow);
-        await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
+        await ProjectsMongoDbFixture.AddAsync(fakedProject.AsDocument());
 
-
-        var command = new CreateProject(projectId, null, null, "test.nl/image", title, description);
-
-        // Check if exception is thrown
-
+        var command = new CreateProject(fakedProject.Id, fakedProject.ProjectUserIds, fakedProject.InvitedUserIds,
+            "test.nl/image", fakedProject.Title, fakedProject.Description);
+        
         await _commandHandler
             .Awaiting(c => c.HandleAsync(command))
             .Should().ThrowAsync<ProjectAlreadyExistsException>();
@@ -101,14 +96,11 @@ public class CreateProjectTests : IDisposable
     [Fact]
     public async Task create_project_command_fails_when_owner_does_not_exist()
     {
-        var projectId = "key";
-        var key = "key";
-        var title = "Title";
-        var description = "description";
+        var fakedProject = ProjectFaker.Instance.Generate();
+        _contextAccessor.Context.Returns(new Context("some-activity-id", "some-trace-id", "some-correlation-id", "some-message-id", "some-causation-id", fakedProject.OwnerUserId.ToString()));
 
-        var command = new CreateProject(projectId, null, null, "test.nl/image", title, description);
-
-        // Check if exception is thrown
+        var command = new CreateProject(fakedProject.Id, fakedProject.ProjectUserIds, fakedProject.InvitedUserIds,
+            "test.nl/image", fakedProject.Title, fakedProject.Description);
 
         await _commandHandler
             .Awaiting(c => c.HandleAsync(command))

@@ -1,5 +1,5 @@
 ﻿using System;
-using Spirebyte.Services.Projects.Application.Exceptions.Base;
+using Spirebyte.Framework.Shared.Exceptions;
 
 namespace Spirebyte.Services.Projects.Application.Users.Exceptions;
 
@@ -10,6 +10,5 @@ public class UserNotFoundException : AppException
         UserId = userId;
     }
 
-    public override string Code { get; } = "user_not_found";
     public Guid UserId { get; }
 }

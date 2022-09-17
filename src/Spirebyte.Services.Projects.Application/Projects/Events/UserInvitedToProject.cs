@@ -1,9 +1,10 @@
 ﻿using System;
-using Convey.CQRS.Events;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 
 namespace Spirebyte.Services.Projects.Application.Projects.Events;
 
-[Contract]
+[Message("projects", "user_invited_to_project")]
 public class UserInvitedToProject : IEvent
 {
     public UserInvitedToProject(string id, Guid userId, string projectTitle, string username,

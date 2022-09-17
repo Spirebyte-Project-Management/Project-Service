@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Convey.CQRS.Events;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 using Spirebyte.Services.Projects.Core.Entities;
 
 namespace Spirebyte.Services.Projects.Application.PermissionSchemes.Events;
 
-[Contract]
+[Message("projects", "custom_permission_scheme_created")]
 public class CustomPermissionSchemeCreated : IEvent
 {
     public CustomPermissionSchemeCreated(string projectId, Guid permissionSchemeId, string name, string description,

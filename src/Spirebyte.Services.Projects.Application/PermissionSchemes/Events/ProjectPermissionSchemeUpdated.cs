@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Convey.CQRS.Events;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 using Spirebyte.Services.Projects.Core.Entities;
 using Spirebyte.Shared.Changes;
 using Spirebyte.Shared.Changes.ValueObjects;
 
 namespace Spirebyte.Services.Projects.Application.PermissionSchemes.Events;
 
-[Contract]
+[Message("projects", "project_permission_scheme_updated")]
 public class ProjectPermissionSchemeUpdated : IEvent
 {
     public ProjectPermissionSchemeUpdated(string projectId, Guid permissionSchemeId, string name, string description,

@@ -1,9 +1,9 @@
-﻿using Convey.CQRS.Events;
-using Convey.MessageBrokers;
+﻿using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 
 namespace Spirebyte.Services.Projects.Application.Projects.Events.External;
 
-[Message("issues")]
+[Message("issues", "issue_deleted", "projects.issue_deleted")]
 public class IssueDeleted : IEvent
 {
     public IssueDeleted(string id, string projectId)

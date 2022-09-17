@@ -1,4 +1,4 @@
-﻿using Spirebyte.Services.Projects.Application.Exceptions.Base;
+﻿using Spirebyte.Framework.Shared.Exceptions;
 
 namespace Spirebyte.Services.Projects.Application.ProjectGroups.Exceptions;
 
@@ -9,7 +9,5 @@ public class ProjectGroupAlreadyExistsException : AppException
     {
         Name = name;
     }
-
-    public override string Code { get; } = "project_group_already_exists";
     public string Name { get; }
 }

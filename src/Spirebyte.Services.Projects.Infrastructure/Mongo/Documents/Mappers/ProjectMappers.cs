@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Spirebyte.Services.Projects.Application.Projects.DTO;
 using Spirebyte.Services.Projects.Core.Entities;
@@ -21,8 +22,8 @@ internal static class ProjectMappers
             Id = entity.Id,
             PermissionSchemeId = entity.PermissionSchemeId,
             OwnerUserId = entity.OwnerUserId,
-            ProjectUserIds = entity.ProjectUserIds ?? Enumerable.Empty<Guid>(),
-            InvitedUserIds = entity.InvitedUserIds ?? Enumerable.Empty<Guid>(),
+            ProjectUserIds = new List<Guid>(entity.ProjectUserIds ?? Enumerable.Empty<Guid>()),
+            InvitedUserIds = new List<Guid>(entity.InvitedUserIds ?? Enumerable.Empty<Guid>()),
             Pic = entity.Pic,
             Title = entity.Title,
             Description = entity.Description,
@@ -39,8 +40,8 @@ internal static class ProjectMappers
             Id = document.Id,
             PermissionSchemeId = document.PermissionSchemeId,
             OwnerUserId = document.OwnerUserId,
-            ProjectUserIds = document.ProjectUserIds ?? Enumerable.Empty<Guid>(),
-            InvitedUserIds = document.InvitedUserIds ?? Enumerable.Empty<Guid>(),
+            ProjectUserIds = new List<Guid>(document.ProjectUserIds ?? Enumerable.Empty<Guid>()),
+            InvitedUserIds = new List<Guid>(document.InvitedUserIds ?? Enumerable.Empty<Guid>()),
             Pic = document.Pic,
             Title = document.Title,
             Description = document.Description,

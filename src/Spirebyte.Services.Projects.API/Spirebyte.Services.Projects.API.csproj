@@ -10,18 +10,26 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Convey" Version="1.0.531"/>
-        <PackageReference Include="Convey.Logging" Version="1.0.531"/>
-        <PackageReference Include="Convey.WebApi" Version="1.0.531"/>
-        <PackageReference Include="Convey.WebApi.CQRS" Version="1.0.531"/>
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+        <ProjectReference Include="..\Spirebyte.Services.Projects.Infrastructure\Spirebyte.Services.Projects.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\Spirebyte.Services.Projects.Infrastructure\Spirebyte.Services.Projects.Infrastructure.csproj"/>
+      <Content Include="Certs\localhost.cer">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Certs\localhost.key">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Certs\localhost.pem">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Certs\localhost.pfx">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="docker-compose.integration.yml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

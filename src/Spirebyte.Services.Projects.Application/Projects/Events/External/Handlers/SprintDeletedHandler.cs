@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Events;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Projects.Application.Projects.Exceptions;
 using Spirebyte.Services.Projects.Core.Repositories;
 

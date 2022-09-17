@@ -1,61 +1,42 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Convey.CQRS.Queries;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using Spirebyte.Services.Projects.API;
+using Spirebyte.Framework.Shared.Handlers;
+using Spirebyte.Framework.Tests.Shared.Fixtures;
 using Spirebyte.Services.Projects.Application.Projects.Queries;
-using Spirebyte.Services.Projects.Core.Entities;
-using Spirebyte.Services.Projects.Core.Entities.Base;
-using Spirebyte.Services.Projects.Core.Entities.Objects;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
-using Spirebyte.Services.Projects.Tests.Shared.Factories;
-using Spirebyte.Services.Projects.Tests.Shared.Fixtures;
+using Spirebyte.Services.Projects.Infrastructure.Mongo.Queries.Handler;
+using Spirebyte.Services.Projects.Tests.Shared.MockData.Entities;
 using Xunit;
 
 namespace Spirebyte.Services.Projects.Tests.Integration.Queries;
 
-[Collection("Spirebyte collection")]
-public class DoesProjectExistTests : IDisposable
+public class DoesProjectExistTests : TestBase
 {
-    private const string Exchange = "projects";
-    private readonly MongoDbFixture<ProjectDocument, string> _mongoDbFixture;
     private readonly IQueryHandler<DoesProjectExist, bool> _queryHandler;
-    private readonly RabbitMqFixture _rabbitMqFixture;
 
-    public DoesProjectExistTests(SpirebyteApplicationFactory<Program> factory)
+    public DoesProjectExistTests(
+        MongoDbFixture<IssueDocument, string> issuesMongoDbFixture,
+        MongoDbFixture<PermissionSchemeDocument, Guid> permissionSchemesMongoDbFixture,
+        MongoDbFixture<ProjectGroupDocument, Guid> projectGroupsMongoDbFixture,
+        MongoDbFixture<ProjectDocument, string> projectsMongoDbFixture,
+        MongoDbFixture<SprintDocument, string> sprintsMongoDbFixture,
+        MongoDbFixture<UserDocument, Guid> usersMongoDbFixture) : base(issuesMongoDbFixture, permissionSchemesMongoDbFixture, projectGroupsMongoDbFixture, projectsMongoDbFixture, sprintsMongoDbFixture, usersMongoDbFixture)
     {
-        _rabbitMqFixture = new RabbitMqFixture();
-        _mongoDbFixture = new MongoDbFixture<ProjectDocument, string>("projects");
-        factory.Server.AllowSynchronousIO = true;
-        _queryHandler = factory.Services.GetRequiredService<IQueryHandler<DoesProjectExist, bool>>();
+        _queryHandler = new DoesProjectExistHandler(ProjectsMongoDbFixture);
     }
-
-    public void Dispose()
-    {
-        _mongoDbFixture.Dispose();
-    }
-
 
     [Fact]
     public async Task does_project_exist_query_returns_true_when_project_with_id_exist()
     {
-        var projectId = "key";
-        var permissionSchemeId = Guid.NewGuid();
-        var ownerId = new AggregateId();
-        var title = "Title";
-        var description = "description";
-
-        var project = new Project(projectId, permissionSchemeId, ownerId, null, null, "test.nl/image", title,
-            description, IssueInsights.Empty, SprintInsights.Empty, DateTime.UtcNow);
-        await _mongoDbFixture.InsertAsync(project.AsDocument());
+        var fakedProject = ProjectFaker.Instance.Generate();
+        await ProjectsMongoDbFixture.AddAsync(fakedProject.AsDocument());
 
 
-        var query = new DoesProjectExist(projectId);
+        var query = new DoesProjectExist(fakedProject.Id);
 
         // Check if exception is thrown
-
         var requestResult = _queryHandler
             .Awaiting(c => c.HandleAsync(query));
 
@@ -69,12 +50,11 @@ public class DoesProjectExistTests : IDisposable
     [Fact]
     public async Task does_project_exist_query_returns_false_when_no_project_with_id_exist()
     {
-        var projectId = "notExistingKey";
-
-        var query = new DoesProjectExist(projectId);
+        var fakedProject = ProjectFaker.Instance.Generate();
+        
+        var query = new DoesProjectExist(fakedProject.Id);
 
         // Check if exception is thrown
-
         var requestResult = _queryHandler
             .Awaiting(c => c.HandleAsync(query));
 

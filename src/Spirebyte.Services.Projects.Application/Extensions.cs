@@ -1,44 +1,38 @@
 ﻿using System;
-using Convey;
-using Convey.CQRS.Commands;
-using Convey.CQRS.Events;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Spirebyte.Framework.Messaging;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Services;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Services.Interfaces;
+using Spirebyte.Services.Projects.Application.Projects.Commands;
+using Spirebyte.Services.Projects.Application.Projects.Events;
+using Spirebyte.Services.Projects.Application.Projects.Events.External;
+using Spirebyte.Services.Projects.Application.Users.External;
 
 namespace Spirebyte.Services.Projects.Application;
 
 public static class Extensions
 {
-    public static IConveyBuilder AddApplication(this IConveyBuilder builder)
+    public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        builder.Services.AddSingleton<IPermissionService, PermissionService>();
+        services.AddTransient<IPermissionService, PermissionService>();
 
-        return builder
-            .AddCommandHandlers()
-            .AddEventHandlers()
-            .AddInMemoryCommandDispatcher()
-            .AddInMemoryEventDispatcher();
+        return services;
     }
 
-    public static string GetMimeTypeFromBase64(string base64Url)
+    public static IApplicationBuilder UseApplication(this IApplicationBuilder app)
     {
-        var pFrom = base64Url.IndexOf("data:", StringComparison.Ordinal) + "data:".Length;
-        var pTo = base64Url.LastIndexOf(";", StringComparison.Ordinal);
+        app.Subscribe()
+            .Command<CreateProject>()
+            .Command<UpdateProject>()
+            .Event<IssueCreated>()
+            .Event<IssueUpdated>()
+            .Event<IssueDeleted>()
+            .Event<SprintCreated>()
+            .Event<SprintUpdated>()
+            .Event<SprintDeleted>()
+            .Event<SignedUp>();
 
-        return base64Url.Substring(pFrom, pTo - pFrom);
-    }
-
-    public static string GetDataFromBase64(string base64Url)
-    {
-        var pFrom = base64Url.IndexOf("base64,", StringComparison.Ordinal) + "base64,".Length;
-
-        return base64Url.Substring(pFrom);
-    }
-
-    public static double ConvertToUnixTimestamp(this DateTime date)
-    {
-        var diff = date.ToUniversalTime() - DateTime.UnixEpoch;
-        return Math.Floor(diff.TotalSeconds);
+        return app;
     }
 }

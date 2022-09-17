@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Convey.Types;
+using Spirebyte.Framework.Shared.Types;
 using Spirebyte.Services.Projects.Core.Entities;
 
 namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 
-internal sealed class PermissionSchemeDocument : IIdentifiable<Guid>
+public sealed class PermissionSchemeDocument : IIdentifiable<Guid>
 {
     public string ProjectId { get; set; }
     public string Name { get; set; }

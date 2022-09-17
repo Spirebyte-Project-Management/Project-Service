@@ -1,5 +1,5 @@
 ﻿using System;
-using Spirebyte.Services.Projects.Core.Exceptions.Base;
+using Spirebyte.Framework.Shared.Exceptions;
 
 namespace Spirebyte.Services.Projects.Core.Exceptions;
 
@@ -13,5 +13,5 @@ public class InvalidIdException : DomainException
     {
     }
 
-    public override string Code { get; } = "invalid_id";
+    public string Code { get; } = "invalid_id";
 }

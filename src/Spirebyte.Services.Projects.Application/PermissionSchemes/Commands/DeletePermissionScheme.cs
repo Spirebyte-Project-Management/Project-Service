@@ -1,7 +1,8 @@
 ﻿using System;
-using Convey.CQRS.Commands;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 
 namespace Spirebyte.Services.Projects.Application.PermissionSchemes.Commands;
 
-[Contract]
+[Message("projects", "delete_permission_scheme", "projects.delete_permission_scheme")]
 public record DeletePermissionScheme(Guid Id) : ICommand;

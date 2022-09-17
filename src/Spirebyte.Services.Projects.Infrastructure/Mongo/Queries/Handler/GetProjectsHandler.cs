@@ -1,31 +1,31 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Queries;
-using Convey.Persistence.MongoDB;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using Spirebyte.Framework.Contexts;
+using Spirebyte.Framework.DAL.MongoDb.Interfaces;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Projects.Application.Projects.DTO;
 using Spirebyte.Services.Projects.Application.Projects.Queries;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
-using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Queries.Handler;
 
 internal sealed class GetProjectsHandler : IQueryHandler<GetProjects, IEnumerable<ProjectDto>>
 {
-    private readonly IAppContext _appContext;
+    private readonly IContextAccessor _contextAccessor;
     private readonly ILogger _logger;
     private readonly IMongoRepository<ProjectDocument, string> _projectRepository;
 
-    public GetProjectsHandler(IMongoRepository<ProjectDocument, string> projectRepository, IAppContext appContext,
+    public GetProjectsHandler(IMongoRepository<ProjectDocument, string> projectRepository, IContextAccessor contextAccessor,
         ILogger<GetProjectsHandler> logger)
     {
         _projectRepository = projectRepository;
-        _appContext = appContext;
+        _contextAccessor = contextAccessor;
         _logger = logger;
     }
 
@@ -33,9 +33,9 @@ internal sealed class GetProjectsHandler : IQueryHandler<GetProjects, IEnumerabl
         CancellationToken cancellationToken = default)
     {
         var documents = _projectRepository.Collection.AsQueryable();
-        if (_appContext.Identity.IsAuthenticated)
+        if (_contextAccessor.Context?.UserId is not null)
         {
-            var userId = _appContext.Identity.Id;
+            var userId = _contextAccessor.Context.GetUserId();
 
             _logger.LogInformation("Getting project for user with id: {id}", userId);
 
@@ -45,7 +45,7 @@ internal sealed class GetProjectsHandler : IQueryHandler<GetProjects, IEnumerabl
         }
 
         var projects = await documents.ToListAsync(cancellationToken);
-
+        
         return projects.Select(p => p.AsDto());
     }
 }
