@@ -27,8 +27,6 @@ public class ProjectGroupsController : ApiController
     [Authorize(ApiScopes.ProjectGroupsRead)]
     [SwaggerOperation("Browse project groups")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<ProjectGroupDto>> BrowseAsync([FromQuery] GetProjectGroups query)
     {
         return Ok(await _dispatcher.QueryAsync(query));
@@ -39,8 +37,6 @@ public class ProjectGroupsController : ApiController
     [SwaggerOperation("Get project group")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<ProjectGroupDto?>> GetAsync(Guid projectGroupId)
     {
         return await _dispatcher.QueryAsync(new GetProjectGroup(projectGroupId));

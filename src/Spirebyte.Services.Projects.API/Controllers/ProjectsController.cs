@@ -28,8 +28,6 @@ public class ProjectsController : ApiController
     [Authorize(ApiScopes.ProjectsRead)]
     [SwaggerOperation("Browse projects")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<ProjectDto>> BrowseAsync([FromQuery] GetProjects query)
     {
         return Ok(await _dispatcher.QueryAsync(query));
@@ -40,8 +38,6 @@ public class ProjectsController : ApiController
     [SwaggerOperation("Get project")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<ProjectDto?>> GetAsync(string projectId)
     {
         return await _dispatcher.QueryAsync(new GetProject(projectId));
@@ -52,8 +48,6 @@ public class ProjectsController : ApiController
     [SwaggerOperation("Does project exist")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<bool>> ExistsAsync(string projectId)
     {
         return await _dispatcher.QueryAsync(new DoesProjectExist(projectId));
@@ -110,8 +104,6 @@ public class ProjectsController : ApiController
     [HttpGet("{projectId}/user/{userId:guid}/hasPermission/{permissionKey}")]
     [SwaggerOperation("Has permission")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<bool>> HasPermissionAsync(string projectId, Guid userId, string permissionKey)
     {
         return await _dispatcher.QueryAsync(new HasPermission(permissionKey, userId, projectId));

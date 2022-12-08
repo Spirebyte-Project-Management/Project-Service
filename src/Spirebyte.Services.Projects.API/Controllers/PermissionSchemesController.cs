@@ -27,8 +27,6 @@ public class PermissionSchemesController : ApiController
     [Authorize(ApiScopes.ProjectPermissionSchemesRead)]
     [SwaggerOperation("Browse permission schemes")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<PermissionSchemeDto>> BrowseAsync([FromQuery] GetPermissionSchemes query)
     {
         return Ok(await _dispatcher.QueryAsync(query));
@@ -39,8 +37,6 @@ public class PermissionSchemesController : ApiController
     [SwaggerOperation("Get Permission scheme")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<PermissionSchemeDto?>> GetAsync(Guid permissionSchemeId)
     {
         return await _dispatcher.QueryAsync(new GetPermissionScheme(permissionSchemeId));
