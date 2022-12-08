@@ -3,9 +3,6 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <UserSecretsId>eac4a875-6c45-4a5b-8cfe-80c130754c2c</UserSecretsId>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <DockerfileContext>..\..\..\..</DockerfileContext>
-        <DockerComposeProjectPath>..\..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
         <LangVersion>latestmajor</LangVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
@@ -16,18 +13,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="Certs\localhost.cer">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <Content Include="Certs\localhost.key">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <Content Include="Certs\localhost.pem">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <Content Include="Certs\localhost.pfx">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
       <Content Include="docker-compose.integration.yml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
