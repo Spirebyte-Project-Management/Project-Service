@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Spirebyte.Framework.API;
 using Spirebyte.Framework.Shared.Handlers;
-using Spirebyte.Services.Projects.API.Controllers.Base;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Commands;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.DTO;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Queries;
@@ -14,7 +14,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Spirebyte.Services.Projects.API.Controllers;
 
 [Authorize]
-public class PermissionSchemesController : BaseController
+public class PermissionSchemesController : ApiController
 {
     private readonly IDispatcher _dispatcher;
 
@@ -24,7 +24,7 @@ public class PermissionSchemesController : BaseController
     }
 
     [HttpGet]
-    [Authorize(ApiScopes.Read)]
+    [Authorize(ApiScopes.ProjectPermissionSchemesRead)]
     [SwaggerOperation("Browse permission schemes")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -35,19 +35,19 @@ public class PermissionSchemesController : BaseController
     }
 
     [HttpGet("{permissionSchemeId:guid}")]
-    [Authorize(ApiScopes.Read)]
+    [Authorize(ApiScopes.ProjectPermissionSchemesRead)]
     [SwaggerOperation("Get Permission scheme")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult<PermissionSchemeDto>> GetAsync(Guid permissionSchemeId)
+    public async Task<ActionResult<PermissionSchemeDto?>> GetAsync(Guid permissionSchemeId)
     {
-        return OkOrNotFound(await _dispatcher.QueryAsync(new GetPermissionScheme(permissionSchemeId)));
+        return await _dispatcher.QueryAsync(new GetPermissionScheme(permissionSchemeId));
     }
 
     [HttpPost]
-    [Authorize(ApiScopes.Write)]
+    [Authorize(ApiScopes.ProjectPermissionSchemesWrite)]
     [SwaggerOperation("Create Permission scheme")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -60,7 +60,7 @@ public class PermissionSchemesController : BaseController
 
 
     [HttpPut("{permissionSchemeId:guid}")]
-    [Authorize(ApiScopes.Write)]
+    [Authorize(ApiScopes.ProjectPermissionSchemesWrite)]
     [SwaggerOperation("Update permission scheme")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -73,7 +73,7 @@ public class PermissionSchemesController : BaseController
     }
 
     [HttpDelete("{permissionSchemeId:guid}")]
-    [Authorize(ApiScopes.Delete)]
+    [Authorize(ApiScopes.ProjectPermissionSchemesDelete)]
     [SwaggerOperation("Delete permission scheme")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

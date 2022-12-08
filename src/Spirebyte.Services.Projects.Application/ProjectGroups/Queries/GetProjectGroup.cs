@@ -4,7 +4,7 @@ using Spirebyte.Services.Projects.Application.ProjectGroups.DTO;
 
 namespace Spirebyte.Services.Projects.Application.ProjectGroups.Queries;
 
-public class GetProjectGroup : IQuery<ProjectGroupDto>
+public class GetProjectGroup : IQuery<ProjectGroupDto?>
 {
     public GetProjectGroup(Guid id)
     {

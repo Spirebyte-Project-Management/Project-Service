@@ -4,7 +4,7 @@ using Spirebyte.Services.Projects.Application.PermissionSchemes.DTO;
 
 namespace Spirebyte.Services.Projects.Application.PermissionSchemes.Queries;
 
-public class GetPermissionScheme : IQuery<PermissionSchemeDto>
+public class GetPermissionScheme : IQuery<PermissionSchemeDto?>
 {
     public GetPermissionScheme(Guid id)
     {

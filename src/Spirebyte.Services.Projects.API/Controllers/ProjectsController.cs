@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Spirebyte.Framework.API;
 using Spirebyte.Framework.Shared.Handlers;
-using Spirebyte.Services.Projects.API.Controllers.Base;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Queries;
 using Spirebyte.Services.Projects.Application.Projects.Commands;
 using Spirebyte.Services.Projects.Application.Projects.DTO;
@@ -15,7 +15,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Spirebyte.Services.Projects.API.Controllers;
 
 [Authorize]
-public class ProjectsController : BaseController
+public class ProjectsController : ApiController
 {
     private readonly IDispatcher _dispatcher;
 
@@ -25,7 +25,7 @@ public class ProjectsController : BaseController
     }
 
     [HttpGet]
-    [Authorize(ApiScopes.Read)]
+    [Authorize(ApiScopes.ProjectsRead)]
     [SwaggerOperation("Browse projects")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -36,19 +36,19 @@ public class ProjectsController : BaseController
     }
 
     [HttpGet("{projectId}")]
-    [Authorize(ApiScopes.Read)]
+    [Authorize(ApiScopes.ProjectsRead)]
     [SwaggerOperation("Get project")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult<ProjectDto>> GetAsync(string projectId)
+    public async Task<ActionResult<ProjectDto?>> GetAsync(string projectId)
     {
-        return OkOrNotFound(await _dispatcher.QueryAsync(new GetProject(projectId)));
+        return await _dispatcher.QueryAsync(new GetProject(projectId));
     }
 
     [HttpGet("{projectId}/exists")]
-    [Authorize(ApiScopes.Read)]
+    [Authorize(ApiScopes.ProjectsRead)]
     [SwaggerOperation("Does project exist")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -56,11 +56,11 @@ public class ProjectsController : BaseController
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<bool>> ExistsAsync(string projectId)
     {
-        return OkOrNotFound(await _dispatcher.QueryAsync(new DoesProjectExist(projectId)));
+        return await _dispatcher.QueryAsync(new DoesProjectExist(projectId));
     }
 
     [HttpPost]
-    [Authorize(ApiScopes.Write)]
+    [Authorize(ApiScopes.ProjectsWrite)]
     [SwaggerOperation("Create project")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -72,7 +72,7 @@ public class ProjectsController : BaseController
     }
 
     [HttpPost("{projectId}/join")]
-    [Authorize(ApiScopes.Write)]
+    [Authorize(ApiScopes.ProjectsWrite)]
     [SwaggerOperation("Join project")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -83,7 +83,7 @@ public class ProjectsController : BaseController
     }
 
     [HttpPost("{projectId}/leave")]
-    [Authorize(ApiScopes.Write)]
+    [Authorize(ApiScopes.ProjectsWrite)]
     [SwaggerOperation("Leave project")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -94,7 +94,7 @@ public class ProjectsController : BaseController
     }
 
     [HttpPut("{projectId}")]
-    [Authorize(ApiScopes.Write)]
+    [Authorize(ApiScopes.ProjectsWrite)]
     [SwaggerOperation("Update project")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -110,11 +110,10 @@ public class ProjectsController : BaseController
     [HttpGet("{projectId}/user/{userId:guid}/hasPermission/{permissionKey}")]
     [SwaggerOperation("Has permission")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<bool>> HasPermissionAsync(string projectId, Guid userId, string permissionKey)
     {
-        return OkOrNotFound(await _dispatcher.QueryAsync(new HasPermission(permissionKey, userId, projectId)));
+        return await _dispatcher.QueryAsync(new HasPermission(permissionKey, userId, projectId));
     }
 }

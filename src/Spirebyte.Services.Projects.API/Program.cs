@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Framework;
+using Spirebyte.Framework.Auth;
 using Spirebyte.Services.Projects.Application;
 using Spirebyte.Services.Projects.Core.Constants;
 using Spirebyte.Services.Projects.Infrastructure;
-using Spirebyte.Shared.IdentityServer;
 
 public class Program
 {
@@ -28,9 +28,17 @@ public class Program
                 .AddInfrastructure(ctx.Configuration)
                 .Configure<AuthorizationOptions>(options =>
                 {
-                    options.AddEitherOrScopePolicy(ApiScopes.Read, "projects.read", "projects.manage");
-                    options.AddEitherOrScopePolicy(ApiScopes.Write, "projects.write", "projects.manage");
-                    options.AddEitherOrScopePolicy(ApiScopes.Delete, "projects.delete", "projects.manage");
+                    options.AddEitherOrScopePolicy(ApiScopes.ProjectsRead, ApiScopes.ProjectsRead, ApiScopes.ProjectsManage);
+                    options.AddEitherOrScopePolicy(ApiScopes.ProjectsWrite, ApiScopes.ProjectsWrite, ApiScopes.ProjectsManage);
+                    options.AddEitherOrScopePolicy(ApiScopes.ProjectsDelete, ApiScopes.ProjectsDelete, ApiScopes.ProjectsManage);
+                    options.AddEitherOrScopePolicy(ApiScopes.ProjectsJoin, ApiScopes.ProjectsJoin, ApiScopes.ProjectsManage);
+                    options.AddEitherOrScopePolicy(ApiScopes.ProjectsLeave, ApiScopes.ProjectsLeave, ApiScopes.ProjectsManage);
+                    options.AddEitherOrScopePolicy(ApiScopes.ProjectGroupsRead, ApiScopes.ProjectGroupsRead, ApiScopes.ProjectsManage);
+                    options.AddEitherOrScopePolicy(ApiScopes.ProjectGroupsWrite, ApiScopes.ProjectGroupsWrite, ApiScopes.ProjectsManage);
+                    options.AddEitherOrScopePolicy(ApiScopes.ProjectGroupsDelete, ApiScopes.ProjectGroupsDelete, ApiScopes.ProjectsManage);
+                    options.AddEitherOrScopePolicy(ApiScopes.ProjectPermissionSchemesRead, ApiScopes.ProjectPermissionSchemesRead, ApiScopes.ProjectsManage);
+                    options.AddEitherOrScopePolicy(ApiScopes.ProjectPermissionSchemesWrite, ApiScopes.ProjectPermissionSchemesWrite, ApiScopes.ProjectsManage);
+                    options.AddEitherOrScopePolicy(ApiScopes.ProjectPermissionSchemesDelete, ApiScopes.ProjectPermissionSchemesDelete, ApiScopes.ProjectsManage);
                 })
                 .AddControllers()
             )

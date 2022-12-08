@@ -10,7 +10,7 @@ using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
 
 namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Queries.Handler;
 
-internal sealed class GetPermissionSchemeHandler : IQueryHandler<GetPermissionScheme, PermissionSchemeDto>
+internal sealed class GetPermissionSchemeHandler : IQueryHandler<GetPermissionScheme, PermissionSchemeDto?>
 {
     private readonly IMongoRepository<PermissionSchemeDocument, Guid> _permissionSchemeRepository;
 
@@ -19,7 +19,7 @@ internal sealed class GetPermissionSchemeHandler : IQueryHandler<GetPermissionSc
         _permissionSchemeRepository = permissionSchemeRepository;
     }
 
-    public async Task<PermissionSchemeDto> HandleAsync(GetPermissionScheme query,
+    public async Task<PermissionSchemeDto?> HandleAsync(GetPermissionScheme query,
         CancellationToken cancellationToken = default)
     {
         var permissionScheme = await _permissionSchemeRepository.GetAsync(p => p.Id == query.Id);

@@ -9,7 +9,7 @@ using Spirebyte.Services.Projects.Infrastructure.Mongo.Documents.Mappers;
 
 namespace Spirebyte.Services.Projects.Infrastructure.Mongo.Queries.Handler;
 
-internal sealed class GetProjectHandler : IQueryHandler<GetProject, ProjectDto>
+internal sealed class GetProjectHandler : IQueryHandler<GetProject, ProjectDto?>
 {
     private readonly IMongoRepository<ProjectDocument, string> _projectRepository;
 
@@ -18,7 +18,7 @@ internal sealed class GetProjectHandler : IQueryHandler<GetProject, ProjectDto>
         _projectRepository = projectRepository;
     }
 
-    public async Task<ProjectDto> HandleAsync(GetProject query, CancellationToken cancellationToken = default)
+    public async Task<ProjectDto?> HandleAsync(GetProject query, CancellationToken cancellationToken = default)
     {
         var project = await _projectRepository.GetAsync(p => p.Id == query.Id);
 
