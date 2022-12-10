@@ -1,11 +1,9 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Framework.Messaging;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Services;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Services.Interfaces;
 using Spirebyte.Services.Projects.Application.Projects.Commands;
-using Spirebyte.Services.Projects.Application.Projects.Events;
 using Spirebyte.Services.Projects.Application.Projects.Events.External;
 using Spirebyte.Services.Projects.Application.Users.External;
 

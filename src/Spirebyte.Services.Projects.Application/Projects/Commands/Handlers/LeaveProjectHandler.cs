@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Spirebyte.Framework.Contexts;
 using Spirebyte.Framework.Messaging.Brokers;

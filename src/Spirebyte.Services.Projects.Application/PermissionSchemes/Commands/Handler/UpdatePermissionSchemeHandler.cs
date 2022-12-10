@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Spirebyte.Framework.Contexts;
 using Spirebyte.Framework.Messaging.Brokers;
 using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Projects.Application.PermissionSchemes.Events;

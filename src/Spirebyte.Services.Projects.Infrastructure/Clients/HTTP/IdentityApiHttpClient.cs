@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using Microsoft.Net.Http.Headers;
 using Spirebyte.Framework.HTTP;
 using Spirebyte.Services.Projects.Application.Users.Clients.DTO;
 using Spirebyte.Services.Projects.Application.Users.Clients.Interfaces;
