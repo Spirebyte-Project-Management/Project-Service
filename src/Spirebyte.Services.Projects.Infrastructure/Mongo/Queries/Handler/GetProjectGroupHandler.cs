@@ -21,7 +21,7 @@ internal sealed class GetProjectGroupHandler : IQueryHandler<GetProjectGroup, Pr
 
     public async Task<ProjectGroupDto?> HandleAsync(GetProjectGroup query, CancellationToken cancellationToken = default)
     {
-        var projectGroup = await _projectGroupRepository.GetAsync(p => p.Id == query.Id);
+        var projectGroup = await _projectGroupRepository.GetAsync(p => p.Id == query.Id, cancellationToken);
 
         return projectGroup?.AsDto();
     }

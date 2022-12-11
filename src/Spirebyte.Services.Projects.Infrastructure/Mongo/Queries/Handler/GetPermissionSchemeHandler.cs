@@ -22,7 +22,7 @@ internal sealed class GetPermissionSchemeHandler : IQueryHandler<GetPermissionSc
     public async Task<PermissionSchemeDto?> HandleAsync(GetPermissionScheme query,
         CancellationToken cancellationToken = default)
     {
-        var permissionScheme = await _permissionSchemeRepository.GetAsync(p => p.Id == query.Id);
+        var permissionScheme = await _permissionSchemeRepository.GetAsync(p => p.Id == query.Id, cancellationToken);
 
         return permissionScheme?.AsDto();
     }

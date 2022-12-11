@@ -20,7 +20,7 @@ internal sealed class GetProjectHandler : IQueryHandler<GetProject, ProjectDto?>
 
     public async Task<ProjectDto?> HandleAsync(GetProject query, CancellationToken cancellationToken = default)
     {
-        var project = await _projectRepository.GetAsync(p => p.Id == query.Id);
+        var project = await _projectRepository.GetAsync(p => p.Id == query.Id, cancellationToken);
 
         return project?.AsDto();
     }

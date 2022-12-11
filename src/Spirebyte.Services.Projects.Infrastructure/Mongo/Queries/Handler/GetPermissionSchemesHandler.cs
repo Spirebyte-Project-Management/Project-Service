@@ -36,12 +36,13 @@ internal sealed class
         if (query.ProjectId == null)
             return Enumerable.Empty<PermissionSchemeDto>();
 
-        var project = await _projectRepository.GetAsync(query.ProjectId);
+        var project = await _projectRepository.GetAsync(query.ProjectId, cancellationToken);
         if (project == null) return Enumerable.Empty<PermissionSchemeDto>();
 
-        return await documents
+        var permissionSchemes = await documents
             .Where(p => p.ProjectId == project.Id || p.Id == ProjectConstants.DefaultPermissionSchemeId)
-            .Select(p => p.AsDto())
             .ToListAsync(cancellationToken);
+
+        return permissionSchemes.Select(p => p.AsDto());
     }
 }

@@ -34,12 +34,13 @@ internal sealed class GetProjectGroupsHandler : IQueryHandler<GetProjectGroups, 
         if (query.ProjectId == null)
             return Enumerable.Empty<ProjectGroupDto>();
 
-        var project = await _projectRepository.GetAsync(query.ProjectId);
+        var project = await _projectRepository.GetAsync(query.ProjectId, cancellationToken);
         if (project == null) return Enumerable.Empty<ProjectGroupDto>();
         
-        return await documents
+        var projectGroups = await documents
             .Where(p =>p.ProjectId == project.Id)
-            .Select(p => p.AsDto())
             .ToListAsync(cancellationToken: cancellationToken);
+        
+        return projectGroups.Select(p => p.AsDto());
     }
 }
