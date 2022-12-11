@@ -29,7 +29,7 @@ public static class Extensions
             .Event<SprintCreated>()
             .Event<SprintUpdated>()
             .Event<SprintDeleted>()
-            .Event<SignedUp>();
+            .Event<UserCreated>();
 
         return app;
     }

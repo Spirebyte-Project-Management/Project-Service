@@ -15,13 +15,13 @@ using Xunit;
 
 namespace Spirebyte.Services.Projects.Tests.Integration.Events;
 
-public class SignedUpTests : TestBase
+public class UserCreatedTests : TestBase
 {
-    private readonly IEventHandler<SignedUp> _eventHandler;
+    private readonly IEventHandler<UserCreated> _eventHandler;
 
     private readonly IUserRepository _userRepository;
 
-    public SignedUpTests(
+    public UserCreatedTests(
         MongoDbFixture<IssueDocument, string> issuesMongoDbFixture,
         MongoDbFixture<PermissionSchemeDocument, Guid> permissionSchemesMongoDbFixture,
         MongoDbFixture<ProjectGroupDocument, Guid> projectGroupsMongoDbFixture,
@@ -31,17 +31,17 @@ public class SignedUpTests : TestBase
     {
         _userRepository = new UserRepository(UsersMongoDbFixture);
         
-        _eventHandler = new SignedUpHandler(_userRepository);
+        _eventHandler = new UserCreatedHandler(_userRepository);
     }
     
     [Fact]
-    public async Task signedup_event_should_add_user_with_given_data_to_database()
+    public async Task user_created_event_should_add_user_with_given_data_to_database()
     {
         var userId = Guid.NewGuid();
         var email = "email@test.com";
 
 
-        var externalEvent = new SignedUp(userId, email);
+        var externalEvent = new UserCreated(userId, email);
 
         // Check if exception is thrown
 
@@ -57,7 +57,7 @@ public class SignedUpTests : TestBase
     }
 
     [Fact]
-    public async Task signedup_event_fails_when_user_with_id_already_exists()
+    public async Task user_created_event_fails_when_user_with_id_already_exists()
     {
         var userId = Guid.NewGuid();
         var email = "email@test.com";
@@ -65,7 +65,7 @@ public class SignedUpTests : TestBase
         var user = new User(userId);
         await UsersMongoDbFixture.AddAsync(user.AsDocument());
 
-        var externalEvent = new SignedUp(userId, email);
+        var externalEvent = new UserCreated(userId, email);
 
         // Check if exception is thrown
 

@@ -7,18 +7,15 @@ using Spirebyte.Services.Projects.Core.Repositories;
 
 namespace Spirebyte.Services.Projects.Application.Users.External.Handlers;
 
-public class SignedUpHandler : IEventHandler<SignedUp>
+public class UserCreatedHandler : IEventHandler<UserCreated>
 {
-    private const string RequiredRole = "user";
     private readonly IUserRepository _userRepository;
-
-
-    public SignedUpHandler(IUserRepository userRepository)
+    public UserCreatedHandler(IUserRepository userRepository)
     {
         _userRepository = userRepository;
     }
 
-    public async Task HandleAsync(SignedUp @event, CancellationToken cancellationToken = default)
+    public async Task HandleAsync(UserCreated @event, CancellationToken cancellationToken = default)
     {
         if (await _userRepository.ExistsAsync(@event.UserId)) throw new UserAlreadyCreatedException(@event.UserId);
 

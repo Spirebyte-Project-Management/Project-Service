@@ -4,10 +4,10 @@ using Spirebyte.Framework.Shared.Attributes;
 
 namespace Spirebyte.Services.Projects.Application.Users.External;
 
-[Message("identity")]
-public class SignedUp : IEvent
+[Message("identity", "user_created", "projects.user_created")]
+public class UserCreated : IEvent
 {
-    public SignedUp(Guid userId, string email)
+    public UserCreated(Guid userId, string email)
     {
         UserId = userId;
         Email = email;
